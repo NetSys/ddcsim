@@ -33,14 +33,14 @@ void Event::Handle(Entity* e) { e->Handle(this); }
 
 string Event::Description() { return "base event"; }
 
-RouterUpEvent::RouterUpEvent(Time t, Router* r) : Event(t, r) {}
+SwitchUp::SwitchUp(Time t, Switch* r) : Event(t, r) {}
 
-void RouterUpEvent::Handle(Entity* e) { e->Handle(this); }
+void SwitchUp::Handle(Entity* e) { e->Handle(this); }
 
-string RouterUpEvent::Description() { return "router up event"; }
+string SwitchUp::Description() { return "switch up"; }
 
-RouterDownEvent::RouterDownEvent(Time t, Router* r) : Event(t, r) {}
+SwitchDown::SwitchDown(Time t, Switch* r) : Event(t, r) {}
 
-void RouterDownEvent::Handle(Entity* e) { e->Handle(this); }
+void SwitchDown::Handle(Entity* e) { e->Handle(this); }
 
-string RouterDownEvent::Description() { return "router down event"; }
+string SwitchDown::Description() { return "switch down"; }

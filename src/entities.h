@@ -13,15 +13,15 @@ class Entity {
   DISALLOW_COPY_AND_ASSIGN(Entity);
 };
 
-class Router : public Entity {
+class Switch : public Entity {
  public:
-  Router();
+  Switch();
   virtual void Handle(Event*);
-  virtual void Handle(RouterUpEvent*);
-  virtual void Handle(RouterDownEvent*);
+  virtual void Handle(SwitchUp*);
+  virtual void Handle(SwitchDown*);
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(Router);
+  DISALLOW_COPY_AND_ASSIGN(Switch);
 };
 
 #endif

@@ -7,7 +7,7 @@
 #include "common.h"
 
 class Entity;
-class Router;
+class Switch;
 
 class Event {
  public:
@@ -38,26 +38,26 @@ class Event {
   DISALLOW_COPY_AND_ASSIGN(Event);
 };
 
-class RouterUpEvent : public Event {
+class SwitchUp : public Event {
  public:
-  RouterUpEvent(Time, Router*);
+  SwitchUp(Time, Switch*);
   virtual void Handle(Entity*);
   // TODO is virtual here redundant?
   virtual std::string Description();
 
  private:
   // TODO need disallow in derived classes?
-  DISALLOW_COPY_AND_ASSIGN(RouterUpEvent);
+  DISALLOW_COPY_AND_ASSIGN(SwitchUp);
 };
 
-class RouterDownEvent : public Event {
+class SwitchDown : public Event {
  public:
-  RouterDownEvent(Time, Router*);
+  SwitchDown(Time, Switch*);
   virtual void Handle(Entity*);
   virtual std::string Description();
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(RouterDownEvent);
+  DISALLOW_COPY_AND_ASSIGN(SwitchDown);
 };
 
 #endif

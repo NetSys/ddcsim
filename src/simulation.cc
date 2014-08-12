@@ -16,9 +16,9 @@ int main(int argc, char* argv[]) {
   Event* abs = new Event(3, new Entity);
 
   /* Two "concrete" events. */
-  Router* r = new Router;
-  RouterUpEvent* up = new RouterUpEvent(2, r);
-  RouterDownEvent* down = new RouterDownEvent(1, r);
+  Switch* r = new Switch;
+  SwitchUp* up = new SwitchUp(2, r);
+  SwitchDown* down = new SwitchDown(1, r);
 
   Scheduler sched;
   sched.AddEvent(abs);

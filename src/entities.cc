@@ -11,16 +11,16 @@ void Entity::Handle(Event* e) {
   cout << "Entity received event " << e->Description() << endl;
 }
 
-Router::Router() {}
+Switch::Switch() {}
 
-void Router::Handle(Event* e) {
-  cout << "Router received event " << e->Description() << endl;
+void Switch::Handle(Event* e) {
+  cout << "Switch received event " << e->Description() << endl;
 }
 
-void Router::Handle(RouterUpEvent* e) {
-  cout << "Router received event " << e->Description() << endl;
+void Switch::Handle(SwitchUp* e) {
+  cout << "Switch received event " << e->Description() << endl;
 }
 
-void Router::Handle(RouterDownEvent* e) {
-  cout << "Router received event " << e->Description() << endl;
+void Switch::Handle(SwitchDown* e) {
+  cout << "Switch received event " << e->Description() << endl;
 }
