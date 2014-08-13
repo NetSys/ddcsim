@@ -61,9 +61,9 @@ class SwitchDown : public Event {
   DISALLOW_COPY_AND_ASSIGN(SwitchDown);
 };
 
-// TODO make friend of broadcast switch?
-// TODO what are the proper practices with friend relationships
 class Broadcast : public Event {
+  // TODO what are the proper practices with friend relationships
+  friend class BroadcastSwitch;
  public:
   // TODO correct spacing on constructor?
   template<class Iterator> Broadcast(Time t, Switch* s, Iterator begin,
