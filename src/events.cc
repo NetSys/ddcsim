@@ -44,3 +44,5 @@ SwitchDown::SwitchDown(Time t, Switch* r) : Event(t, r) {}
 void SwitchDown::Handle(Entity* e) { e->Handle(this); }
 
 string SwitchDown::Description() { return "switch down"; }
+
+void Broadcast::SetInPort(Port p) { in_port_ = p; }
