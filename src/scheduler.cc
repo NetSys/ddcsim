@@ -19,6 +19,22 @@ Event* Scheduler::NextEvent() {
   return next;
 }
 
+void Scheduler::StartSimulation() {
+  Time cur_time;
+
+  while(HasNextEvent()) {
+    Event* ev = NextEvent();
+
+    cur_time = ev->time();
+
+    for (vector<Entity*>::iterator it = ev->AffectedEntitiesBegin();
+         it != ev->AffectedEntitiesEnd(); ++it) {
+      ev->Handle(*it);
+      delete ev;
+    }
+  }
+}
+
 bool Scheduler::Comparator::operator() (const Event* const lhs,
                                         const Event* const rhs) const {
   return lhs->time() > rhs->time();

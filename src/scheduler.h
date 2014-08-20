@@ -28,10 +28,11 @@ class Scheduler {
  public:
   Scheduler();
   void AddEvent(Event*);
-  bool HasNextEvent();
-  Event* NextEvent();
+  void StartSimulation();
 
  private:
+  bool HasNextEvent();
+  Event* NextEvent();
   std::priority_queue<Event*, std::vector<Event*>, Comparator> event_queue_;
   DISALLOW_COPY_AND_ASSIGN(Scheduler);
 };

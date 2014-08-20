@@ -33,18 +33,7 @@ int main(int argc, char* argv[]) {
   sched.AddEvent(up);
   sched.AddEvent(down);
 
-  Time cur_time;
-  while(sched.HasNextEvent()) {
-    Event* ev = sched.NextEvent();
-
-    cur_time = ev->time();
-
-    for (vector<Entity*>::iterator it = ev->AffectedEntitiesBegin();
-         it != ev->AffectedEntitiesEnd(); ++it) {
-      ev->Handle(*it);
-      delete ev;
-    }
-  }
+  sched.StartSimulation();
 
   for(auto it = ents.begin(); it != ents.end(); ++it) {
     delete *it;

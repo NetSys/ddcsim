@@ -1,5 +1,5 @@
-#ifndef DDCSIM_ROUTERS_H_
-#define DDCSIM_ROUTERS_H_
+#ifndef DDCSIM_ENTITIES_H_
+#define DDCSIM_ENTITIES_H_
 
 #include <unordered_set>
 #include <inttypes.h>
