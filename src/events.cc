@@ -45,4 +45,16 @@ void SwitchDown::Handle(Entity* e) { e->Handle(this); }
 
 string SwitchDown::Description() { return "switch down"; }
 
-void Broadcast::SetInPort(Port p) { in_port_ = p; }
+Broadcast::Broadcast(Time t, const Switch* src, Entity* affected_entity,
+                     Port in, SequenceNum sn) :
+    Event(t, affected_entity), src_(src), in_port_(in), sn_(sn) {}
+
+SequenceNum Broadcast::sn() const { return sn_; }
+
+const Switch* Broadcast::src() const { return src_; }
+
+Port Broadcast::in_port() const { return in_port_; }
+
+void Broadcast::Handle(Entity* e) { e->Handle(this); }
+
+string Broadcast::Description() { return "broadcast"; }

@@ -25,6 +25,7 @@ class Event {
   // TODO return generic iterator rather than vector's
   std::vector<Entity*>::iterator AffectedEntitiesBegin();
   std::vector<Entity*>::iterator AffectedEntitiesEnd();
+
   /* The following Handle method, and the Handle methods in all descendants
    * of Event, implement the pattern outlined here:
    * http://en.wikipedia.org/wiki/Double_dispatch#Double_dispatch_in_C.2B.2B
@@ -33,9 +34,11 @@ class Event {
   virtual void Handle(Entity*);
   virtual std::string Description();
 
- private:
+ protected:
   Time time_;
   std::vector<Entity*> affected_entities_;
+
+ private:
   DISALLOW_COPY_AND_ASSIGN(Event);
 };
 
@@ -62,20 +65,22 @@ class SwitchDown : public Event {
 };
 
 class Broadcast : public Event {
-  // TODO what are the proper practices with friend relationships
-  friend class BroadcastSwitch;
  public:
-  // TODO correct spacing on constructor?
-  template<class Iterator> Broadcast(Time t, Switch* s, Iterator begin,
-                                     Iterator end, Port in) :
-      Event(t, begin, end), src_(s), in_port_(in) {}
-  void SetInPort(Port);
+  // TODO is it safe for affected entities to be an entity?
+  Broadcast(Time, const Switch*, Entity*, Port, SequenceNum);
+  SequenceNum sn() const;
+  const Switch* src() const;
+  Port in_port() const;
+  virtual void Handle(Entity*);
+  virtual std::string Description();
 
- private:
-  const SequenceNum sn_;
+ protected:
+  SequenceNum sn_;
   // TODO advantages of making r a ref?
   const Switch* src_;
   Port in_port_;
+
+ private:
   DISALLOW_COPY_AND_ASSIGN(Broadcast);
 };
 

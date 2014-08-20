@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "entities.h"
 
 using std::cout;
@@ -45,5 +47,5 @@ bool BroadcastSwitch::HasBeenSeen(const Broadcast* b) const {
 }
 
 MsgId BroadcastSwitch::MakeMsgId(const Broadcast* b) {
-  return make_pair(b->sn_, b->src_);
+  return make_pair(b->sn(), b->src());
 }
