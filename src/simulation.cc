@@ -9,16 +9,19 @@ int main(int argc, char* argv[]) {
   // TODO remove hard-coded simulation instance below after simulation input
   // are implemented
 
+  Scheduler sched;
+
   // TODO why did adding a constructor that the compiler should have already
   // inserted fix the issue?  Something to do with move constructors?
 
   /* Construct entities */
-  vector<Entity*> ents({new Entity, new Switch, new Switch});
+  vector<Entity*> ents({new Entity(sched), new Switch(sched),
+          new Switch(sched)});
 
   /* Construct topology */
-  ents[0]->InitPorts(++(ents.begin()), ents.end());
-  ents[1]->InitPorts(ents.begin(), ++(ents.begin()));
-  ents[2]->InitPorts(ents.begin(), ++(ents.begin()));
+  ents[0]->InitLinks(++(ents.begin()), ents.end());
+  ents[1]->InitLinks(ents.begin(), ++(ents.begin()));
+  ents[2]->InitLinks(ents.begin(), ++(ents.begin()));
 
   /* An "abstract" event. */
   Event* abs = new Event(3, ents[0]);
@@ -28,7 +31,6 @@ int main(int argc, char* argv[]) {
   SwitchDown* down = new SwitchDown(1, static_cast<Switch*>(ents[1]));
   SwitchUp* up = new SwitchUp(2, static_cast<Switch*>(ents[1]));
 
-  Scheduler sched;
   sched.AddEvent(abs);
   sched.AddEvent(up);
   sched.AddEvent(down);

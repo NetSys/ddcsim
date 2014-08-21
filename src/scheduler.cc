@@ -1,6 +1,11 @@
+#include <assert.h>
+#include <iostream>
+#include <utility>
+
+#include "entities.h"
+#include "events.h"
 #include "scheduler.h"
 
-using std::priority_queue;
 using std::vector;
 
 Scheduler::Scheduler() : event_queue_() {}
@@ -19,6 +24,35 @@ Event* Scheduler::NextEvent() {
   return next;
 }
 
+bool Scheduler::Comparator::operator() (const Event* const lhs,
+                                        const Event* const rhs) const {
+  return lhs->time() > rhs->time();
+}
+
+// TODO why isn't partial specialization of methods allowed?
+template<> Broadcast* Scheduler::Schedule(Broadcast* broadcast_in,
+                                          Entity* receiver, Port in) {
+  return new Broadcast(broadcast_in->time() + kLinkLatency,
+                       broadcast_in->src(), receiver, in, broadcast_in->sn());
+}
+
+template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out) {
+  Links& l = sender->links();
+
+  if(! l.IsLinkUp(out)) {
+    std::cout << "Broadcast packet dropped due to down link" << std::endl;
+    return;
+  }
+
+  Entity* receiver = l.GetEndpoint(out);
+
+  Port in = FindInPort(sender, receiver);
+  assert(in != PORT_NOT_FOUND);
+
+  M* new_event = Schedule(msg_in, receiver, in);
+  AddEvent(new_event);
+}
+
 void Scheduler::StartSimulation() {
   Time cur_time;
 
@@ -35,7 +69,19 @@ void Scheduler::StartSimulation() {
   }
 }
 
-bool Scheduler::Comparator::operator() (const Event* const lhs,
-                                        const Event* const rhs) const {
-  return lhs->time() > rhs->time();
+template<class E> Port Scheduler::FindInPort(E* sender, Entity* receiver) {
+  Links& l = receiver->links();
+  for(auto it = l.LinksBegin(); it != l.LinksEnd(); ++it)
+    if(sender == it->second.second)
+      return it->first;
+  return PORT_NOT_FOUND;
 }
+
+/* TODO explain why we need to oblige the compiler to instantiate these
+ * here methods
+ */
+template void Scheduler::Forward<BroadcastSwitch, Broadcast>(BroadcastSwitch*,
+                                                             Broadcast*,
+                                                             Port);
+template Port Scheduler::FindInPort<BroadcastSwitch>(BroadcastSwitch*,
+                                                     Entity*);

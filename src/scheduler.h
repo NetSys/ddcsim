@@ -5,7 +5,9 @@
 #include <vector>
 
 #include "common.h"
-#include "events.h"
+
+class Entity;
+class Event;
 
 class Scheduler {
   /* When an inner class is not part of a class's interface, as is the case
@@ -28,12 +30,20 @@ class Scheduler {
  public:
   Scheduler();
   void AddEvent(Event*);
+  // TODO more descriptive template type names? what is the convention?
+  template<class E, class M> void Forward(E* sender, M* msg_in, Port out);
+  template<class E> Port FindInPort(E* sender, Entity* receiver);
   void StartSimulation();
 
  private:
   bool HasNextEvent();
   Event* NextEvent();
+  /* Note that there is no actual implementation of the Schedule method for
+   * a generic type M.
+   */
+  template<class M> M* Schedule(M* msg_in, Entity* receiver, Port in);
   std::priority_queue<Event*, std::vector<Event*>, Comparator> event_queue_;
+  static constexpr Time kLinkLatency = 5;
   DISALLOW_COPY_AND_ASSIGN(Scheduler);
 };
 
