@@ -1,7 +1,9 @@
-#include "common.h"
-#include "entities.h"
-#include "events.h"
-#include "scheduler.h"
+#include "../src/common.h"
+#include "../src/entities.h"
+#include "../src/events.h"
+#include "../src/scheduler.h"
+// TODO I don't believe the Google style guide allows for relative addressing
+// in header paths
 
 using std::vector;
 
