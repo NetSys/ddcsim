@@ -1,6 +1,8 @@
 #ifndef DDCSIM_ROUTERS_H_
 #define DDCSIM_ROUTERS_H_
 
+#include <iostream>
+
 #include <iterator>
 #include <inttypes.h>
 #include <unordered_map>
@@ -42,6 +44,7 @@ class Links {
     for(Port p = 0; neighbors_begin != neighbors_end; ++neighbors_begin, ++p) {
       port_nums_.push_back(p);
       port_to_link_.insert({p, {true, *neighbors_begin}});
+      std::cout << p << "-->" << (*neighbors_begin)->id() << std::endl;
     }
   }
   // TODO return generic iterator rather than an interator to a vector
@@ -65,17 +68,23 @@ class Links {
 class Entity {
  public:
   Entity(Scheduler&);
+  Entity(Scheduler&, Id);
   template<class Iterator> void InitLinks(Iterator first, Iterator last) {
+    std::cout << id_ << std::endl;
     links_.Init(first, last);
   }
   virtual void Handle(Event*);
   virtual void Handle(Broadcast*);
+  virtual void Handle(SwitchUp*);
+  virtual void Handle(SwitchDown*);
   // TODO didn't want to do it...
   Links& links();
+  Id id() const;
 
  protected:
   Links links_;
   Scheduler& scheduler_;
+  Id id_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Entity);
@@ -84,6 +93,7 @@ class Entity {
 class Switch : public Entity {
  public:
   Switch(Scheduler&);
+  Switch(Scheduler&, Id);
   virtual void Handle(Event*);
   virtual void Handle(SwitchUp*);
   virtual void Handle(SwitchDown*);
@@ -98,6 +108,7 @@ class Switch : public Entity {
 class BroadcastSwitch : public Switch {
  public:
   BroadcastSwitch(Scheduler&);
+  BroadcastSwitch(Scheduler&, Id);
   virtual void Handle(Broadcast*);
 
  protected:

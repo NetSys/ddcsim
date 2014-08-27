@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "entities.h"
 #include "events.h"
 
@@ -5,6 +7,8 @@
 
 using std::string;
 using std::vector;
+using std::cout;
+using std::endl;
 
 // TODO everything here is a small method, move to header file?
 
@@ -55,6 +59,12 @@ const Switch* Broadcast::src() const { return src_; }
 
 Port Broadcast::in_port() const { return in_port_; }
 
-void Broadcast::Handle(Entity* e) { e->Handle(this); }
+void Broadcast::Handle(Entity* e) {
+  cout << "Broadcast Event: sn=" << sn_;
+  cout << " src=" << src_->id();
+  cout << " in_port=" << in_port_;
+  cout << " t=" << time_ << endl;
+  e->Handle(this);
+}
 
 string Broadcast::Description() { return "broadcast"; }

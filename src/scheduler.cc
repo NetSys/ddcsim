@@ -8,7 +8,12 @@
 
 using std::vector;
 
-Scheduler::Scheduler() : event_queue_() {}
+const Time Scheduler::kLinkLatency = 0.1;
+const Time Scheduler::kDefaultHeartbeatPeriod = 3;
+const Time Scheduler::kDefaultEndTime = 60;
+
+Scheduler::Scheduler(Time end_time) : event_queue_(),
+                                      end_time_(end_time) {}
 
 void Scheduler::AddEvent(Event* e) {
   event_queue_.push(e);
@@ -54,9 +59,9 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
 }
 
 void Scheduler::StartSimulation() {
-  Time cur_time;
+  Time cur_time = 0;
 
-  while(HasNextEvent()) {
+  while(HasNextEvent() && cur_time < end_time_) {
     Event* ev = NextEvent();
 
     cur_time = ev->time();
@@ -68,6 +73,8 @@ void Scheduler::StartSimulation() {
     }
   }
 }
+
+Time Scheduler::end_time() { return end_time_; }
 
 template<class E> Port Scheduler::FindInPort(E* sender, Entity* receiver) {
   Links& l = receiver->links();
