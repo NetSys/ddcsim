@@ -35,19 +35,16 @@ bool Scheduler::Comparator::operator() (const Event* const lhs,
 }
 
 // TODO why isn't partial specialization of methods allowed?
-template<> Broadcast* Scheduler::Schedule(Broadcast* broadcast_in,
+template<> Heartbeat* Scheduler::Schedule(Heartbeat* heartbeat_in,
                                           Entity* receiver, Port in) {
-  return new Broadcast(broadcast_in->time() + kLinkLatency,
-                       broadcast_in->src(), receiver, in, broadcast_in->sn());
+  return new Heartbeat(heartbeat_in->time() + kLinkLatency,
+                       heartbeat_in->src(), receiver, in, heartbeat_in->sn());
 }
 
 template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out) {
   Links& l = sender->links();
 
-  if(! l.IsLinkUp(out)) {
-    std::cout << "Broadcast packet dropped due to down link" << std::endl;
-    return;
-  }
+  if(! l.IsLinkUp(out)) return;
 
   Entity* receiver = l.GetEndpoint(out);
 
@@ -87,8 +84,5 @@ template<class E> Port Scheduler::FindInPort(E* sender, Entity* receiver) {
 /* TODO explain why we need to oblige the compiler to instantiate these
  * here methods
  */
-template void Scheduler::Forward<BroadcastSwitch, Broadcast>(BroadcastSwitch*,
-                                                             Broadcast*,
-                                                             Port);
-template Port Scheduler::FindInPort<BroadcastSwitch>(BroadcastSwitch*,
-                                                     Entity*);
+template void Scheduler::Forward<Switch, Heartbeat>(Switch*, Heartbeat*, Port);
+template Port Scheduler::FindInPort<Switch>(Switch*, Entity*);

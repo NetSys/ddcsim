@@ -1,8 +1,6 @@
 #ifndef DDCSIM_ROUTERS_H_
 #define DDCSIM_ROUTERS_H_
 
-#include <iostream>
-
 #include <iterator>
 #include <inttypes.h>
 #include <unordered_map>
@@ -14,15 +12,15 @@
 #include "scheduler.h"
 
 class Entity; /* For Links */
-class Switch; /* For MsgId */
+class Switch; /* For MsgId's */
 class Event;
-class SwitchUp;
-class SwitchDown;
+class Up;
+class Down;
 class Broadcast;
+class Heartbeat;
 
-// TODO make it local to BroadcastSwitch?
+// TODO move into Switch
 // TODO represent as class instead?
-// TODO better to be explicit about equality?
 typedef std::pair<SequenceNum, const Switch*> MsgId;
 
 /* Specialize the standard hash function for MsgId's */
@@ -44,7 +42,6 @@ class Links {
     for(Port p = 0; neighbors_begin != neighbors_end; ++neighbors_begin, ++p) {
       port_nums_.push_back(p);
       port_to_link_.insert({p, {true, *neighbors_begin}});
-      std::cout << p << "-->" << (*neighbors_begin)->id() << std::endl;
     }
   }
   // TODO return generic iterator rather than an interator to a vector
@@ -70,21 +67,21 @@ class Entity {
   Entity(Scheduler&);
   Entity(Scheduler&, Id);
   template<class Iterator> void InitLinks(Iterator first, Iterator last) {
-    std::cout << id_ << std::endl;
     links_.Init(first, last);
   }
   virtual void Handle(Event*);
+  virtual void Handle(Up*);
+  virtual void Handle(Down*);
   virtual void Handle(Broadcast*);
-  virtual void Handle(SwitchUp*);
-  virtual void Handle(SwitchDown*);
-  // TODO didn't want to do it...
-  Links& links();
+  virtual void Handle(Heartbeat*);
+  Links& links(); // TODO didn't want to do it...
   Id id() const;
 
  protected:
   Links links_;
   Scheduler& scheduler_;
   Id id_;
+  bool is_up_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Entity);
@@ -94,32 +91,17 @@ class Switch : public Entity {
  public:
   Switch(Scheduler&);
   Switch(Scheduler&, Id);
-  virtual void Handle(Event*);
-  virtual void Handle(SwitchUp*);
-  virtual void Handle(SwitchDown*);
+  virtual void Handle(Heartbeat*);
 
  protected:
-  bool is_up_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(Switch);
-};
-
-class BroadcastSwitch : public Switch {
- public:
-  BroadcastSwitch(Scheduler&);
-  BroadcastSwitch(Scheduler&, Id);
-  virtual void Handle(Broadcast*);
-
- protected:
-  void MarkAsSeen(const Broadcast*);
-  bool HasBeenSeen(const Broadcast*) const;
+  void MarkAsSeen(const Heartbeat*);
+  bool HasBeenSeen(const Heartbeat*) const;
   // TODO what does the style guide say about static methods?
-  static MsgId MakeMsgId(const Broadcast*);
+  static MsgId MakeMsgId(const Heartbeat*);
   std::unordered_set<MsgId> seen;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(BroadcastSwitch);
+  DISALLOW_COPY_AND_ASSIGN(Switch);
 };
 
 #endif

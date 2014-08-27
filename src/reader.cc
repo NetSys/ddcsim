@@ -12,12 +12,8 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
-/*
-using YAML::Node;
-using YAML::LoadFile;
-using YAML::as;
-*/
 using namespace YAML;
+
 // TODO complicated initialization on allowed in constructor?
 // TODO is yaml constructor considered complicated?
 Reader::Reader(std::string topo_file_path, std::string event_file_path,
@@ -30,10 +26,6 @@ bool Reader::IsEntity(Node n) {
 }
 
 bool Reader::IsSwitch(Node n) {
-  return false; //TODO
-}
-
-bool Reader::IsBroadcastSwitch(Node n) {
   return true; //TODO
 }
 
@@ -48,9 +40,7 @@ bool Reader::ParseEntities(Node raw_entities) {
     typ = ((*it)["type"]);
     id = ((*it)["id"]).as<Id>();
 
-    if(IsBroadcastSwitch(typ)) {
-      id_to_entity_.insert({id, new BroadcastSwitch(scheduler_, id)});
-    } else if(IsSwitch(typ)) {
+    if(IsSwitch(typ)) {
       id_to_entity_.insert({id, new Switch(scheduler_, id)});
     } else if(IsEntity(typ)) {
       id_to_entity_.insert({id, new Entity(scheduler_, id)});
@@ -107,12 +97,12 @@ bool Reader::ParseTopology() {
   return true;
 }
 
-bool Reader::IsSwitchUp(YAML::Node n) {
-  return !n["type"].as<string>().compare("switchup");
+bool Reader::IsUp(YAML::Node n) {
+  return !n["type"].as<string>().compare("up");
 }
 
-bool Reader::IsSwitchDown(YAML::Node n) {
-  return !n["type"].as<string>().compare("switchdown");
+bool Reader::IsDown(YAML::Node n) {
+  return !n["type"].as<string>().compare("down");
 }
 
 bool Reader::IsLinkUp(YAML::Node n) {
@@ -139,17 +129,17 @@ bool Reader::ParseEvents() {
     t = it->first.as<Time>();
     ev = it->second;
 
-    if(IsSwitchUp(ev)) {
+    if(IsUp(ev)) {
       affected_id = it->second["id"].as<Id>();
       // TODO how to cleanly remove static cast
-      scheduler_.AddEvent(new SwitchUp(t,
-                                       static_cast<Switch*>
-                                       (id_to_entity_[affected_id])));
-    } else if(IsSwitchDown(ev)) {
+      scheduler_.AddEvent(new Up(t,
+                                 static_cast<Switch*>
+                                 (id_to_entity_[affected_id])));
+    } else if(IsDown(ev)) {
       affected_id = it->second["id"].as<Id>();
-      scheduler_.AddEvent(new SwitchDown(t,
-                                         static_cast<Switch*>
-                                         (id_to_entity_[affected_id])));
+      scheduler_.AddEvent(new Down(t,
+                                   static_cast<Switch*>
+                                   (id_to_entity_[affected_id])));
     } else if(IsLinkUp(ev)) {
     } else if(IsLinkDown(ev)) {
     } else {

@@ -26,10 +26,9 @@ public:
 private:
   bool IsEntity(YAML::Node);
   bool IsSwitch(YAML::Node);
-  bool IsBroadcastSwitch(YAML::Node);
   bool ParseEntities(YAML::Node); // TODO why isn't ref allowed?
-  bool IsSwitchUp(YAML::Node);
-  bool IsSwitchDown(YAML::Node);
+  bool IsUp(YAML::Node);
+  bool IsDown(YAML::Node);
   bool IsLinkUp(YAML::Node);
   bool IsLinkDown(YAML::Node);
   bool ParseLinks(YAML::Node);

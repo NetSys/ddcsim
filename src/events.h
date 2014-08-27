@@ -7,7 +7,6 @@
 #include "common.h"
 
 class Entity;
-class Switch;
 
 class Event {
  public:
@@ -42,46 +41,56 @@ class Event {
   DISALLOW_COPY_AND_ASSIGN(Event);
 };
 
-class SwitchUp : public Event {
+class Up : public Event {
  public:
-  SwitchUp(Time, Switch*);
+  Up(Time, Entity*);
   virtual void Handle(Entity*);
   // TODO is virtual here redundant?
   virtual std::string Description();
 
  private:
   // TODO need disallow in derived classes?
-  DISALLOW_COPY_AND_ASSIGN(SwitchUp);
+  DISALLOW_COPY_AND_ASSIGN(Up);
 };
 
-class SwitchDown : public Event {
+class Down : public Event {
  public:
-  SwitchDown(Time, Switch*);
+  Down(Time, Entity*);
   virtual void Handle(Entity*);
   virtual std::string Description();
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(SwitchDown);
+  DISALLOW_COPY_AND_ASSIGN(Down);
 };
 
 class Broadcast : public Event {
  public:
-  // TODO is it safe for affected entities to be an entity?
-  Broadcast(Time, const Switch*, Entity*, Port, SequenceNum);
-  SequenceNum sn() const;
-  const Switch* src() const;
+  Broadcast(Time, Entity*, Port);
   Port in_port() const;
   virtual void Handle(Entity*);
   virtual std::string Description();
 
  protected:
-  SequenceNum sn_;
-  // TODO advantages of making r a ref?
-  const Switch* src_;
   Port in_port_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Broadcast);
+};
+
+class Heartbeat : public Broadcast {
+ public:
+  Heartbeat(Time, const Switch*, Entity*, Port, SequenceNum);
+  SequenceNum sn() const;
+  const Switch* src() const;
+  virtual void Handle(Entity*);
+  virtual std::string Description();
+
+ protected:
+  SequenceNum sn_;
+  const Switch* src_; // TODO better to change to a ref?
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(Heartbeat);
 };
 
 #endif

@@ -1,5 +1,5 @@
 entities:
-  - {id: 1, type: &b broadcastswitch}
+  - {id: 1, type: &b switch}
   - {id: 2, type: *b}
   - {id: 3, type: *b}
   - {id: 4, type: *b}

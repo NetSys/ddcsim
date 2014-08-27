@@ -97,8 +97,7 @@ int main(int ac, char* av[]) {
   for (Time t = 0; t < sched.end_time(); t+= heartbeat_period) {
     for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
          ++it) {
-      sched.AddEvent(new Broadcast(t,
-                                   static_cast<BroadcastSwitch*>(it->second),
+      sched.AddEvent(new Heartbeat(t, static_cast<Switch*>(it->second),
                                    it->second,
                                    INITIATING_EVENT,
                                    t / heartbeat_period));

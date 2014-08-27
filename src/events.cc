@@ -10,8 +10,6 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-// TODO everything here is a small method, move to header file?
-
 Event::Event() : time_(UNINITIALIZED_TIME), affected_entities_() {}
 
 Event::Event(Time t, Entity* e) : time_(t), affected_entities_() {
@@ -37,29 +35,36 @@ void Event::Handle(Entity* e) { e->Handle(this); }
 
 string Event::Description() { return "base event"; }
 
-SwitchUp::SwitchUp(Time t, Switch* r) : Event(t, r) {}
+Up::Up(Time t, Entity* r) : Event(t, r) {}
 
-void SwitchUp::Handle(Entity* e) { e->Handle(this); }
+void Up::Handle(Entity* e) { e->Handle(this); }
 
-string SwitchUp::Description() { return "switch up"; }
+string Up::Description() { return "up"; }
 
-SwitchDown::SwitchDown(Time t, Switch* r) : Event(t, r) {}
+Down::Down(Time t, Entity* r) : Event(t, r) {}
 
-void SwitchDown::Handle(Entity* e) { e->Handle(this); }
+void Down::Handle(Entity* e) { e->Handle(this); }
 
-string SwitchDown::Description() { return "switch down"; }
+string Down::Description() { return "down"; }
 
-Broadcast::Broadcast(Time t, const Switch* src, Entity* affected_entity,
-                     Port in, SequenceNum sn) :
-    Event(t, affected_entity), src_(src), in_port_(in), sn_(sn) {}
-
-SequenceNum Broadcast::sn() const { return sn_; }
-
-const Switch* Broadcast::src() const { return src_; }
+Broadcast::Broadcast(Time t, Entity* affected_entity, Port in):
+    Event(t, affected_entity), in_port_(in) {}
 
 Port Broadcast::in_port() const { return in_port_; }
 
-void Broadcast::Handle(Entity* e) {
+void Broadcast::Handle(Entity* e) { e->Handle(this); }
+
+string Broadcast::Description() { return "broadcast"; }
+
+Heartbeat::Heartbeat(Time t, const Switch* src, Entity* affected_entity, Port in,
+                     SequenceNum sn) : Broadcast(t, affected_entity, in),
+                                       src_(src), sn_(sn) {}
+
+SequenceNum Heartbeat::sn() const { return sn_; }
+
+const Switch* Heartbeat::src() const { return src_; }
+
+void Heartbeat::Handle(Entity* e) {
   cout << "Broadcast Event: sn=" << sn_;
   cout << " src=" << src_->id();
   cout << " in_port=" << in_port_;
@@ -67,4 +72,4 @@ void Broadcast::Handle(Entity* e) {
   e->Handle(this);
 }
 
-string Broadcast::Description() { return "broadcast"; }
+string Heartbeat::Description() { return "heartbeat"; }

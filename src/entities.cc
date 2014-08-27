@@ -7,6 +7,8 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+// TODO log handler methods
+
 Links::Links() : port_nums_(), port_to_link_() {}
 
 vector<Port>::const_iterator Links::PortsBegin() { return port_nums_.cbegin(); }
@@ -18,63 +20,43 @@ bool Links::IsLinkUp(Port p) { return port_to_link_[p].first; }
 Entity* Links::GetEndpoint(Port p) { return port_to_link_[p].second; }
 
 std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
-Links::LinksBegin() {
-  return port_to_link_.cbegin();
-}
+Links::LinksBegin() { return port_to_link_.cbegin(); }
 
 std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
-Links::LinksEnd() {
-  return port_to_link_.cend();
-}
+Links::LinksEnd() { return port_to_link_.cend(); }
 
-Entity::Entity(Scheduler& s) : links_(), scheduler_(s), id_(NONE_ID) {}
+Entity::Entity(Scheduler& s) : links_(), scheduler_(s), is_up_(true),
+                               id_(NONE_ID) {}
 
-Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), id_(id) {}
+Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), is_up_(true),
+                                      id_(id) {}
 
 void Entity::Handle(Event* e) {
   cout << "Entity received event " << e->Description() << endl;
 }
 
+void Entity::Handle(Up* u) { is_up_ = true; }
+
+void Entity::Handle(Down* d) { is_up_ = false; }
+
 void Entity::Handle(Broadcast* b) {
   cout << "Entity received event " << b->Description() << endl;
 }
 
-void Entity::Handle(SwitchUp* su) {
-  cout << "Entity received event " << su->Description() << endl;
-}
-
-void Entity::Handle(SwitchDown* sd) {
-  cout << "Entity received event " << sd->Description() << endl;
+void Entity::Handle(Heartbeat* h) {
+  cout << "Entity received event " << h->Description() << endl;
 }
 
 Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }
 
-Switch::Switch(Scheduler& s) : Entity(s), is_up_(true) {}
+Switch::Switch(Scheduler& s) : Entity(s), seen() {}
 
-Switch::Switch(Scheduler& s, Id id) : Entity(s, id), is_up_(true) {}
+Switch::Switch(Scheduler& s, Id id) : Entity(s, id), seen() {}
 
-void Switch::Handle(Event* e) {
-  cout << "Switch received event " << e->Description() << endl;
-}
-
-void Switch::Handle(SwitchUp* e) {
-  cout << "Switch " << id_ << " received event " << e->Description() << endl;
-  is_up_ = true;
-}
-
-void Switch::Handle(SwitchDown* e) {
-  cout << "Switch " << id_ << " received event " << e->Description() << endl;
-  is_up_ = false;
-}
-
-BroadcastSwitch::BroadcastSwitch(Scheduler& s) : Switch(s), seen() {}
-
-BroadcastSwitch::BroadcastSwitch(Scheduler& s, Id id) : Switch(s, id), seen() {}
-
-void BroadcastSwitch::Handle(Broadcast* b) {
-  cout << "BroadcastSwitch " << id_ << " received Broadcast event";
+void Switch::Handle(Heartbeat* b) {
+  cout << "Switch " << id_ << " received Broadcast event";
 
   if(!is_up_) {
     cout << "\tdropped" << endl;
@@ -94,16 +76,16 @@ void BroadcastSwitch::Handle(Broadcast* b) {
   MarkAsSeen(b);
 }
 
-void BroadcastSwitch::MarkAsSeen(const Broadcast* b) {
+void Switch::MarkAsSeen(const Heartbeat* b) {
   // TODO this can throw an exception if seen's allocator fails.  Should I just
   // ignore this possibility?
   seen.insert(MakeMsgId(b));
 }
 
-bool BroadcastSwitch::HasBeenSeen(const Broadcast* b) const {
+bool Switch::HasBeenSeen(const Heartbeat* b) const {
   return seen.count(MakeMsgId(b)) > 0;
 }
 
-MsgId BroadcastSwitch::MakeMsgId(const Broadcast* b) {
+MsgId Switch::MakeMsgId(const Heartbeat* b) {
   return {b->sn(), b->src()};
 }
