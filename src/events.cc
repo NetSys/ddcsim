@@ -35,17 +35,29 @@ void Event::Handle(Entity* e) { e->Handle(this); }
 
 string Event::Description() { return "base event"; }
 
-Up::Up(Time t, Entity* r) : Event(t, r) {}
+Up::Up(Time t, Entity* e) : Event(t, e) {}
 
 void Up::Handle(Entity* e) { e->Handle(this); }
 
 string Up::Description() { return "up"; }
 
-Down::Down(Time t, Entity* r) : Event(t, r) {}
+Down::Down(Time t, Entity* e) : Event(t, e) {}
 
 void Down::Handle(Entity* e) { e->Handle(this); }
 
 string Down::Description() { return "down"; }
+
+LinkUp::LinkUp(Time t, Entity* e, Port p) : Event(t, e), broken(p) {}
+
+void LinkUp::Handle(Entity* e) { e->Handle(this); }
+
+string LinkUp::Description() { return "link up"; }
+
+LinkDown::LinkDown(Time t, Entity* e, Port p) : Event(t, e), broken(p) {}
+
+void LinkDown::Handle(Entity* e) { e->Handle(this); }
+
+string LinkDown::Description() { return "link down"; }
 
 Broadcast::Broadcast(Time t, Entity* affected_entity, Port in):
     Event(t, affected_entity), in_port_(in) {}

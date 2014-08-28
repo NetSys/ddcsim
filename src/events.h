@@ -63,6 +63,28 @@ class Down : public Event {
   DISALLOW_COPY_AND_ASSIGN(Down);
 };
 
+class LinkUp : public Event {
+ public:
+  LinkUp(Time, Entity*, Port);
+  virtual void Handle(Entity*);
+  virtual std::string Description();
+  const Port broken;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LinkUp);
+};
+
+class LinkDown : public Event {
+ public:
+  LinkDown(Time, Entity*, Port);
+  virtual void Handle(Entity*);
+  virtual std::string Description();
+  const Port broken;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LinkDown);
+};
+
 class Broadcast : public Event {
  public:
   Broadcast(Time, Entity*, Port);
@@ -71,7 +93,7 @@ class Broadcast : public Event {
   virtual std::string Description();
 
  protected:
-  Port in_port_;
+  const Port in_port_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Broadcast);
@@ -86,7 +108,7 @@ class Heartbeat : public Broadcast {
   virtual std::string Description();
 
  protected:
-  SequenceNum sn_;
+  const SequenceNum sn_;
   const Switch* src_; // TODO better to change to a ref?
 
  private:

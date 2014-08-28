@@ -8,6 +8,9 @@
 
 using std::vector;
 
+using std::cout;
+using std::endl;
+
 const Time Scheduler::kLinkLatency = 0.1;
 const Time Scheduler::kDefaultHeartbeatPeriod = 3;
 const Time Scheduler::kDefaultEndTime = 60;
