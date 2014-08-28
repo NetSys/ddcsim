@@ -15,9 +15,20 @@ vector<Port>::const_iterator Links::PortsBegin() { return port_nums_.cbegin(); }
 
 vector<Port>::const_iterator Links::PortsEnd() { return port_nums_.cend(); }
 
+void Links::SetLinkUp(Port p) { port_to_link_[p].first = true; }
+
+void Links::SetLinkDown(Port p) { port_to_link_[p].first = false; }
+
 bool Links::IsLinkUp(Port p) { return port_to_link_[p].first; }
 
 Entity* Links::GetEndpoint(Port p) { return port_to_link_[p].second; }
+
+Port Links::GetPortTo(Entity* endpoint) {
+  for(auto it = LinksBegin(); it != LinksEnd(); ++it)
+    if(it->second.second == endpoint)
+      return it->first;
+  return PORT_NOT_FOUND;
+}
 
 std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
 Links::LinksBegin() { return port_to_link_.cbegin(); }
@@ -47,6 +58,10 @@ void Entity::Handle(Heartbeat* h) {
   cout << "Entity received event " << h->Description() << endl;
 }
 
+void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->broken); }
+
+void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->broken); }
+
 Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }
@@ -74,6 +89,18 @@ void Switch::Handle(Heartbeat* b) {
       scheduler_.Forward(this, b, *it);
 
   MarkAsSeen(b);
+}
+
+void Switch::Handle(LinkUp* lu) {
+  Entity::Handle(lu);
+
+  // TODO broadcast out a Failure message
+}
+
+void Switch::Handle(LinkDown* ld) {
+  Entity::Handle(ld);
+
+  // TODO broadcast out a Failure message
 }
 
 void Switch::MarkAsSeen(const Heartbeat* b) {

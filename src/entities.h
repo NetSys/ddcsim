@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "common.h"
+#include "reader.h"
 #include "scheduler.h"
 
 class Entity; /* For Links */
@@ -16,6 +17,8 @@ class Switch; /* For MsgId's */
 class Event;
 class Up;
 class Down;
+class LinkUp;
+class LinkDown;
 class Broadcast;
 class Heartbeat;
 
@@ -47,13 +50,16 @@ class Links {
   // TODO return generic iterator rather than an interator to a vector
   std::vector<Port>::const_iterator PortsBegin();
   std::vector<Port>::const_iterator PortsEnd();
+  void SetLinkUp(Port);
+  void SetLinkDown(Port);
   // TODO Is using friend functions considered good style?
   template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out);
   template<class E> friend Port Scheduler::FindInPort(E* sender, Entity* receiver);
-
+  friend bool Reader::ParseEvents();
  private:
   bool IsLinkUp(Port);
   Entity* GetEndpoint(Port);
+  Port GetPortTo(Entity*);
   std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator LinksBegin();
   std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator LinksEnd();
   // TODO use Boost's iterator transformers to return an iterator to only keys
@@ -74,6 +80,8 @@ class Entity {
   virtual void Handle(Down*);
   virtual void Handle(Broadcast*);
   virtual void Handle(Heartbeat*);
+  virtual void Handle(LinkUp*);
+  virtual void Handle(LinkDown*);
   Links& links(); // TODO didn't want to do it...
   Id id() const;
 
@@ -92,6 +100,8 @@ class Switch : public Entity {
   Switch(Scheduler&);
   Switch(Scheduler&, Id);
   virtual void Handle(Heartbeat*);
+  virtual void Handle(LinkUp*);
+  virtual void Handle(LinkDown*);
 
  protected:
   void MarkAsSeen(const Heartbeat*);

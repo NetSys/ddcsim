@@ -31,7 +31,7 @@ private:
   bool IsDown(YAML::Node);
   bool IsLinkUp(YAML::Node);
   bool IsLinkDown(YAML::Node);
-  bool ParseLinks(YAML::Node);
+  bool ParseLinks(YAML::Node&&);
   std::string topo_file_path_;
   std::string event_file_path_;
   Scheduler& scheduler_;

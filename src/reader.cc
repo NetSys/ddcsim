@@ -22,27 +22,23 @@ Reader::Reader(std::string topo_file_path, std::string event_file_path,
                                scheduler_(s), id_to_entity_() {}
 
 bool Reader::IsEntity(Node n) {
-  return false; //TODO
+  return !n["type"].as<string>().compare("entity");
 }
 
 bool Reader::IsSwitch(Node n) {
-  return true; //TODO
+  return !n["type"].as<string>().compare("switch");
 }
 
 bool Reader::ParseEntities(Node raw_entities) {
-  Id id;
-  Node typ;
-
   // TODO error handling
   // TODO hoist raw_entities.end out of loop?
   for(auto it = raw_entities.begin(); it != raw_entities.end(); ++it) {
+    Node n = *it;
+    Id id = n["id"].as<Id>();
 
-    typ = ((*it)["type"]);
-    id = ((*it)["id"]).as<Id>();
-
-    if(IsSwitch(typ)) {
+    if(IsSwitch(n)) {
       id_to_entity_.insert({id, new Switch(scheduler_, id)});
-    } else if(IsEntity(typ)) {
+    } else if(IsEntity(n)) {
       id_to_entity_.insert({id, new Entity(scheduler_, id)});
     } else {
       /* Error out quickly */
@@ -56,7 +52,7 @@ bool Reader::ParseEntities(Node raw_entities) {
 }
 
 
-bool Reader::ParseLinks(Node raw_links) {
+bool Reader::ParseLinks(Node&& raw_links) {
   Id src_id;
   Entity* src_ent;
   vector<Id> dst_ids;
@@ -106,11 +102,11 @@ bool Reader::IsDown(YAML::Node n) {
 }
 
 bool Reader::IsLinkUp(YAML::Node n) {
-  return false; // TODO
+  return !n["type"].as<string>().compare("linkup");
 }
 
 bool Reader::IsLinkDown(YAML::Node n) {
-  return false; //TODO
+  return !n["type"].as<string>().compare("linkdown");
 }
 
 bool Reader::ParseEvents() {
@@ -141,7 +137,19 @@ bool Reader::ParseEvents() {
                                    static_cast<Switch*>
                                    (id_to_entity_[affected_id])));
     } else if(IsLinkUp(ev)) {
+      affected_id = it->second["src_id"].as<Id>();
+      Entity* src = id_to_entity_[affected_id];
+      Entity* dst = id_to_entity_[it->second["dst_id"].as<Id>()];
+      Port p = src->links().GetPortTo(dst);
+      assert(p != PORT_NOT_FOUND);
+      scheduler_.AddEvent(new LinkUp(t, src, p));
     } else if(IsLinkDown(ev)) {
+      affected_id = it->second["src_id"].as<Id>();
+      Entity* src = id_to_entity_[affected_id];
+      Entity* dst = id_to_entity_[it->second["dst_id"].as<Id>()];
+      Port p = src->links().GetPortTo(dst);
+      assert(p != PORT_NOT_FOUND);
+      scheduler_.AddEvent(new LinkDown(t, src, p));
     } else {
       /* Error out quickly */
       cout << "[error]Reader::ParseEvents: Iterated over unrecognizable event";
