@@ -13,7 +13,6 @@
 #include "scheduler.h"
 
 class Entity; /* For Links */
-class Switch; /* For MsgId's */
 class Event;
 class Up;
 class Down;
@@ -21,20 +20,55 @@ class LinkUp;
 class LinkDown;
 class Broadcast;
 class Heartbeat;
+class LinkAlert;
 
-// TODO move into Switch
-// TODO represent as class instead?
-typedef std::pair<SequenceNum, const Switch*> MsgId;
-
-/* Specialize the standard hash function for MsgId's */
+/* Specialize the standard hash function for HeartbeatId's and LinkId's*/
 namespace std {
-template<> struct hash<MsgId> {
-  size_t operator()(const MsgId& id) const {
+template<> struct hash<pair<unsigned int, const Entity*>> {
+  size_t operator()(const pair<unsigned int, const Entity*>& id) const {
+    return hash<unsigned int>()(id.first) ^
+        hash<uint64_t>()(reinterpret_cast<uint64_t>(id.second));
+  }
+};
+template<> struct hash<pair<int, const Entity*>> {
+  size_t operator()(const pair<int, const Entity*>& id) const {
     return hash<unsigned int>()(id.first) ^
         hash<uint64_t>()(reinterpret_cast<uint64_t>(id.second));
   }
 };
 }
+
+// TODO move into entity?
+class HeartbeatHistory {
+ public:
+  HeartbeatHistory();
+  void MarkAsSeen(const Heartbeat*);
+  bool HasBeenSeen(const Heartbeat*) const;
+
+ private:
+  typedef std::pair<SequenceNum, const Entity*> HeartbeatId;
+  // TODO what does the style guide say about static methods?
+  static HeartbeatId MakeHeartbeatId(const Heartbeat* b);
+  std::unordered_set<HeartbeatId> seen_;
+  DISALLOW_COPY_AND_ASSIGN(HeartbeatHistory);
+};
+
+// TODO combine HeartbeatHistory and LinkHistory
+
+class LinkFailureHistory {
+ public:
+  LinkFailureHistory();
+  bool LinkIsUp(const LinkAlert*) const;
+  void MarkAsDown(const LinkAlert*);
+  bool MarkAsUp(const LinkAlert*);
+
+ private:
+  typedef std::pair<Port, const Entity*> LinkId;
+  // TODO what does the style guide say about static methods?
+  static LinkId MakeLinkId(const LinkAlert* b);
+  std::unordered_set<LinkId> failures_;
+  DISALLOW_COPY_AND_ASSIGN(LinkFailureHistory);
+};
 
 class Links {
  public:
@@ -52,14 +86,13 @@ class Links {
   std::vector<Port>::const_iterator PortsEnd();
   void SetLinkUp(Port);
   void SetLinkDown(Port);
-  // TODO Is using friend functions considered good style?
   template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out);
-  template<class E> friend Port Scheduler::FindInPort(E* sender, Entity* receiver);
   friend bool Reader::ParseEvents();
  private:
   bool IsLinkUp(Port);
   Entity* GetEndpoint(Port);
   Port GetPortTo(Entity*);
+  Port FindInPort(Entity*);
   std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator LinksBegin();
   std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator LinksEnd();
   // TODO use Boost's iterator transformers to return an iterator to only keys
@@ -82,10 +115,12 @@ class Entity {
   virtual void Handle(Heartbeat*);
   virtual void Handle(LinkUp*);
   virtual void Handle(LinkDown*);
+  virtual void Handle(LinkAlert*);
   Links& links(); // TODO didn't want to do it...
   Id id() const;
 
  protected:
+  HeartbeatHistory heart_history_;
   Links links_;
   Scheduler& scheduler_;
   Id id_;
@@ -99,19 +134,21 @@ class Switch : public Entity {
  public:
   Switch(Scheduler&);
   Switch(Scheduler&, Id);
-  virtual void Handle(Heartbeat*);
-  virtual void Handle(LinkUp*);
-  virtual void Handle(LinkDown*);
-
- protected:
-  void MarkAsSeen(const Heartbeat*);
-  bool HasBeenSeen(const Heartbeat*) const;
-  // TODO what does the style guide say about static methods?
-  static MsgId MakeMsgId(const Heartbeat*);
-  std::unordered_set<MsgId> seen;
+  void Handle(LinkAlert*);
 
  private:
+  LinkFailureHistory link_history_;
   DISALLOW_COPY_AND_ASSIGN(Switch);
+};
+
+class Controller : public Entity {
+ public:
+  Controller(Scheduler&);
+  Controller(Scheduler&, Id);
+  void Handle(LinkAlert*);
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(Controller);
 };
 
 #endif

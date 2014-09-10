@@ -68,7 +68,7 @@ class LinkUp : public Event {
   LinkUp(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description();
-  const Port broken;
+  const Port out_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkUp);
@@ -79,7 +79,7 @@ class LinkDown : public Event {
   LinkDown(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description();
-  const Port broken;
+  const Port out_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkDown);
@@ -101,18 +101,31 @@ class Broadcast : public Event {
 
 class Heartbeat : public Broadcast {
  public:
-  Heartbeat(Time, const Switch*, Entity*, Port, SequenceNum);
+  Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum);
   SequenceNum sn() const;
-  const Switch* src() const;
+  const Entity* src() const;
   virtual void Handle(Entity*);
   virtual std::string Description();
 
  protected:
   const SequenceNum sn_;
-  const Switch* src_; // TODO better to change to a ref?
+  const Entity* src_; // TODO better to change to a ref?
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Heartbeat);
+};
+
+class LinkAlert : public Broadcast {
+ public:
+  LinkAlert(Time, Entity*, Port, const Entity*, Port, bool);
+  virtual void Handle(Entity*);
+  virtual std::string Description();
+  const Entity* src_;
+  const Port out_;
+  const bool is_up_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LinkAlert);
 };
 
 #endif

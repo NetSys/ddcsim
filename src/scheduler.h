@@ -32,14 +32,8 @@ class Scheduler {
   void AddEvent(Event*);
   // TODO more descriptive template type names? what is the convention?
   template<class E, class M> void Forward(E* sender, M* msg_in, Port out);
-  template<class E> Port FindInPort(E* sender, Entity* receiver);
   void StartSimulation();
   Time end_time();
-  /*
-  static const Time kLinkLatency = 5;
-  static const Time kDefaultHeartbeatPeriod = 3;
-  static const Time kDefaultEndTime = 100;
-  */
   static const Time kLinkLatency;
   static const Time kDefaultHeartbeatPeriod;
   static const Time kDefaultEndTime;

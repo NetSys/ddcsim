@@ -44,6 +44,12 @@ template<> Heartbeat* Scheduler::Schedule(Heartbeat* heartbeat_in,
                        heartbeat_in->src(), receiver, in, heartbeat_in->sn());
 }
 
+template<> LinkAlert* Scheduler::Schedule(LinkAlert* alert_in,
+                                          Entity* receiver, Port in) {
+  return new LinkAlert(alert_in->time() + kLinkLatency, receiver, in,
+                       alert_in->src_, alert_in->out_, alert_in->is_up_);
+}
+
 template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out) {
   Links& l = sender->links();
 
@@ -51,7 +57,7 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
 
   Entity* receiver = l.GetEndpoint(out);
 
-  Port in = FindInPort(sender, receiver);
+  Port in = receiver->links().FindInPort(sender);
   assert(in != PORT_NOT_FOUND);
 
   M* new_event = Schedule(msg_in, receiver, in);
@@ -76,16 +82,8 @@ void Scheduler::StartSimulation() {
 
 Time Scheduler::end_time() { return end_time_; }
 
-template<class E> Port Scheduler::FindInPort(E* sender, Entity* receiver) {
-  Links& l = receiver->links();
-  for(auto it = l.LinksBegin(); it != l.LinksEnd(); ++it)
-    if(sender == it->second.second)
-      return it->first;
-  return PORT_NOT_FOUND;
-}
-
-/* TODO explain why we need to oblige the compiler to instantiate these
- * here methods
+/* TODO explain why we need to oblige the compiler to instantiate this templated
+ * method explicity
  */
-template void Scheduler::Forward<Switch, Heartbeat>(Switch*, Heartbeat*, Port);
-template Port Scheduler::FindInPort<Switch>(Switch*, Entity*);
+template void Scheduler::Forward<Entity, Heartbeat>(Entity*, Heartbeat*, Port);
+template void Scheduler::Forward<Switch, LinkAlert>(Switch*, LinkAlert*, Port);

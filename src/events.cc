@@ -47,13 +47,13 @@ void Down::Handle(Entity* e) { e->Handle(this); }
 
 string Down::Description() { return "down"; }
 
-LinkUp::LinkUp(Time t, Entity* e, Port p) : Event(t, e), broken(p) {}
+LinkUp::LinkUp(Time t, Entity* e, Port p) : Event(t, e), out_(p) {}
 
 void LinkUp::Handle(Entity* e) { e->Handle(this); }
 
 string LinkUp::Description() { return "link up"; }
 
-LinkDown::LinkDown(Time t, Entity* e, Port p) : Event(t, e), broken(p) {}
+LinkDown::LinkDown(Time t, Entity* e, Port p) : Event(t, e), out_(p) {}
 
 void LinkDown::Handle(Entity* e) { e->Handle(this); }
 
@@ -68,20 +68,21 @@ void Broadcast::Handle(Entity* e) { e->Handle(this); }
 
 string Broadcast::Description() { return "broadcast"; }
 
-Heartbeat::Heartbeat(Time t, const Switch* src, Entity* affected_entity, Port in,
+Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity, Port in,
                      SequenceNum sn) : Broadcast(t, affected_entity, in),
                                        src_(src), sn_(sn) {}
 
 SequenceNum Heartbeat::sn() const { return sn_; }
 
-const Switch* Heartbeat::src() const { return src_; }
+const Entity* Heartbeat::src() const { return src_; }
 
-void Heartbeat::Handle(Entity* e) {
-  cout << "Broadcast Event: sn=" << sn_;
-  cout << " src=" << src_->id();
-  cout << " in_port=" << in_port_;
-  cout << " t=" << time_ << endl;
-  e->Handle(this);
-}
+void Heartbeat::Handle(Entity* e) { e->Handle(this); }
 
 string Heartbeat::Description() { return "heartbeat"; }
+
+LinkAlert::LinkAlert(Time t, Entity* e, Port i, const Entity* s, Port p, bool b)
+    : Broadcast(t, e, i), src_(s), out_(p), is_up_(b) {}
+
+void LinkAlert::Handle(Entity* e) { e->Handle(this); }
+
+string LinkAlert::Description() { return "link alert"; }

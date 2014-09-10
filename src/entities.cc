@@ -6,8 +6,43 @@
 using std::cout;
 using std::endl;
 using std::vector;
+using std::pair;
 
 // TODO log handler methods
+
+HeartbeatHistory::HeartbeatHistory() : seen_() {}
+
+void HeartbeatHistory::MarkAsSeen(const Heartbeat* b) {
+  // TODO this can throw an exception if seen's allocator fails.  Should I just
+  // ignore this possibility?
+  seen_.insert(MakeHeartbeatId(b));
+}
+
+bool HeartbeatHistory::HasBeenSeen(const Heartbeat* b) const {
+  return seen_.count(MakeHeartbeatId(b)) > 0;
+}
+
+HeartbeatHistory::HeartbeatId HeartbeatHistory::MakeHeartbeatId(const Heartbeat* b) {
+  return {b->sn(), b->src()};
+}
+
+LinkFailureHistory::LinkFailureHistory() : failures_() {}
+
+bool LinkFailureHistory::LinkIsUp(const LinkAlert* l) const {
+  return failures_.count(MakeLinkId(l)) <= 0;
+}
+
+void LinkFailureHistory::MarkAsDown(const LinkAlert* l) {
+  failures_.insert(MakeLinkId(l));
+}
+
+bool LinkFailureHistory::MarkAsUp(const LinkAlert* l) {
+  failures_.erase(MakeLinkId(l));
+}
+
+LinkFailureHistory::LinkId LinkFailureHistory::MakeLinkId(const LinkAlert* l) {
+  return {l->out_, l->src_};
+}
 
 Links::Links() : port_nums_(), port_to_link_() {}
 
@@ -30,6 +65,13 @@ Port Links::GetPortTo(Entity* endpoint) {
   return PORT_NOT_FOUND;
 }
 
+Port Links::FindInPort(Entity* sender) {
+  for(auto it = LinksBegin(); it != LinksEnd(); ++it)
+    if(sender == it->second.second)
+      return it->first;
+  return PORT_NOT_FOUND;
+}
+
 std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
 Links::LinksBegin() { return port_to_link_.cbegin(); }
 
@@ -37,10 +79,10 @@ std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
 Links::LinksEnd() { return port_to_link_.cend(); }
 
 Entity::Entity(Scheduler& s) : links_(), scheduler_(s), is_up_(true),
-                               id_(NONE_ID) {}
+                               id_(NONE_ID), heart_history_() {}
 
 Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), is_up_(true),
-                                      id_(id) {}
+                                      id_(id), heart_history_() {}
 
 void Entity::Handle(Event* e) {
   cout << "Entity received event " << e->Description() << endl;
@@ -55,64 +97,50 @@ void Entity::Handle(Broadcast* b) {
 }
 
 void Entity::Handle(Heartbeat* h) {
-  cout << "Entity received event " << h->Description() << endl;
+  if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
+
+  // TODO how to factor out to Entity::Handle?
+  for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
+    if(h->in_port() != *it)
+      scheduler_.Forward(this, h, *it);
+
+  heart_history_.MarkAsSeen(h);
 }
 
-void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->broken); }
+void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->out_); }
 
-void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->broken); }
+void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->out_); }
+
+void Entity::Handle(LinkAlert* alert) {
+  cout << "Entity received event " << alert->Description() << endl;
+}
 
 Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }
 
-Switch::Switch(Scheduler& s) : Entity(s), seen() {}
+Switch::Switch(Scheduler& s) : Entity(s), link_history_() {}
 
-Switch::Switch(Scheduler& s, Id id) : Entity(s, id), seen() {}
+Switch::Switch(Scheduler& s, Id id) : Entity(s, id), link_history_() {}
 
-void Switch::Handle(Heartbeat* b) {
-  cout << "Switch " << id_ << " received Broadcast event";
+void Switch::Handle(LinkAlert* alert) {
+  if(!is_up_) return;
 
-  if(!is_up_) {
-    cout << "\tdropped" << endl;
-    return;
-  }
-
-  if (HasBeenSeen(b)) {
-    cout << "\tseen" << endl;
-    return;
-  }
-  cout << endl;
+  if(! (alert->is_up_ ^ link_history_.LinkIsUp(alert))) return;
 
   for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
-    if(b->in_port() != *it)
-      scheduler_.Forward(this, b, *it);
+    if(alert->in_port() != *it)
+      scheduler_.Forward(this, alert, *it);
 
-  MarkAsSeen(b);
+  if(alert->is_up_)
+    link_history_.MarkAsUp(alert);
+  else
+    link_history_.MarkAsDown(alert);
 }
 
-void Switch::Handle(LinkUp* lu) {
-  Entity::Handle(lu);
+Controller::Controller(Scheduler& s) : Entity(s) {}
 
-  // TODO broadcast out a Failure message
-}
+Controller::Controller(Scheduler& s, Id id) : Entity(s, id) {}
 
-void Switch::Handle(LinkDown* ld) {
-  Entity::Handle(ld);
-
-  // TODO broadcast out a Failure message
-}
-
-void Switch::MarkAsSeen(const Heartbeat* b) {
-  // TODO this can throw an exception if seen's allocator fails.  Should I just
-  // ignore this possibility?
-  seen.insert(MakeMsgId(b));
-}
-
-bool Switch::HasBeenSeen(const Heartbeat* b) const {
-  return seen.count(MakeMsgId(b)) > 0;
-}
-
-MsgId Switch::MakeMsgId(const Heartbeat* b) {
-  return {b->sn(), b->src()};
+void Controller::Handle(LinkAlert* alert) {
 }
