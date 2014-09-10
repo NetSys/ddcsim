@@ -115,6 +115,10 @@ void Entity::Handle(LinkAlert* alert) {
   cout << "Entity received event " << alert->Description() << endl;
 }
 
+void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->broken); }
+
+void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->broken); }
+
 Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }

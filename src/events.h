@@ -109,7 +109,11 @@ class Heartbeat : public Broadcast {
 
  protected:
   const SequenceNum sn_;
+<<<<<<< HEAD
   const Entity* src_; // TODO better to change to a ref?
+=======
+  const Switch* src_; // TODO better to change to a ref?
+>>>>>>> 2adf76e0d831882e1b1b5564dd4ba932dfca6d90
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Heartbeat);
