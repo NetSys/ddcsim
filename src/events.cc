@@ -59,7 +59,14 @@ void LinkDown::Handle(Entity* e) { e->Handle(this); }
 
 string LinkDown::Description() { return "link down"; }
 
-Broadcast::Broadcast(Time t, Entity* affected_entity, Port in):
+InitiateHeartbeat::InitiateHeartbeat(Time t, Entity* affected_entity) :
+    Event(t, affected_entity) {}
+
+void InitiateHeartbeat::Handle(Entity* e) { return e->Handle(this); }
+
+string InitiateHeartbeat::Description() { return "initiate heartbeat"; }
+
+Broadcast::Broadcast(Time t, Entity* affected_entity, Port in) :
     Event(t, affected_entity), in_port_(in) {}
 
 Port Broadcast::in_port() const { return in_port_; }
@@ -68,13 +75,16 @@ void Broadcast::Handle(Entity* e) { e->Handle(this); }
 
 string Broadcast::Description() { return "broadcast"; }
 
-Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity, Port in,
-                     SequenceNum sn) : Broadcast(t, affected_entity, in),
-                                       src_(src), sn_(sn) {}
+Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity,
+                     Port in, SequenceNum sn, vector<bool> r) :
+    Broadcast(t, affected_entity, in), src_(src), sn_(sn), recently_seen_(r),
+    leader_(NONE_ID), current_partition_(0) {}
 
 SequenceNum Heartbeat::sn() const { return sn_; }
 
 const Entity* Heartbeat::src() const { return src_; }
+
+vector<bool> Heartbeat::recently_seen() const { return recently_seen_; }
 
 void Heartbeat::Handle(Entity* e) { e->Handle(this); }
 

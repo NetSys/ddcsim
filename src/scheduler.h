@@ -33,18 +33,18 @@ class Scheduler {
   // TODO more descriptive template type names? what is the convention?
   template<class E, class M> void Forward(E* sender, M* msg_in, Port out);
   void StartSimulation();
+  Time cur_time();
   Time end_time();
+  static int kMaxEntities;
   static const Time kLinkLatency;
   static const Time kDefaultHeartbeatPeriod;
   static const Time kDefaultEndTime;
+  static const int kNoMaxEntities;
 
  private:
   bool HasNextEvent();
   Event* NextEvent();
-  /* Note that there is no actual implementation of the Schedule method for
-   * a generic type M.
-   */
-  template<class M> M* Schedule(M* msg_in, Entity* receiver, Port in);
+  Time cur_time_;
   Time end_time_;
   std::priority_queue<Event*, std::vector<Event*>, Comparator> event_queue_;
   DISALLOW_COPY_AND_ASSIGN(Scheduler);

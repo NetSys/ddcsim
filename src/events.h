@@ -85,6 +85,16 @@ class LinkDown : public Event {
   DISALLOW_COPY_AND_ASSIGN(LinkDown);
 };
 
+class InitiateHeartbeat : public Event {
+ public:
+  InitiateHeartbeat(Time, Entity*);
+  virtual void Handle(Entity*);
+  virtual std::string Description();
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(InitiateHeartbeat);
+};
+
 class Broadcast : public Event {
  public:
   Broadcast(Time, Entity*, Port);
@@ -101,15 +111,19 @@ class Broadcast : public Event {
 
 class Heartbeat : public Broadcast {
  public:
-  Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum);
+  Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum, std::vector<bool>);
   SequenceNum sn() const;
   const Entity* src() const;
+  std::vector<bool> recently_seen() const;
   virtual void Handle(Entity*);
   virtual std::string Description();
 
  protected:
   const SequenceNum sn_;
   const Entity* src_; // TODO better to change to a ref?
+  const std::vector<bool> recently_seen_;
+  unsigned int current_partition_;
+  Id leader_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Heartbeat);

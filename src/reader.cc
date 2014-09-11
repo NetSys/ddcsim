@@ -19,7 +19,8 @@ using namespace YAML;
 Reader::Reader(std::string topo_file_path, std::string event_file_path,
                Scheduler& s) : topo_file_path_(topo_file_path),
                                event_file_path_(event_file_path),
-                               scheduler_(s), id_to_entity_() {}
+                               scheduler_(s), id_to_entity_(),
+                               num_entities_(0) {}
 
 bool Reader::IsEntity(Node n) {
   return !n["type"].as<string>().compare("entity");
@@ -46,6 +47,8 @@ bool Reader::ParseEntities(Node raw_entities) {
       cout << " type" << endl;
       return false;
     }
+
+    num_entities_++;
   }
 
   return true;
@@ -164,3 +167,5 @@ bool Reader::ParseEvents() {
 std::unordered_map<Id, Entity*>& Reader::id_to_entity() {
   return id_to_entity_;
 }
+
+int Reader::num_entities() { return num_entities_; }

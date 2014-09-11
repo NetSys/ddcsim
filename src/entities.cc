@@ -12,14 +12,23 @@ using std::pair;
 
 HeartbeatHistory::HeartbeatHistory() : seen_() {}
 
-void HeartbeatHistory::MarkAsSeen(const Heartbeat* b) {
+void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   // TODO this can throw an exception if seen's allocator fails.  Should I just
   // ignore this possibility?
   seen_.insert(MakeHeartbeatId(b));
+  last_seen_.insert({b->src()->id(), time_seen});
 }
 
 bool HeartbeatHistory::HasBeenSeen(const Heartbeat* b) const {
   return seen_.count(MakeHeartbeatId(b)) > 0;
+}
+
+bool HeartbeatHistory::HasBeenSeen(Id id) const {
+  return last_seen_.count(id) > 0;
+}
+
+Time HeartbeatHistory::LastSeen(Id id) const {
+    return last_seen_.at(id);
 }
 
 HeartbeatHistory::HeartbeatId HeartbeatHistory::MakeHeartbeatId(const Heartbeat* b) {
@@ -79,10 +88,12 @@ std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
 Links::LinksEnd() { return port_to_link_.cend(); }
 
 Entity::Entity(Scheduler& s) : links_(), scheduler_(s), is_up_(true),
-                               id_(NONE_ID), heart_history_() {}
+                               id_(NONE_ID), heart_history_(),
+                               next_heartbeat_(0) {}
 
 Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), is_up_(true),
-                                      id_(id), heart_history_() {}
+                                      id_(id), heart_history_(),
+                                      next_heartbeat_(0) {}
 
 void Entity::Handle(Event* e) {
   cout << "Entity received event " << e->Description() << endl;
@@ -104,7 +115,7 @@ void Entity::Handle(Heartbeat* h) {
     if(h->in_port() != *it)
       scheduler_.Forward(this, h, *it);
 
-  heart_history_.MarkAsSeen(h);
+  heart_history_.MarkAsSeen(h, scheduler_.cur_time());
 }
 
 void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->out_); }
@@ -115,9 +126,34 @@ void Entity::Handle(LinkAlert* alert) {
   cout << "Entity received event " << alert->Description() << endl;
 }
 
+void Entity::Handle(InitiateHeartbeat* init) {
+  if(!is_up_) return;
+
+  for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
+    scheduler_.Forward(this, init, *it);
+
+  next_heartbeat_++;
+}
+
 Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }
+
+SequenceNum Entity::NextHeartbeatSeqNum() const { return next_heartbeat_; }
+
+// TODO how to avoid copying here?
+vector<bool> Entity::ComputeRecentlySeen() const {
+  vector<bool> recently_seen(false, Scheduler::kMaxEntities);
+
+  for(Id id = 0; id < Scheduler::kMaxEntities; ++id)
+    if(heart_history_.HasBeenSeen(id))
+      recently_seen[id] =
+          scheduler_.cur_time() - heart_history_.LastSeen(id) < kMaxRecent;
+
+  return recently_seen;
+}
+
+const Time Entity::kMaxRecent = 3;
 
 Switch::Switch(Scheduler& s) : Entity(s), link_history_() {}
 

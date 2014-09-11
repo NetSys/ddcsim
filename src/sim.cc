@@ -25,7 +25,7 @@ using po::notify;
 // TODO does Google have special conventions for out params?
 bool ParseArgs(int ac, char* av[], string& topo_file_path,
                string& event_file_path, Time& heartbeat_period,
-               Time& end_time) {
+               Time& end_time, int& max_entities) {
   options_description desc("Allowed options");
   desc.add_options()
       ("help",
@@ -42,7 +42,10 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
        "emit a heartbeat every heartbeat-period seconds")
       ("end-time,t",
        value<Time>(&end_time)->default_value(Scheduler::kDefaultEndTime),
-       "stop the simulation after end-time seconds have passed");
+       "stop the simulation after end-time seconds have passed")
+      ("max-entities,m",
+       value<int>(&max_entities)->default_value(Scheduler::kNoMaxEntities),
+       "the maximum number of entities that can exist at any point");
 
   positional_options_description p;
   p.add("topo", 1);
@@ -71,9 +74,10 @@ int main(int ac, char* av[]) {
   string event_file_path;
   Time heartbeat_period;
   Time end_time;
+  int max_entities;
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
-                              heartbeat_period, end_time);
+                              heartbeat_period, end_time, max_entities);
 
   if(!valid_args) return -1;
 
@@ -85,6 +89,10 @@ int main(int ac, char* av[]) {
 
   if(!valid_topology) return -1;
 
+  sched.kMaxEntities =
+      max_entities == Scheduler::kNoMaxEntities ?
+      in.num_entities() : max_entities;
+
   // TODO check that entities and links are correct by implementing print
   // functions for them
   bool valid_events = in.ParseEvents();
@@ -93,16 +101,11 @@ int main(int ac, char* av[]) {
 
   // TODO take into account routers and links going down
 
-  // TODO this is fucking disgusting and it will be removed...
-  for (Time t = 0; t < sched.end_time(); t+= heartbeat_period) {
+  // TODO this will be generalized
+  for (Time t = 0; t < sched.end_time(); t+= heartbeat_period)
     for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
-         ++it) {
-      sched.AddEvent(new Heartbeat(t, static_cast<Switch*>(it->second),
-                                   it->second,
-                                   INITIATING_EVENT,
-                                   t / heartbeat_period));
-    }
-  }
+         ++it)
+      sched.AddEvent(new InitiateHeartbeat(t, it->second));
 
   sched.StartSimulation();
 

@@ -21,6 +21,7 @@ class LinkDown;
 class Broadcast;
 class Heartbeat;
 class LinkAlert;
+class InitiateHeartbeat;
 
 /* Specialize the standard hash function for HeartbeatId's and LinkId's*/
 namespace std {
@@ -42,14 +43,20 @@ template<> struct hash<pair<int, const Entity*>> {
 class HeartbeatHistory {
  public:
   HeartbeatHistory();
-  void MarkAsSeen(const Heartbeat*);
+  void MarkAsSeen(const Heartbeat*, Time);
   bool HasBeenSeen(const Heartbeat*) const;
+  Time LastSeen(Id) const;
+  bool HasBeenSeen(Id) const;
 
  private:
+  // TODO combine the set and map?
+  // TODO make into a pair of sequence number and id?
   typedef std::pair<SequenceNum, const Entity*> HeartbeatId;
   // TODO what does the style guide say about static methods?
   static HeartbeatId MakeHeartbeatId(const Heartbeat* b);
   std::unordered_set<HeartbeatId> seen_;
+  // TODO make into array-type mapping for better efficiency?
+  std::unordered_map<Id, Time> last_seen_;
   DISALLOW_COPY_AND_ASSIGN(HeartbeatHistory);
 };
 
@@ -116,10 +123,15 @@ class Entity {
   virtual void Handle(LinkUp*);
   virtual void Handle(LinkDown*);
   virtual void Handle(LinkAlert*);
+  virtual void Handle(InitiateHeartbeat*);
   Links& links(); // TODO didn't want to do it...
   Id id() const;
+  SequenceNum NextHeartbeatSeqNum() const;
+  std::vector<bool> ComputeRecentlySeen() const;
+  static const Time kMaxRecent;  // TODO should be a commandline arg?
 
  protected:
+  SequenceNum next_heartbeat_;
   HeartbeatHistory heart_history_;
   Links links_;
   Scheduler& scheduler_;

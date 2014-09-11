@@ -1,4 +1,4 @@
 0.2:
-  {id: 3, type: down}
+  {id: 2, type: down}
 3:
-  {id: 3, type: up}
+  {id: 2, type: up}

@@ -4,14 +4,16 @@
 typedef double Time; /* Time has units of seconds */
 typedef unsigned int SequenceNum;
 typedef int Port;
-typedef std::string Id;
+typedef int Id;
 
 /* Special port numbers */
-#define INITIATING_EVENT -1
-#define PORT_NOT_FOUND -2
+const Port PORT_NOT_FOUND = -1;
 
 /* Special Id's */
-#define NONE_ID ""
+const Id NONE_ID = -1;
+
+/* Special times */
+const Time START_TIME = 0;
 
 #define DISALLOW_COPY_AND_ASSIGN(TypeName)      \
   TypeName(const TypeName&);                    \
