@@ -1,10 +1,21 @@
 #ifndef DDCSIM_EVENTS_H_
 #define DDCSIM_EVENTS_H_
 
-#include <vector>
+#include <iostream>
 #include <string>
+#include <vector>
 
 #include "common.h"
+
+// TODO do this with templates as we are essentially attempting to generate
+// a family of (overloaded) functions
+#define OVERLOAD_EVENT_OSTREAM_IMPL(event_type)                     \
+  ostream& operator<<(ostream& s, const event_type &e) {            \
+    return s << #event_type << " " << e.Description();              \
+  }                                                                 \
+
+#define OVERLOAD_EVENT_OSTREAM_DECL(event_type) \
+  std::ostream& operator<<(std::ostream&, const event_type &);
 
 class Entity;
 
@@ -31,7 +42,8 @@ class Event {
    * in order to implement double dispatch.
    */
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
 
  protected:
   Time time_;
@@ -46,7 +58,8 @@ class Up : public Event {
   Up(Time, Entity*);
   virtual void Handle(Entity*);
   // TODO is virtual here redundant?
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
 
  private:
   // TODO need disallow in derived classes?
@@ -57,7 +70,8 @@ class Down : public Event {
  public:
   Down(Time, Entity*);
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Down);
@@ -67,7 +81,8 @@ class LinkUp : public Event {
  public:
   LinkUp(Time, Entity*, Port);
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
   const Port out_;
 
  private:
@@ -78,7 +93,8 @@ class LinkDown : public Event {
  public:
   LinkDown(Time, Entity*, Port);
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
   const Port out_;
 
  private:
@@ -89,7 +105,8 @@ class InitiateHeartbeat : public Event {
  public:
   InitiateHeartbeat(Time, Entity*);
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(InitiateHeartbeat);
@@ -100,7 +117,8 @@ class Broadcast : public Event {
   Broadcast(Time, Entity*, Port);
   Port in_port() const;
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
 
  protected:
   const Port in_port_;
@@ -116,7 +134,8 @@ class Heartbeat : public Broadcast {
   const Entity* src() const;
   std::vector<bool> recently_seen() const;
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
 
  protected:
   const SequenceNum sn_;
@@ -133,7 +152,8 @@ class LinkAlert : public Broadcast {
  public:
   LinkAlert(Time, Entity*, Port, const Entity*, Port, bool);
   virtual void Handle(Entity*);
-  virtual std::string Description();
+  virtual std::string Description() const;
+  virtual std::string Name() const;
   const Entity* src_;
   const Port out_;
   const bool is_up_;
@@ -141,5 +161,15 @@ class LinkAlert : public Broadcast {
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkAlert);
 };
+
+OVERLOAD_EVENT_OSTREAM_DECL(Event)
+OVERLOAD_EVENT_OSTREAM_DECL(Up)
+OVERLOAD_EVENT_OSTREAM_DECL(Down)
+OVERLOAD_EVENT_OSTREAM_DECL(LinkUp)
+OVERLOAD_EVENT_OSTREAM_DECL(LinkDown)
+OVERLOAD_EVENT_OSTREAM_DECL(InitiateHeartbeat)
+OVERLOAD_EVENT_OSTREAM_DECL(Broadcast)
+OVERLOAD_EVENT_OSTREAM_DECL(Heartbeat)
+OVERLOAD_EVENT_OSTREAM_DECL(LinkAlert)
 
 #endif

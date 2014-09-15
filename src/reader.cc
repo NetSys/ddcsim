@@ -1,15 +1,14 @@
-#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
+
+#include <glog/logging.h>
 
 #include "scheduler.h"
 #include "reader.h"
 #include "entities.h"
 #include "events.h"
 
-using std::cout;
-using std::endl;
 using std::string;
 using std::vector;
 using namespace YAML;
@@ -22,12 +21,16 @@ Reader::Reader(std::string topo_file_path, std::string event_file_path,
                                scheduler_(s), id_to_entity_(),
                                num_entities_(0) {}
 
-bool Reader::IsEntity(Node n) {
+bool Reader::IsGenericEntity(Node n) {
   return !n["type"].as<string>().compare("entity");
 }
 
 bool Reader::IsSwitch(Node n) {
   return !n["type"].as<string>().compare("switch");
+}
+
+bool Reader::IsController(Node n) {
+  return !n["type"].as<string>().compare("controller");
 }
 
 bool Reader::ParseEntities(Node raw_entities) {
@@ -37,14 +40,15 @@ bool Reader::ParseEntities(Node raw_entities) {
     Node n = *it;
     Id id = n["id"].as<Id>();
 
-    if(IsSwitch(n)) {
+    if(IsController(n)) {
+      id_to_entity_.insert({id, new Controller(scheduler_, id)});
+    } else if(IsSwitch(n)) {
       id_to_entity_.insert({id, new Switch(scheduler_, id)});
-    } else if(IsEntity(n)) {
-      id_to_entity_.insert({id, new Entity(scheduler_, id)});
+    } else if(IsGenericEntity(n)) {
+      LOG(ERROR) << "Construction of generic entities is disallowed";
+      return false;
     } else {
-      /* Error out quickly */
-      cout << "[error]Reader::ParseEntities: Iterated over unrecognizable entity";
-      cout << " type" << endl;
+      LOG(ERROR) << "Iterated over unrecognizable entity type";
       return false;
     }
 
@@ -79,8 +83,7 @@ bool Reader::ParseTopology() {
   Node raw_topo(LoadFile(topo_file_path_));
 
   if(!raw_topo.IsMap()) {
-    cout << "[error]Reader::ParseTopology: Expected the top level structure";
-    cout << " of topology file to be a map" << endl;
+    LOG(FATAL) << "Expected the top level structure of topology file to be a map";
     return false;
   }
 
@@ -96,20 +99,40 @@ bool Reader::ParseTopology() {
   return true;
 }
 
-bool Reader::IsUp(YAML::Node n) {
+bool Reader::IsUp(Node n) {
   return !n["type"].as<string>().compare("up");
 }
 
-bool Reader::IsDown(YAML::Node n) {
+bool Reader::IsDown(Node n) {
   return !n["type"].as<string>().compare("down");
 }
 
-bool Reader::IsLinkUp(YAML::Node n) {
+bool Reader::IsLinkUp(Node n) {
   return !n["type"].as<string>().compare("linkup");
 }
 
-bool Reader::IsLinkDown(YAML::Node n) {
+bool Reader::IsLinkDown(Node n) {
   return !n["type"].as<string>().compare("linkdown");
+}
+
+bool Reader::IsGenericEvent(Node n) {
+  return !n["type"].as<string>().compare("event");
+}
+
+bool Reader::IsInitiateHeartbeat(Node n) {
+  return !n["type"].as<string>().compare("initiateheartbeat");
+}
+
+bool Reader::IsBroadcast(Node n) {
+  return !n["type"].as<string>().compare("broadcast");
+}
+
+bool Reader::IsHeartbeat(Node n) {
+  return !n["type"].as<string>().compare("heartbeat");
+}
+
+bool Reader::IsLinkAlert(Node n) {
+  return !n["type"].as<string>().compare("linkalert");
 }
 
 bool Reader::ParseEvents() {
@@ -153,10 +176,24 @@ bool Reader::ParseEvents() {
       Port p = src->links().GetPortTo(dst);
       assert(p != PORT_NOT_FOUND);
       scheduler_.AddEvent(new LinkDown(t, src, p));
+    } else if(IsGenericEvent(ev)) {
+      LOG(ERROR) << "Construction of generic events is disallowed";
+      return false;
+    } else if(IsInitiateHeartbeat(ev)) {
+      // TODO
+    } else if(IsBroadcast(ev)) {
+      LOG(ERROR) << "Construction of generic broadcasts is disallowed";
+      return false;
+    } else if(IsHeartbeat(ev)) {
+      LOG(ERROR) << "To explicitly initiate a heartbeat, "
+          "use the InitiateHeartbeat event";
+      return false;
+    } else if(IsLinkAlert(ev)) {
+      LOG(ERROR) << "Expliciti construction of link up/down events is disallowed"
+          ".  To inject link up/down events, use the events input.";
+      return false;
     } else {
-      /* Error out quickly */
-      cout << "[error]Reader::ParseEvents: Iterated over unrecognizable event";
-      cout << " type" << endl;
+      LOG(ERROR) << "Iterated over unrecognizable event type";
       return false;
     }
   }

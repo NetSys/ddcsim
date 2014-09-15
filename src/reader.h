@@ -25,13 +25,19 @@ public:
   int num_entities();
 
 private:
-  bool IsEntity(YAML::Node);
+  bool IsGenericEntity(YAML::Node);
   bool IsSwitch(YAML::Node);
+  bool IsController(YAML::Node);
   bool ParseEntities(YAML::Node); // TODO why isn't ref allowed?
   bool IsUp(YAML::Node);
   bool IsDown(YAML::Node);
   bool IsLinkUp(YAML::Node);
   bool IsLinkDown(YAML::Node);
+  bool IsGenericEvent(YAML::Node);
+  bool IsInitiateHeartbeat(YAML::Node);
+  bool IsBroadcast(YAML::Node);
+  bool IsHeartbeat(YAML::Node);
+  bool IsLinkAlert(YAML::Node);
   bool ParseLinks(YAML::Node&&);
   std::string topo_file_path_;
   std::string event_file_path_;

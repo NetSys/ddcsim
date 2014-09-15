@@ -95,6 +95,7 @@ class Links {
   void SetLinkDown(Port);
   template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out);
   friend bool Reader::ParseEvents();
+
  private:
   bool IsLinkUp(Port);
   Entity* GetEndpoint(Port);
@@ -115,14 +116,14 @@ class Entity {
   template<class Iterator> void InitLinks(Iterator first, Iterator last) {
     links_.Init(first, last);
   }
-  virtual void Handle(Event*);
+  virtual void Handle(Event*) = 0;
   virtual void Handle(Up*);
   virtual void Handle(Down*);
-  virtual void Handle(Broadcast*);
+  virtual void Handle(Broadcast*) = 0;
   virtual void Handle(Heartbeat*);
   virtual void Handle(LinkUp*);
   virtual void Handle(LinkDown*);
-  virtual void Handle(LinkAlert*);
+  virtual void Handle(LinkAlert*) = 0;
   virtual void Handle(InitiateHeartbeat*);
   Links& links(); // TODO didn't want to do it...
   Id id() const;
@@ -146,7 +147,15 @@ class Switch : public Entity {
  public:
   Switch(Scheduler&);
   Switch(Scheduler&, Id);
+  void Handle(Event*);
+  void Handle(Up*);
+  void Handle(Down*);
+  void Handle(Broadcast*);
+  void Handle(Heartbeat*);
+  void Handle(LinkUp*);
+  void Handle(LinkDown*);
   void Handle(LinkAlert*);
+  void Handle(InitiateHeartbeat*);
 
  private:
   LinkFailureHistory link_history_;
@@ -157,7 +166,15 @@ class Controller : public Entity {
  public:
   Controller(Scheduler&);
   Controller(Scheduler&, Id);
+  void Handle(Event*);
+  void Handle(Up*);
+  void Handle(Down*);
+  void Handle(Broadcast*);
+  void Handle(Heartbeat*);
+  void Handle(LinkUp*);
+  void Handle(LinkDown*);
   void Handle(LinkAlert*);
+  void Handle(InitiateHeartbeat*);
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Controller);

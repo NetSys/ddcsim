@@ -1,7 +1,7 @@
 #include <boost/program_options.hpp>
+#include <glog/logging.h>
 
 #include <string>
-#include <iostream>
 
 #include "common.h"
 #include "scheduler.h"
@@ -10,8 +10,6 @@
 #include "events.h"
 
 using std::string;
-using std::cout;
-using std::endl;
 using std::unordered_map;
 namespace po = boost::program_options;
 using po::options_description;
@@ -56,8 +54,7 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
   notify(vm);
 
   if (!vm.count("topo")) {
-    cout << "[error]sim.cc::ParseArgs: Path to file containing ";
-    cout << "network topology not specified" << endl;
+    LOG(FATAL) << "Path to file containing network topology ";
     return false;
   }
 
@@ -66,7 +63,13 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
 
 void DeleteEntities(unordered_map<Id, Entity*>& id_to_entity) {
   for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
-    free(it->second);
+    delete it->second;
+}
+
+void InitLogging(const char* argv0) {
+  google::InitGoogleLogging(argv0);
+  FLAGS_logtostderr = true;
+  FLAGS_log_prefix = false;
 }
 
 int main(int ac, char* av[]) {
@@ -75,6 +78,8 @@ int main(int ac, char* av[]) {
   Time heartbeat_period;
   Time end_time;
   int max_entities;
+
+  InitLogging(av[0]);
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
                               heartbeat_period, end_time, max_entities);
@@ -98,8 +103,6 @@ int main(int ac, char* av[]) {
   bool valid_events = in.ParseEvents();
 
   if(!valid_events) return -1;
-
-  // TODO take into account routers and links going down
 
   // TODO this will be generalized
   for (Time t = 0; t < sched.end_time(); t+= heartbeat_period)

@@ -1,15 +1,16 @@
 #include <assert.h>
-#include <iostream>
+#include <string>
 #include <utility>
+
+#include <glog/logging.h>
 
 #include "entities.h"
 #include "events.h"
 #include "scheduler.h"
 
+using std::string;
+using std::to_string;
 using std::vector;
-
-using std::cout;
-using std::endl;
 
 /* The type-specific parts of Scheduler::Forward are deferred to this class.
  * This functionality is implemented as a class rather than as a generic
@@ -18,11 +19,10 @@ using std::endl;
  */
 template<class E, class M> class Schedule {
  public:
-  Event* operator()(E* sender, M* msg_in, Entity* reciever, Port in) {
-    cout << "[error]Scheduler::operator(): Unsupporte operation" << endl;
-  }
+  Event* operator()(E* sender, M* msg_in, Entity* reciever, Port in);
 };
 
+// TODO should the scheduler create messages?
 template<> class Schedule<Entity, Heartbeat> {
  public:
   Event* operator()(Entity* sender, Heartbeat* heartbeat_in,
@@ -79,7 +79,6 @@ bool Scheduler::Comparator::operator() (const Event* const lhs,
   return lhs->time() > rhs->time();
 }
 
-// TODO should the scheduler create messages?
 // TODO why isn't partial specialization of methods allowed?
 template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out) {
   Links& l = sender->links();
@@ -94,7 +93,7 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
   Schedule<E, M> s;
   Event* new_event = s(sender, msg_in, receiver, in);
 
-  // todo stick in token bucket here
+  // TODO stick in token bucket here
 
   AddEvent(new_event);
 }
@@ -105,13 +104,17 @@ void Scheduler::StartSimulation() {
   while(HasNextEvent() && cur_time_ < end_time_) {
     Event* ev = NextEvent();
 
+    // TODO log event popping off queue?
+
     cur_time_ = ev->time();
 
+    LOG(INFO) << "clock = " << cur_time_ << " seconds";
+
     for (vector<Entity*>::iterator it = ev->AffectedEntitiesBegin();
-         it != ev->AffectedEntitiesEnd(); ++it) {
+         it != ev->AffectedEntitiesEnd(); ++it)
       ev->Handle(*it);
-      delete ev;
-    }
+
+    delete ev;
   }
 }
 
@@ -120,8 +123,8 @@ Time Scheduler::cur_time() { return cur_time_; }
 Time Scheduler::end_time() { return end_time_; }
 
 /* TODO explain why we need to oblige the compiler to instantiate this templated
- * method explicity
- */
+* method explicity
+*/
 template void Scheduler::Forward<Entity, Heartbeat>(Entity*, Heartbeat*, Port);
 template void Scheduler::Forward<Switch, LinkAlert>(Switch*, LinkAlert*, Port);
 template void Scheduler::Forward<Entity, InitiateHeartbeat>(Entity*,

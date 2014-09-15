@@ -1,14 +1,14 @@
 #include "entities.h"
 #include "events.h"
 
-#include <iostream>
+#include <glog/logging.h>
 
-using std::cout;
-using std::endl;
 using std::vector;
 using std::pair;
 
-// TODO log handler methods
+#define LOG_HANDLE(level, type, var)                                    \
+  LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":"; \
+  LOG(level) << var->Description();
 
 HeartbeatHistory::HeartbeatHistory() : seen_() {}
 
@@ -28,7 +28,7 @@ bool HeartbeatHistory::HasBeenSeen(Id id) const {
 }
 
 Time HeartbeatHistory::LastSeen(Id id) const {
-    return last_seen_.at(id);
+  return last_seen_.at(id);
 }
 
 HeartbeatHistory::HeartbeatId HeartbeatHistory::MakeHeartbeatId(const Heartbeat* b) {
@@ -95,22 +95,13 @@ Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), is_up_(true),
                                       id_(id), heart_history_(),
                                       next_heartbeat_(0) {}
 
-void Entity::Handle(Event* e) {
-  cout << "Entity received event " << e->Description() << endl;
-}
-
 void Entity::Handle(Up* u) { is_up_ = true; }
 
 void Entity::Handle(Down* d) { is_up_ = false; }
 
-void Entity::Handle(Broadcast* b) {
-  cout << "Entity received event " << b->Description() << endl;
-}
-
 void Entity::Handle(Heartbeat* h) {
   if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
 
-  // TODO how to factor out to Entity::Handle?
   for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
     if(h->in_port() != *it)
       scheduler_.Forward(this, h, *it);
@@ -121,10 +112,6 @@ void Entity::Handle(Heartbeat* h) {
 void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->out_); }
 
 void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->out_); }
-
-void Entity::Handle(LinkAlert* alert) {
-  cout << "Entity received event " << alert->Description() << endl;
-}
 
 void Entity::Handle(InitiateHeartbeat* init) {
   if(!is_up_) return;
@@ -143,7 +130,7 @@ SequenceNum Entity::NextHeartbeatSeqNum() const { return next_heartbeat_; }
 
 // TODO how to avoid copying here?
 vector<bool> Entity::ComputeRecentlySeen() const {
-  vector<bool> recently_seen(false, Scheduler::kMaxEntities);
+  vector<bool> recently_seen(Scheduler::kMaxEntities, false);
 
   for(Id id = 0; id < Scheduler::kMaxEntities; ++id)
     if(heart_history_.HasBeenSeen(id))
@@ -153,13 +140,49 @@ vector<bool> Entity::ComputeRecentlySeen() const {
   return recently_seen;
 }
 
-const Time Entity::kMaxRecent = 3;
+const Time Entity::kMaxRecent = 5;
 
 Switch::Switch(Scheduler& s) : Entity(s), link_history_() {}
 
 Switch::Switch(Scheduler& s, Id id) : Entity(s, id), link_history_() {}
 
+void Switch::Handle(Event* e) { LOG_HANDLE(ERROR, Switch, e) }
+
+void Switch::Handle(Up* u) {
+  LOG_HANDLE(INFO, Switch, u)
+
+  Entity::Handle(u);
+}
+
+void Switch::Handle(Down* d) {
+  LOG_HANDLE(INFO, Switch, d)
+
+  Entity::Handle(d);
+}
+
+void Switch::Handle(Broadcast* b) { LOG_HANDLE(ERROR, Switch, b); }
+
+void Switch::Handle(Heartbeat* h) {
+  LOG_HANDLE(INFO, Switch, h)
+
+  Entity::Handle(h);
+}
+
+void Switch::Handle(LinkUp* lu) {
+  LOG_HANDLE(INFO, Switch, lu)
+
+  Entity::Handle(lu);
+}
+
+void Switch::Handle(LinkDown* ld) {
+  LOG_HANDLE(INFO, Switch, ld)
+
+  Entity::Handle(ld);
+}
+
 void Switch::Handle(LinkAlert* alert) {
+  LOG_HANDLE(INFO, Switch, alert)
+
   if(!is_up_) return;
 
   if(! (alert->is_up_ ^ link_history_.LinkIsUp(alert))) return;
@@ -174,9 +197,56 @@ void Switch::Handle(LinkAlert* alert) {
     link_history_.MarkAsDown(alert);
 }
 
+void Switch::Handle(InitiateHeartbeat* init) {
+  LOG_HANDLE(INFO, Switch, init)
+
+  Entity::Handle(init);
+}
+
 Controller::Controller(Scheduler& s) : Entity(s) {}
 
 Controller::Controller(Scheduler& s, Id id) : Entity(s, id) {}
 
+void Controller::Handle(Event* e) { LOG_HANDLE(ERROR, Controller, e) }
+
+void Controller::Handle(Up* u) {
+  LOG_HANDLE(INFO, Controller, u)
+
+  Entity::Handle(u);
+}
+
+void Controller::Handle(Down* d) {
+  LOG_HANDLE(INFO, Controller, d)
+
+  Entity::Handle(d);
+}
+
+void Controller::Handle(Broadcast* b) { LOG_HANDLE(ERROR, Controller, b) }
+
+void Controller::Handle(Heartbeat* h) {
+  LOG_HANDLE(INFO, Controller, h)
+
+  Entity::Handle(h);
+}
+
+void Controller::Handle(LinkUp* lu) {
+  LOG_HANDLE(INFO, Controller, lu)
+
+  Entity::Handle(lu);
+}
+
+void Controller::Handle(LinkDown* ld) {
+  LOG_HANDLE(INFO, Controller, ld)
+
+  Entity::Handle(ld);
+}
+
 void Controller::Handle(LinkAlert* alert) {
+  LOG_HANDLE(INFO, Controller, alert);
+}
+
+void Controller::Handle(InitiateHeartbeat* init) {
+  LOG_HANDLE(INFO, Controller, init)
+
+  Entity::Handle(init);
 }
