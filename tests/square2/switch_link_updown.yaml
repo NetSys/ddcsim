@@ -1,0 +1,8 @@
+0.2:
+  {id: 2, type: down}
+3:
+  {id: 2, type: up}
+0.2:
+  {src_id: 0, dst_id: 3, type: linkdown}
+0.8:
+  {src_id: 0, dst_id: 3, type: linkup}
