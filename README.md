@@ -1,3 +1,3 @@
 ddcsim
 ======
-To build the project, you can simply execute "g++ -std=c++0x *.cc" in the src directory.  Makefile (and maybe a more elaborate directory structure) coming soon.
+To build the project, execute "make" from the root of the project (ie. ddcsim/).  Since I feel like I've already spent too much time on the build infrastructure and so don't want to learn how to write configure files, to alter the build process to work on your computer, you must modify a few variables in the top level Makefile.  This should be straightforward because they are clearly delimited in the file and have sane values.
