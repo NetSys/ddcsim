@@ -1,10 +1,7 @@
 SRCDIR=.
 SRCS=$(wildcard $(SRCDIR)/*.cc)
 OBJECTS=$(patsubst %.cc, %.o, $(SRCS))
-
-BOOST_ROOT=/usr/bin/boost_1_54_0/
-
-CXXFLAGS=$(OPTLVL) -std=c++0x -I $(BOOST_ROOT)
+CXXFLAGS=$(OPTLVL) -std=c++0x -I $(BOOSTHEADERS) -I $(YAMLHEADERS)
 
 all: $(OBJECTS)
 

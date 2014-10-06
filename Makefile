@@ -11,12 +11,14 @@
 OPTLVL=$(OPT)
 EXEFILE=pilosim
 GLOGLIB=/usr/local/lib/libglog.a
-PROGOPTSLIB=/usr/local/lib/libboost_program_options.a
+PROGOPTSLIB=~/Documents/pilo/boost_1_56_0/stage/lib/libboost_program_options.a
+BOOSTHEADERS=~/Documents/pilo/boost_1_56_0/
 # END
 
 CXX=g++
 LDLIBS=-lpthread
 STATICLIBS= $(GLOGLIB) $(PROGOPTSLIB)
+YAMLHEADERS=~/Documents/pilo/ddcsim/yaml-cpp-0.5.1/include/
 
 SUBDIRS=src yaml-cpp-0.5.1
 OPT=-O3
@@ -24,6 +26,8 @@ DBG=-O0 -g
 
 export OPTLVL
 export CXX
+export YAMLHEADERS
+export BOOSTHEADERS
 
 all: $(EXEFILE)
 

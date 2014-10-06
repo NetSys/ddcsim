@@ -1,7 +1,7 @@
 SRCDIR=src
 SRCS=$(wildcard $(SRCDIR)/*.cpp)
 OBJECTS=$(patsubst %.cpp, %.o, $(SRCS))
-CXXFLAGS=$(OPTLVL) -Wno-deprecated
+CXXFLAGS=$(OPTLVL) -Wno-deprecated -I $(BOOSTHEADERS) -I $(YAMLHEADERS)
 
 all: $(OBJECTS)
 
