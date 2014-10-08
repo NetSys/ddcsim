@@ -3,8 +3,11 @@
 
 #include <glog/logging.h>
 
-using std::vector;
+#include <algorithm>
+
+using std::min;
 using std::pair;
+using std::vector;
 
 #define LOG_HANDLE(level, type, var)                                    \
   LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":"; \
@@ -53,7 +56,8 @@ LinkFailureHistory::LinkId LinkFailureHistory::MakeLinkId(const LinkAlert* l) {
   return {l->out_, l->src_};
 }
 
-Links::Links() : port_nums_(), port_to_link_() {}
+Links::Links() : port_nums_(), port_to_link_(), port_to_size_(),
+                 bucket_capacity(UNINIT_SIZE), drain_rate(UNINIT_RATE) {}
 
 vector<Port>::const_iterator Links::PortsBegin() { return port_nums_.cbegin(); }
 
@@ -62,6 +66,22 @@ vector<Port>::const_iterator Links::PortsEnd() { return port_nums_.cend(); }
 void Links::SetLinkUp(Port p) { port_to_link_[p].first = true; }
 
 void Links::SetLinkDown(Port p) { port_to_link_[p].first = false; }
+
+void Links::UpdateCapacities(Time passed) {
+  /* Token buckets fill up at a rate of drain_rate bytes/sec so for each
+   * link, we need to add drain_rate * (cur_time_ - last_time) bytes to its
+   * bucket UNLESS it is already full.  Thus, we update each token bucket by
+   * size = min{ size + drain_rate * (cur_time_ - last_time), bucket_capacity }
+   */
+
+  for(auto it = port_to_size_.begin(); it != port_to_size_.end(); ++it)
+    it->second = min(static_cast<unsigned int>(bucket_capacity),
+                     static_cast<unsigned int>(it->second + drain_rate * passed));
+}
+
+const Size Links::kDefaultCapacity = 1 << 31;
+
+const Rate Links::kDefaultRate = 1 << 31;
 
 bool Links::IsLinkUp(Port p) { return port_to_link_[p].first; }
 
@@ -138,6 +158,10 @@ vector<bool> Entity::ComputeRecentlySeen() const {
           scheduler_.cur_time() - heart_history_.LastSeen(id) < kMaxRecent;
 
   return recently_seen;
+}
+
+void Entity::UpdateLinkCapacities(Time passed) {
+  links_.UpdateCapacities(passed);
 }
 
 const Time Entity::kMaxRecent = 5;

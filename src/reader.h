@@ -1,7 +1,6 @@
 #ifndef DDCSIM_READER_H_
 #define DDCSIM_READER_H_
 
-// TODO how does the compiler know where to find yaml-cpp/?
 #include "yaml-cpp/yaml.h"
 
 #include <string>
@@ -17,7 +16,7 @@ class Scheduler;
 class Reader {
 public:
   Reader(std::string, std::string, Scheduler&);
-  bool ParseTopology();
+  bool ParseTopology(Size, Rate);
   bool ParseEvents();
   // TODO take out type of iterator
   // TODO just make id_to_entity_ public?
@@ -38,7 +37,7 @@ private:
   bool IsBroadcast(YAML::Node);
   bool IsHeartbeat(YAML::Node);
   bool IsLinkAlert(YAML::Node);
-  bool ParseLinks(YAML::Node&&);
+  bool ParseLinks(YAML::Node&&, Size, Rate);
   std::string topo_file_path_;
   std::string event_file_path_;
   Scheduler& scheduler_;

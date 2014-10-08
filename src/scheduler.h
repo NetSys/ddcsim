@@ -2,6 +2,7 @@
 #define DDCSIM_SCHEDULER_H_
 
 #include <queue>
+#include <unordered_map>
 #include <vector>
 
 #include "common.h"
@@ -32,7 +33,7 @@ class Scheduler {
   void AddEvent(Event*);
   // TODO more descriptive template type names? what is the convention?
   template<class E, class M> void Forward(E* sender, M* msg_in, Port out);
-  void StartSimulation();
+  void StartSimulation(std::unordered_map<Id, Entity*>&);
   Time cur_time();
   Time end_time();
   static int kMaxEntities;

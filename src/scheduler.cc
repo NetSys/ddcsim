@@ -10,6 +10,7 @@
 
 using std::string;
 using std::to_string;
+using std::unordered_map;
 using std::vector;
 
 /* The type-specific parts of Scheduler::Forward are deferred to this class.
@@ -92,23 +93,38 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
 
   Schedule<E, M> s;
   Event* new_event = s(sender, msg_in, receiver, in);
+  Size sz = new_event->size();
 
-  // TODO stick in token bucket here
-
-  AddEvent(new_event);
+  // TODO push into links
+  if(sz > l.port_to_size_[out]) {
+    // TODO better drop message
+    LOG(INFO) << "Packet dropped due to insufficient link capacity";
+    delete new_event;
+  } else {
+    l.port_to_size_[out] -= sz;
+    AddEvent(new_event);
+  }
 }
 
-void Scheduler::StartSimulation() {
-  cur_time_ = START_TIME;
+// TODO do a better job of sharing the id_to_entity_ mapping between reader
+void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
+  Time last_time;
+
+  last_time = cur_time_ = START_TIME;
 
   while(HasNextEvent() && cur_time_ < end_time_) {
     Event* ev = NextEvent();
 
-    // TODO log event popping off queue?
-
+    last_time = cur_time_;
     cur_time_ = ev->time();
+    assert(cur_time_ >= last_time); // TODO change to google's logging statement
 
     LOG(INFO) << "clock = " << cur_time_ << " seconds";
+
+    // TODO put this functionality somewhere else?
+
+    for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
+      it->second->UpdateLinkCapacities(cur_time_ - last_time);
 
     for (vector<Entity*>::iterator it = ev->AffectedEntitiesBegin();
          it != ev->AffectedEntitiesEnd(); ++it)

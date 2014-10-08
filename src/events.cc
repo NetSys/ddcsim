@@ -60,6 +60,8 @@ string Event::Description() const {
 
 string Event::Name() const { return "Event"; }
 
+Size Event::size() const { return 0; }
+
 Up::Up(Time t, Entity* e) : Event(t, e) {}
 
 void Up::Handle(Entity* e) { e->Handle(this); }
@@ -118,6 +120,11 @@ string Broadcast::Description() const {
 
 string Broadcast::Name() const { return "Broadcast"; }
 
+Size Broadcast::size() const {
+  // TODO find realistic size
+  return 100;
+}
+
 Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity,
                      Port in, SequenceNum sn, vector<bool> r) :
     Broadcast(t, affected_entity, in), src_(src), sn_(sn), recently_seen_(r),
@@ -142,6 +149,8 @@ string Heartbeat::Description() const {
 
 string Heartbeat::Name() const { return "Heartbeat"; }
 
+Size Heartbeat::size() const { return Broadcast::size() + 50; }
+
 LinkAlert::LinkAlert(Time t, Entity* e, Port i, const Entity* s, Port p, bool b)
     : Broadcast(t, e, i), src_(s), out_(p), is_up_(b) {}
 
@@ -155,6 +164,8 @@ string LinkAlert::Description() const {
 }
 
 string LinkAlert::Name() const { return "Link Alert"; }
+
+Size LinkAlert::size() const { return Broadcast::size() + 50; }
 
 OVERLOAD_EVENT_OSTREAM_IMPL(Event)
 OVERLOAD_EVENT_OSTREAM_IMPL(Up)

@@ -44,6 +44,8 @@ class Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  // TODO remove this eventually and factor into a packettx superclass
+  virtual Size size() const;
 
  protected:
   Time time_;
@@ -119,6 +121,7 @@ class Broadcast : public Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual Size size() const;
 
  protected:
   const Port in_port_;
@@ -136,6 +139,7 @@ class Heartbeat : public Broadcast {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual Size size() const;
 
  protected:
   const SequenceNum sn_;
@@ -154,6 +158,7 @@ class LinkAlert : public Broadcast {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual Size size() const;
   const Entity* src_;
   const Port out_;
   const bool is_up_;

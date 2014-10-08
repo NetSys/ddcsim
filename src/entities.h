@@ -82,10 +82,14 @@ class Links {
   Links();
   // TODO what does the style guide say about a newline after the template?
   template<class Iterator> void Init(Iterator neighbors_begin,
-                                     Iterator neighbors_end) {
+                                     Iterator neighbors_end,
+                                     Size capacity, Rate drain) {
     for(Port p = 0; neighbors_begin != neighbors_end; ++neighbors_begin, ++p) {
       port_nums_.push_back(p);
       port_to_link_.insert({p, {true, *neighbors_begin}});
+      port_to_size_.insert({p, bucket_capacity});
+      bucket_capacity = capacity;
+      drain_rate = drain;
     }
   }
   // TODO return generic iterator rather than an interator to a vector
@@ -93,6 +97,11 @@ class Links {
   std::vector<Port>::const_iterator PortsEnd();
   void SetLinkUp(Port);
   void SetLinkDown(Port);
+  void UpdateCapacities(Time);
+  Size bucket_capacity;
+  Rate drain_rate;
+  static const Size kDefaultCapacity;
+  static const Rate kDefaultRate;
   template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out);
   friend bool Reader::ParseEvents();
 
@@ -106,6 +115,8 @@ class Links {
   // TODO use Boost's iterator transformers to return an iterator to only keys
   std::vector<Port> port_nums_;
   std::unordered_map<Port, std::pair<bool,Entity*> > port_to_link_;
+  // TODO combine port mappings
+  std::unordered_map<Port, Size> port_to_size_;
   DISALLOW_COPY_AND_ASSIGN(Links);
 };
 
@@ -113,8 +124,9 @@ class Entity {
  public:
   Entity(Scheduler&);
   Entity(Scheduler&, Id);
-  template<class Iterator> void InitLinks(Iterator first, Iterator last) {
-    links_.Init(first, last);
+  template<class Iterator> void InitLinks(Iterator first, Iterator last,
+                                          Size capacity, Rate rate) {
+    links_.Init(first, last, capacity, rate);
   }
   virtual void Handle(Event*) = 0;
   virtual void Handle(Up*);
@@ -129,6 +141,7 @@ class Entity {
   Id id() const;
   SequenceNum NextHeartbeatSeqNum() const;
   std::vector<bool> ComputeRecentlySeen() const;
+  void UpdateLinkCapacities(Time);
   static const Time kMaxRecent;  // TODO should be a commandline arg?
 
  protected:
