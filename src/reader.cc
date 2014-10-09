@@ -59,7 +59,7 @@ bool Reader::ParseEntities(Node raw_entities) {
 }
 
 bool Reader::ParseLinks(Node&& raw_links, Size bucket_capacity,
-                        Rate drain_rate) {
+                        Rate fill_rate) {
   Id src_id;
   Entity* src_ent;
   vector<Id> dst_ids;
@@ -75,12 +75,12 @@ bool Reader::ParseLinks(Node&& raw_links, Size bucket_capacity,
       dst_ents.push_back(id_to_entity_[*jt]);
     }
     src_ent->InitLinks(dst_ents.begin(), dst_ents.end(),
-                       bucket_capacity, drain_rate);
+                       bucket_capacity, fill_rate);
   }
   return true;
 }
 
-bool Reader::ParseTopology(Size bucket_capacity, Rate drain_rate) {
+bool Reader::ParseTopology(Size bucket_capacity, Rate fill_rate) {
   Node raw_topo(LoadFile(topo_file_path_));
 
   if(!raw_topo.IsMap()) {
@@ -93,7 +93,7 @@ bool Reader::ParseTopology(Size bucket_capacity, Rate drain_rate) {
 
   if(!valid_entities) return false;
 
-  bool valid_links = ParseLinks(raw_topo["links"], bucket_capacity, drain_rate);
+  bool valid_links = ParseLinks(raw_topo["links"], bucket_capacity, fill_rate);
 
   if(!valid_links) return false;
 

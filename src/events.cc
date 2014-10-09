@@ -121,7 +121,7 @@ string Broadcast::Description() const {
 string Broadcast::Name() const { return "Broadcast"; }
 
 Size Broadcast::size() const {
-  // TODO find realistic size
+  // TODO find realistic size automatically
   return 100;
 }
 

@@ -1,0 +1,7 @@
+entities:
+  - {id: 0, type: switch}
+  - {id: 1, type: switch}
+links:
+  0: [1]
+  1: [0]
+

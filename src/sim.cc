@@ -24,7 +24,7 @@ using po::notify;
 bool ParseArgs(int ac, char* av[], string& topo_file_path,
                string& event_file_path, Time& heartbeat_period,
                Time& end_time, int& max_entities,
-               Size& bucket_capacity, Rate& drain_rate) {
+               Size& bucket_capacity, Rate& fill_rate) {
   options_description desc("Allowed options");
   desc.add_options()
       ("help",
@@ -48,9 +48,9 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
       ("bucket-capacity,M",
        value<Size>(&bucket_capacity)->default_value(Links::kDefaultCapacity),
        "the size of the bucket in the token bucket scheme (in units of bytes)")
-      ("drain-rate,R",
-       value<Rate>(&drain_rate)->default_value(Links::kDefaultRate),
-       "the rate at which the token bucket drains (in units of bytes/sec)");
+      ("fill-rate,R",
+       value<Rate>(&fill_rate)->default_value(Links::kDefaultRate),
+       "the rate at which the token bucket fills up (in units of bytes/sec)");
 
   // TODO better names for the variables R and M
   // TODO add an uncapped option
@@ -89,13 +89,13 @@ int main(int ac, char* av[]) {
   Time end_time;
   int max_entities;
   Size bucket_capacity;
-  Rate drain_rate;
+  Rate fill_rate;
 
   InitLogging(av[0]);
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
                               heartbeat_period, end_time, max_entities,
-                              bucket_capacity, drain_rate);
+                              bucket_capacity, fill_rate);
 
   if(!valid_args) return -1;
 
@@ -103,7 +103,7 @@ int main(int ac, char* av[]) {
 
   Reader in(topo_file_path, event_file_path, sched);
 
-  bool valid_topology = in.ParseTopology(bucket_capacity, drain_rate);
+  bool valid_topology = in.ParseTopology(bucket_capacity, fill_rate);
 
   if(!valid_topology) return -1;
 

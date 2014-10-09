@@ -83,13 +83,14 @@ class Links {
   // TODO what does the style guide say about a newline after the template?
   template<class Iterator> void Init(Iterator neighbors_begin,
                                      Iterator neighbors_end,
-                                     Size capacity, Rate drain) {
+                                     Size capacity, Rate fill) {
     for(Port p = 0; neighbors_begin != neighbors_end; ++neighbors_begin, ++p) {
+      bucket_capacity = capacity;
+      fill_rate = fill;
+      
       port_nums_.push_back(p);
       port_to_link_.insert({p, {true, *neighbors_begin}});
       port_to_size_.insert({p, bucket_capacity});
-      bucket_capacity = capacity;
-      drain_rate = drain;
     }
   }
   // TODO return generic iterator rather than an interator to a vector
@@ -99,7 +100,7 @@ class Links {
   void SetLinkDown(Port);
   void UpdateCapacities(Time);
   Size bucket_capacity;
-  Rate drain_rate;
+  Rate fill_rate;
   static const Size kDefaultCapacity;
   static const Rate kDefaultRate;
   template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out);

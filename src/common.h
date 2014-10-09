@@ -5,8 +5,8 @@ typedef double Time; /* Time has units of seconds */
 typedef unsigned int SequenceNum;
 typedef int Port;
 typedef int Id;
-typedef unsigned int Size; /* Size has units of bytes */
-typedef unsigned int Rate; /* Rate has units of bytes per sec*/
+typedef double Size; /* Size has units of bytes */
+typedef double Rate; /* Rate has units of bytes per sec*/
 
 #define TEST 1
 
