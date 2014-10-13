@@ -3,10 +3,11 @@
 
 #include <glog/logging.h>
 
-#include <algorithm>
+#include <iostream>
 
-using std::min;
+using std::ofstream;
 using std::pair;
+using std::to_string;
 using std::vector;
 
 #define LOG_HANDLE(level, type, var)                                    \
@@ -56,73 +57,28 @@ LinkFailureHistory::LinkId LinkFailureHistory::MakeLinkId(const LinkAlert* l) {
   return {l->out_, l->src_};
 }
 
-// TODO how to push initilinks into constructor
-Links::Links() : port_nums_(), port_to_link_(), port_to_size_(),
-                 bucket_capacity(UNINIT_SIZE), fill_rate(UNINIT_RATE) {}
-
-vector<Port>::const_iterator Links::PortsBegin() { return port_nums_.cbegin(); }
-
-vector<Port>::const_iterator Links::PortsEnd() { return port_nums_.cend(); }
-
-void Links::SetLinkUp(Port p) { port_to_link_[p].first = true; }
-
-void Links::SetLinkDown(Port p) { port_to_link_[p].first = false; }
-
-void Links::UpdateCapacities(Time passed) {
-  /* Token buckets fill up at a rate of fill_rate bytes/sec so for each
-   * link, we need to add fill_rate * (cur_time_ - last_time) bytes to its
-   * bucket UNLESS it is already full.  Thus, we update each token bucket by
-   * size = min{ size + fill_rate * (cur_time_ - last_time), bucket_capacity }
-   */
-
-  for(auto it = port_to_size_.begin(); it != port_to_size_.end(); ++it)
-    // TODO having to cast to a double is bullshit
-    // why the fuck did I alias the type in the first place
-    it->second = min(static_cast<double>(bucket_capacity),
-                     static_cast<double>(it->second + fill_rate * passed));
-}
-
-const Size Links::kDefaultCapacity = 1 << 31;
-
-const Rate Links::kDefaultRate = 1 << 31;
-
-bool Links::IsLinkUp(Port p) { return port_to_link_[p].first; }
-
-Entity* Links::GetEndpoint(Port p) { return port_to_link_[p].second; }
-
-Port Links::GetPortTo(Entity* endpoint) {
-  for(auto it = LinksBegin(); it != LinksEnd(); ++it)
-    if(it->second.second == endpoint)
-      return it->first;
-  return PORT_NOT_FOUND;
-}
-
-Port Links::FindInPort(Entity* sender) {
-  for(auto it = LinksBegin(); it != LinksEnd(); ++it)
-    if(sender == it->second.second)
-      return it->first;
-  return PORT_NOT_FOUND;
-}
-
-std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
-Links::LinksBegin() { return port_to_link_.cbegin(); }
-
-std::unordered_map<Port, std::pair<bool,Entity*> >::const_iterator
-Links::LinksEnd() { return port_to_link_.cend(); }
-
+// TODO assume we always have unique IDs?
 Entity::Entity(Scheduler& s) : links_(), scheduler_(s), is_up_(true),
                                id_(NONE_ID), heart_history_(),
                                next_heartbeat_(0) {}
 
 Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), is_up_(true),
                                       id_(id), heart_history_(),
-                                      next_heartbeat_(0) {}
+                                      next_heartbeat_(0),
+                                      bandwidth_usage_log_() {
+  // TODO let user specify file name and location?
+  bandwidth_usage_log_.open("bandwidth_usage_" + to_string(id) + ".txt");
+}
+
+Entity::~Entity() { bandwidth_usage_log_.close(); }
 
 void Entity::Handle(Up* u) { is_up_ = true; }
 
 void Entity::Handle(Down* d) { is_up_ = false; }
 
 void Entity::Handle(Heartbeat* h) {
+  bandwidth_usage_log_ << h->time() << "," << h->size() << "\n";
+
   if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
 
   for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
