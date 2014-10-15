@@ -8,8 +8,6 @@ typedef int Id;
 typedef double Size; /* Size has units of bytes */
 typedef double Rate; /* Rate has units of bytes per sec*/
 
-#define TEST 1
-
 /* Special port numbers */
 const Port PORT_NOT_FOUND = -1;
 
@@ -19,14 +17,11 @@ const Id NONE_ID = -1;
 /* Special times */
 const Time START_TIME = 0;
 
-/* Special sizes */
-const Size UNINIT_SIZE = 0;
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  DISALLOW_COPY(TypeName); DISALLOW_ASSIGN(TypeName)
 
-/* Special rates */
-const Rate UNINIT_RATE = 0;
+#define DISALLOW_ASSIGN(TypeName) void operator=(const TypeName&)
 
-#define DISALLOW_COPY_AND_ASSIGN(TypeName)      \
-  TypeName(const TypeName&);                    \
-  void operator=(const TypeName&)
+#define DISALLOW_COPY(TypeName) TypeName(const TypeName&)
 
 #endif

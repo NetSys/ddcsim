@@ -81,9 +81,9 @@ void Entity::Handle(Heartbeat* h) {
 
   if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
 
-  for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
-    if(h->in_port() != *it)
-      scheduler_.Forward(this, h, *it);
+  for(Port p = 0; p < links_.PortCount(); ++p)
+    if(h->in_port() != p)
+      scheduler_.Forward(this, h, p);
 
   heart_history_.MarkAsSeen(h, scheduler_.cur_time());
 }
@@ -95,8 +95,8 @@ void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->out_); }
 void Entity::Handle(InitiateHeartbeat* init) {
   if(!is_up_) return;
 
-  for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
-    scheduler_.Forward(this, init, *it);
+  for(Port p = 0; p < links_.PortCount(); ++p)
+    scheduler_.Forward(this, init, p);
 
   next_heartbeat_++;
 }
@@ -170,9 +170,9 @@ void Switch::Handle(LinkAlert* alert) {
 
   if(! (alert->is_up_ ^ link_history_.LinkIsUp(alert))) return;
 
-  for(auto it = links_.PortsBegin(); it != links_.PortsEnd(); ++it)
-    if(alert->in_port() != *it)
-      scheduler_.Forward(this, alert, *it);
+  for(Port p = 0; p < links_.PortCount(); ++p)
+    if(alert->in_port() != p)
+      scheduler_.Forward(this, alert, p);
 
   if(alert->is_up_)
     link_history_.MarkAsUp(alert);

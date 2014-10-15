@@ -46,10 +46,10 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
        value<int>(&max_entities)->default_value(Scheduler::kNoMaxEntities),
        "the maximum number of entities that can exist at any point")
       ("bucket-capacity,M",
-       value<Size>(&bucket_capacity)->default_value(Links::kDefaultCapacity),
+       value<Size>(&bucket_capacity)->default_value(BandwidthMeter::kDefaultCapacity),
        "the size of the bucket in the token bucket scheme (in units of bytes)")
       ("fill-rate,R",
-       value<Rate>(&fill_rate)->default_value(Links::kDefaultRate),
+       value<Rate>(&fill_rate)->default_value(BandwidthMeter::kDefaultRate),
        "the rate at which the token bucket fills up (in units of bytes/sec)");
 
   // TODO better names for the variables R and M
