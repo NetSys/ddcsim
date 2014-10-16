@@ -4,10 +4,11 @@
 #include <string>
 
 #include "common.h"
-#include "scheduler.h"
-#include "reader.h"
 #include "entities.h"
 #include "events.h"
+#include "reader.h"
+#include "scheduler.h"
+#include "statistics.h"
 
 using std::string;
 using std::unordered_map;
@@ -103,7 +104,9 @@ int main(int ac, char* av[]) {
 
   Reader in(topo_file_path, event_file_path, sched);
 
-  bool valid_topology = in.ParseTopology(bucket_capacity, fill_rate);
+  Statistics stats(sched);
+
+  bool valid_topology = in.ParseTopology(bucket_capacity, fill_rate, stats);
 
   if(!valid_topology) return -1;
 
@@ -122,6 +125,8 @@ int main(int ac, char* av[]) {
     for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
          ++it)
       sched.AddEvent(new InitiateHeartbeat(t, it->second));
+
+  stats.Init();
 
   sched.StartSimulation(in.id_to_entity());
 

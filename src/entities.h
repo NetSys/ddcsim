@@ -1,7 +1,6 @@
 #ifndef DDCSIM_ROUTERS_H_
 #define DDCSIM_ROUTERS_H_
 
-#include <fstream>
 #include <iterator>
 #include <inttypes.h>
 #include <unordered_map>
@@ -21,6 +20,7 @@ class Broadcast;
 class Heartbeat;
 class LinkAlert;
 class InitiateHeartbeat;
+class Statistics;
 
 /* Specialize the standard hash function for HeartbeatId's and LinkId's*/
 namespace std {
@@ -79,8 +79,7 @@ class LinkFailureHistory {
 class Entity {
  public:
   Entity(Scheduler&);
-  Entity(Scheduler&, Id);
-  ~Entity();
+  Entity(Scheduler&, Id, Statistics&);
   template<class Iterator> void InitLinks(Iterator first, Iterator last,
                                           Size capacity, Rate rate) {
     links_.Init(first, last, capacity, rate);
@@ -108,7 +107,7 @@ class Entity {
   Scheduler& scheduler_;
   Id id_;
   bool is_up_;
-  std::ofstream bandwidth_usage_log_;
+  Statistics& stats_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Entity);
@@ -117,7 +116,7 @@ class Entity {
 class Switch : public Entity {
  public:
   Switch(Scheduler&);
-  Switch(Scheduler&, Id);
+  Switch(Scheduler&, Id, Statistics&);
   void Handle(Event*);
   void Handle(Up*);
   void Handle(Down*);
@@ -136,7 +135,7 @@ class Switch : public Entity {
 class Controller : public Entity {
  public:
   Controller(Scheduler&);
-  Controller(Scheduler&, Id);
+  Controller(Scheduler&, Id, Statistics&);
   void Handle(Event*);
   void Handle(Up*);
   void Handle(Down*);

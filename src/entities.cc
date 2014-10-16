@@ -1,13 +1,10 @@
 #include "entities.h"
 #include "events.h"
+#include "statistics.h"
 
 #include <glog/logging.h>
 
-#include <iostream>
-
-using std::ofstream;
 using std::pair;
-using std::to_string;
 using std::vector;
 
 #define LOG_HANDLE(level, type, var)                                    \
@@ -57,27 +54,18 @@ LinkFailureHistory::LinkId LinkFailureHistory::MakeLinkId(const LinkAlert* l) {
   return {l->out_, l->src_};
 }
 
-// TODO assume we always have unique IDs?
-Entity::Entity(Scheduler& s) : links_(), scheduler_(s), is_up_(true),
-                               id_(NONE_ID), heart_history_(),
-                               next_heartbeat_(0) {}
-
-Entity::Entity(Scheduler& s, Id id) : links_(), scheduler_(s), is_up_(true),
-                                      id_(id), heart_history_(),
-                                      next_heartbeat_(0),
-                                      bandwidth_usage_log_() {
-  // TODO let user specify file name and location?
-  bandwidth_usage_log_.open("bandwidth_usage_" + to_string(id) + ".txt");
-}
-
-Entity::~Entity() { bandwidth_usage_log_.close(); }
+Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
+                                                       is_up_(true), id_(id),
+                                                       heart_history_(),
+                                                       next_heartbeat_(0),
+                                                       stats_(st) {}
 
 void Entity::Handle(Up* u) { is_up_ = true; }
 
 void Entity::Handle(Down* d) { is_up_ = false; }
 
 void Entity::Handle(Heartbeat* h) {
-  bandwidth_usage_log_ << h->time() << "," << h->size() << "\n";
+  stats_.Record(h);
 
   if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
 
@@ -125,9 +113,8 @@ void Entity::UpdateLinkCapacities(Time passed) {
 
 const Time Entity::kMaxRecent = 5;
 
-Switch::Switch(Scheduler& s) : Entity(s), link_history_() {}
-
-Switch::Switch(Scheduler& s, Id id) : Entity(s, id), link_history_() {}
+Switch::Switch(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st),
+                                                       link_history_() {}
 
 void Switch::Handle(Event* e) { LOG_HANDLE(ERROR, Switch, e) }
 
@@ -186,9 +173,7 @@ void Switch::Handle(InitiateHeartbeat* init) {
   Entity::Handle(init);
 }
 
-Controller::Controller(Scheduler& s) : Entity(s) {}
-
-Controller::Controller(Scheduler& s, Id id) : Entity(s, id) {}
+Controller::Controller(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st) {}
 
 void Controller::Handle(Event* e) { LOG_HANDLE(ERROR, Controller, e) }
 

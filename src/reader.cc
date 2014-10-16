@@ -33,7 +33,7 @@ bool Reader::IsController(Node n) {
   return !n["type"].as<string>().compare("controller");
 }
 
-bool Reader::ParseEntities(Node raw_entities) {
+bool Reader::ParseEntities(Node raw_entities, Statistics& s) {
   // TODO error handling
   // TODO hoist raw_entities.end out of loop?
   for(auto it = raw_entities.begin(); it != raw_entities.end(); ++it) {
@@ -41,9 +41,9 @@ bool Reader::ParseEntities(Node raw_entities) {
     Id id = n["id"].as<Id>();
 
     if(IsController(n)) {
-      id_to_entity_.insert({id, new Controller(scheduler_, id)});
+      id_to_entity_.insert({id, new Controller(scheduler_, id, s)});
     } else if(IsSwitch(n)) {
-      id_to_entity_.insert({id, new Switch(scheduler_, id)});
+      id_to_entity_.insert({id, new Switch(scheduler_, id, s)});
     } else if(IsGenericEntity(n)) {
       LOG(ERROR) << "Construction of generic entities is disallowed";
       return false;
@@ -80,7 +80,8 @@ bool Reader::ParseLinks(Node&& raw_links, Size bucket_capacity,
   return true;
 }
 
-bool Reader::ParseTopology(Size bucket_capacity, Rate fill_rate) {
+bool Reader::ParseTopology(Size bucket_capacity, Rate fill_rate,
+                           Statistics& s) {
   Node raw_topo(LoadFile(topo_file_path_));
 
   if(!raw_topo.IsMap()) {
@@ -89,7 +90,7 @@ bool Reader::ParseTopology(Size bucket_capacity, Rate fill_rate) {
   }
 
   // TODO error handling
-  bool valid_entities = ParseEntities(raw_topo["entities"]);
+  bool valid_entities = ParseEntities(raw_topo["entities"], s);
 
   if(!valid_entities) return false;
 

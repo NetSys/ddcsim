@@ -12,11 +12,12 @@
 
 class Entity;
 class Scheduler;
+class Statistics;
 
 class Reader {
 public:
   Reader(std::string, std::string, Scheduler&);
-  bool ParseTopology(Size, Rate);
+  bool ParseTopology(Size, Rate, Statistics&);
   bool ParseEvents();
   // TODO take out type of iterator
   // TODO just make id_to_entity_ public?
@@ -27,7 +28,7 @@ private:
   bool IsGenericEntity(YAML::Node);
   bool IsSwitch(YAML::Node);
   bool IsController(YAML::Node);
-  bool ParseEntities(YAML::Node); // TODO why isn't ref allowed?
+  bool ParseEntities(YAML::Node, Statistics&); // TODO why isn't ref allowed?
   bool IsUp(YAML::Node);
   bool IsDown(YAML::Node);
   bool IsLinkUp(YAML::Node);
