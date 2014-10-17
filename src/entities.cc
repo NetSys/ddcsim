@@ -71,7 +71,7 @@ void Entity::Handle(Heartbeat* h) {
 
   for(Port p = 0; p < links_.PortCount(); ++p)
     if(h->in_port() != p)
-      scheduler_.Forward(this, h, p);
+      scheduler_.Forward(this, h, p, stats_);
 
   heart_history_.MarkAsSeen(h, scheduler_.cur_time());
 }
@@ -84,7 +84,7 @@ void Entity::Handle(InitiateHeartbeat* init) {
   if(!is_up_) return;
 
   for(Port p = 0; p < links_.PortCount(); ++p)
-    scheduler_.Forward(this, init, p);
+    scheduler_.Forward(this, init, p, stats_);
 
   next_heartbeat_++;
 }
@@ -159,7 +159,7 @@ void Switch::Handle(LinkAlert* alert) {
 
   for(Port p = 0; p < links_.PortCount(); ++p)
     if(alert->in_port() != p)
-      scheduler_.Forward(this, alert, p);
+      scheduler_.Forward(this, alert, p, stats_);
 
   if(alert->is_up_)
     link_history_.MarkAsUp(alert);

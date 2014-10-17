@@ -9,6 +9,7 @@
 
 class Entity;
 class Event;
+class Statistics;
 
 class Scheduler {
   /* When an inner class is not part of a class's interface, as is the case
@@ -32,12 +33,16 @@ class Scheduler {
   Scheduler(Time);
   void AddEvent(Event*);
   // TODO more descriptive template type names? what is the convention?
-  template<class E, class M> void Forward(E* sender, M* msg_in, Port out);
+  template<class E, class M> void Forward(E* sender, M* msg_in, Port out,
+                                          Statistics&);
   void StartSimulation(std::unordered_map<Id, Entity*>&);
   Time cur_time();
   Time end_time();
+  static Time Delay();
   static int kMaxEntities;
-  static const Time kLinkLatency;
+  static const Time kComputationDelay;
+  static const Time kTransDelay;
+  static const Time kPropDelay;
   static const Time kDefaultHeartbeatPeriod;
   static const Time kDefaultEndTime;
   static const int kNoMaxEntities;

@@ -9,6 +9,7 @@
 #include "scheduler.h"
 
 class Entity;
+class Statistics;
 
 // TODO Put into Links class?
 class BandwidthMeter {
@@ -53,7 +54,7 @@ class Links {
   void UpdateCapacities(Time);
   unsigned int PortCount();
 
-  template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out);
+  template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out, Statistics&);
   friend bool Reader::ParseEvents();
 
  private:

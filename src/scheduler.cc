@@ -7,6 +7,7 @@
 #include "entities.h"
 #include "events.h"
 #include "scheduler.h"
+#include "statistics.h"
 
 using std::string;
 using std::to_string;
@@ -28,7 +29,7 @@ template<> class Schedule<Entity, Heartbeat> {
  public:
   Event* operator()(Entity* sender, Heartbeat* heartbeat_in,
                     Entity* receiver, Port in) {
-    return new Heartbeat(heartbeat_in->time() + Scheduler::kLinkLatency,
+    return new Heartbeat(heartbeat_in->time() + Scheduler::Delay(),
                          heartbeat_in->src(), receiver, in, heartbeat_in->sn(),
                          heartbeat_in->recently_seen());
   }
@@ -38,7 +39,7 @@ template<> class Schedule<Entity, InitiateHeartbeat> {
  public:
   Event* operator()(Entity* sender, InitiateHeartbeat* init,
                     Entity* receiver, Port in) {
-    return new Heartbeat(init->time() + Scheduler::kLinkLatency, sender,
+    return new Heartbeat(init->time() + Scheduler::Delay(), sender,
                          receiver, in, sender->NextHeartbeatSeqNum(),
                          sender->ComputeRecentlySeen());
   }
@@ -47,12 +48,14 @@ template<> class Schedule<Entity, InitiateHeartbeat> {
 template<class E> class Schedule<E, LinkAlert> {
  public:
   Event* operator()(E* sender, LinkAlert* alert_in, Entity* receiver, Port in) {
-    return new LinkAlert(alert_in->time() + Scheduler::kLinkLatency, receiver,
+    return new LinkAlert(alert_in->time() + Scheduler::Delay(), receiver,
                          in, alert_in->src_, alert_in->out_, alert_in->is_up_);
   }
 };
 
-const Time Scheduler::kLinkLatency = 0.1;
+const Time Scheduler::kComputationDelay = 0.00001; /* 10 micros */
+const Time Scheduler::kTransDelay = 0.001;         /* 1 ms */
+const Time Scheduler::kPropDelay = 0.01;           /* 10 ms */
 const Time Scheduler::kDefaultHeartbeatPeriod = 3;
 const Time Scheduler::kDefaultEndTime = 60;
 const int Scheduler::kNoMaxEntities = -1;
@@ -81,7 +84,8 @@ bool Scheduler::Comparator::operator() (const Event* const lhs,
 }
 
 // TODO why isn't partial specialization of methods allowed?
-template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out) {
+template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out,
+                                                   Statistics& stats) {
   Links& l = sender->links();
 
   if(! l.IsLinkUp(out)) return;
@@ -94,12 +98,14 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
   Schedule<E, M> s;
   Event* new_event = s(sender, msg_in, receiver, in);
 
+  // TODO clean this up
   Size sz = new_event->size();
   BandwidthMeter& m = l.port_to_link_[out].meter;
 
   if(m.CanSend(sz)) {
     m.Send(sz);
     AddEvent(new_event);
+    stats.RecordSend(new_event);
   } else {
     // TODO better drop message
     LOG(INFO) << "Packet dropped due to insufficient link capacity";
@@ -139,11 +145,18 @@ Time Scheduler::cur_time() { return cur_time_; }
 
 Time Scheduler::end_time() { return end_time_; }
 
+Time Scheduler::Delay() {
+  // TODO make these functions of link bandwidth and length
+  return kComputationDelay + kTransDelay + kPropDelay;
+}
+
 /* TODO explain why we need to oblige the compiler to instantiate this templated
 * method explicity
 */
-template void Scheduler::Forward<Entity, Heartbeat>(Entity*, Heartbeat*, Port);
-template void Scheduler::Forward<Switch, LinkAlert>(Switch*, LinkAlert*, Port);
+template void Scheduler::Forward<Entity, Heartbeat>(Entity*, Heartbeat*, Port,
+                                                    Statistics&);
+template void Scheduler::Forward<Switch, LinkAlert>(Switch*, LinkAlert*, Port,
+                                                    Statistics&);
 template void Scheduler::Forward<Entity, InitiateHeartbeat>(Entity*,
                                                             InitiateHeartbeat*,
-                                                            Port);
+                                                            Port, Statistics&);
