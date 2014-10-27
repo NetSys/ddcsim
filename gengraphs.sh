@@ -6,25 +6,30 @@
 
 # In Parameters
 
-RAW_BANDUSE=bandwidth_usage.txt
-BANDUSE_PLOT_TEMPLATE=bandwidth_usage.gnuplot.template
+RAW_BANDUSE=network_usage.txt
+BANDUSE_PLOT_TEMPLATE=network_usage.gnuplot.template
 
 HRTBT_LOG_PREFIX=log_
 HRTBT_LOG_SUFFIX=.txt
 HRTBT_PLOT_TEMPLATE=heartbeats.gnuplot.template
 
+WINDOWED_BANDUSE_PLOT_TEMPLATE=bandwidth_usage.gnuplot.template
+
+
 # Out Parameters
 
-BANDUSE_PLOT=bandwidth_usage.png
+BANDUSE_PLOT=network_usage.pdf
+
 HRTBT_PLOT_PREFIX=heartbeats_
-HRTBT_PLOT_SUFFIX=.png
+HRTBT_PLOT_SUFFIX=.pdf
 
-# Generate time series of total bandwidth usage
+WINDOWED_BANDUSE_PLOT=bandwidth_usage.pdf
 
-BANDUSE=bandwidth_usage.txt.tmp
-python convert_bandwidth_usage.py < ${RAW_BANDUSE} > ${BANDUSE}
+# Generate time series of total network usage
+
+BANDUSE=network_usage.txt.tmp
+python convert_network_usage.py < ${RAW_BANDUSE} > ${BANDUSE}
 m4 --define=IN_FILE=${BANDUSE} ${BANDUSE_PLOT_TEMPLATE} | gnuplot  > ${BANDUSE_PLOT}
-rm ${BANDUSE}
 
 # Generate time series of bandwidth consumed by hearbeats per node
 
@@ -35,3 +40,9 @@ for f in $( ls ${HRTBT_LOG_NAMES} ); do
 	gnuplot > ${HRTBT_PLOT_PREFIX}${i}${HRTBT_PLOT_SUFFIX}
     ((++i))
 done
+
+# Generate a window sampled bandwidth plot
+WINDOWED_BANDUSE=bandwidth_usage.txt.tmp
+python generate_bandwidth_usage.py < ${RAW_BANDUSE} > ${WINDOWED_BANDUSE}
+m4 --define=IN_FILE=${WINDOWED_BANDUSE} ${WINDOWED_BANDUSE_PLOT_TEMPLATE} | \
+    gnuplot  > ${WINDOWED_BANDUSE_PLOT}

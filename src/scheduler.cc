@@ -126,7 +126,8 @@ void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
     cur_time_ = ev->time();
     assert(cur_time_ >= last_time); // TODO change to google's logging statement
 
-    LOG(INFO) << "clock = " << cur_time_ << " seconds";
+    //    LOG(INFO) << "clock = " << cur_time_ << " seconds";
+    LOG(INFO) << "\n";
 
     // TODO put this functionality somewhere else?
 

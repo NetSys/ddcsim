@@ -15,9 +15,9 @@ set grid back linestyle 81
 # much emphasis on a border.
 set border 3 back linestyle 80
 set xtics nomirror rotate
-set ytics nomirror 10
+set ytics nomirror 750
 
-set title "Network Usage by Node NODE's Heartbeats"
+set title "Absolute Network Usage"
 set ylabel "Size (bytes)"
 set xlabel "Time (mm:ss)"
 set xdata time

@@ -64,6 +64,7 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
             vm);
   notify(vm);
 
+  // TODO only trigger if help is not specified
   if (!vm.count("topo")) {
     LOG(FATAL) << "Path to file containing network topology ";
     return false;

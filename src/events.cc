@@ -3,10 +3,12 @@
 
 #include <glog/logging.h>
 
+#include <cmath>
 #include <iostream>
 
 #define UNINITIALIZED_TIME -1
 
+using std::ceil;
 using std::string;
 using std::to_string;
 using std::ostream;
@@ -121,8 +123,8 @@ string Broadcast::Description() const {
 string Broadcast::Name() const { return "Broadcast"; }
 
 Size Broadcast::size() const {
-  // TODO find realistic size automatically
-  return 100;
+  /* 20 bytes for a header with no options */
+  return 20;
 }
 
 Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity,
@@ -149,7 +151,11 @@ string Heartbeat::Description() const {
 
 string Heartbeat::Name() const { return "Heartbeat"; }
 
-Size Heartbeat::size() const { return Broadcast::size() + 50; }
+Size Heartbeat::size() const {
+  // TODO how to automate this?
+  return Broadcast::size() + sizeof(sn_) + sizeof(src_) +
+      ceil(recently_seen_.size() / 8.0) + sizeof(leader_) + sizeof(current_partition_);
+}
 
 LinkAlert::LinkAlert(Time t, Entity* e, Port i, const Entity* s, Port p, bool b)
     : Broadcast(t, e, i), src_(s), out_(p), is_up_(b) {}

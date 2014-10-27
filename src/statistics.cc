@@ -12,7 +12,7 @@ using std::ofstream;
 
 const string Statistics::LOG_PREFIX = "log_";
 const string Statistics::LOG_SUFFIX = ".txt";
-const string Statistics::USAGE_LOG_NAME = "bandwidth_usage.txt";
+const string Statistics::USAGE_LOG_NAME = "network_usage.txt";
 const string Statistics::SEPARATOR = ",";
 
 Statistics::Statistics(Scheduler& s) : scheduler_(s), id_to_log_(),

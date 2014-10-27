@@ -1,0 +1,24 @@
+entities:
+  - {id: 0, type: &b switch}
+  - {id: 1, type: *b}
+  - {id: 2, type: *b}
+  - {id: 3, type: *b}
+  - {id: 4, type: *b}
+  - {id: 5, type: *b}
+  - {id: 6, type: *b}
+  - {id: 7, type: *b}
+  - {id: 8, type: *b}
+  - {id: 9, type: *b}
+  - {id: 10, type: *b}
+links:
+  0: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  1: &l [0]
+  2: *l
+  3: *l
+  4: *l
+  5: *l
+  6: *l
+  7: *l
+  8: *l
+  9: *l
+  10: *l

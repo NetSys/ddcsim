@@ -21,6 +21,7 @@ void BandwidthMeter::UpdateCapacity(Time t) {
    * bucket UNLESS it is already full.  Thus, we update each token bucket by
    * size = min{ size + fill_rate * (cur_time_ - last_time), bucket_capacity }
    */
+  // TODO need to worry about overflow?
   cur_capacity_ = min(max_capacity_, cur_capacity_ + fill_rate_ * t);
 }
 

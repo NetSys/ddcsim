@@ -1,0 +1,10 @@
+entities:
+  - {id: 0, type: controller}
+  - {id: 1, type: switch}
+  - {id: 2, type: switch}
+  - {id: 3, type: switch}
+links:
+  0: [1, 2, 3]
+  1: &l [0]
+  2: *l
+  3: *l
