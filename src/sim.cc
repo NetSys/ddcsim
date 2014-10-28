@@ -1,6 +1,7 @@
 #include <boost/program_options.hpp>
 #include <glog/logging.h>
 
+#include <random>
 #include <string>
 
 #include "common.h"
@@ -10,8 +11,11 @@
 #include "scheduler.h"
 #include "statistics.h"
 
+using std::default_random_engine;
 using std::string;
+using std::uniform_real_distribution;
 using std::unordered_map;
+
 namespace po = boost::program_options;
 using po::options_description;
 using po::value;
@@ -122,10 +126,20 @@ int main(int ac, char* av[]) {
   if(!valid_events) return -1;
 
   // TODO this will be generalized
-  for (Time t = 0; t < sched.end_time(); t+= heartbeat_period)
+  // TODO heartbeat initiation times should be fed in via a file?
+  // TODO feed default_random_engine a seed to make it deterministic
+
+  for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end(); ++it)
+    sched.AddEvent(new InitiateHeartbeat(0, it->second)); // TODO add random variations to t=0 too?
+
+  default_random_engine entropy_src;
+  Time half_hrtbt = heartbeat_period / 2;
+  uniform_real_distribution<Time> dist(-1 * half_hrtbt, half_hrtbt);
+
+  for (Time t = heartbeat_period; t < sched.end_time(); t+= heartbeat_period)
     for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
          ++it)
-      sched.AddEvent(new InitiateHeartbeat(t, it->second));
+      sched.AddEvent(new InitiateHeartbeat(t + dist(entropy_src), it->second));
 
   stats.Init();
 
