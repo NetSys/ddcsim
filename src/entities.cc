@@ -17,6 +17,7 @@ void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   // TODO this can throw an exception if seen's allocator fails.  Should I just
   // ignore this possibility?
   seen_.insert(MakeHeartbeatId(b));
+  last_seen_.erase(b->src()->id());
   last_seen_.insert({b->src()->id(), time_seen});
 }
 
