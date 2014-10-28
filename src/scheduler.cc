@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <string>
 #include <utility>
 
@@ -93,7 +92,7 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
   Entity* receiver = l.GetEndpoint(out);
 
   Port in = receiver->links().GetPortTo(sender);
-  assert(in != PORT_NOT_FOUND);
+  CHECK_NE(in, PORT_NOT_FOUND);
 
   Schedule<E, M> s;
   Event* new_event = s(sender, msg_in, receiver, in);
@@ -124,10 +123,7 @@ void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
 
     last_time = cur_time_;
     cur_time_ = ev->time();
-    assert(cur_time_ >= last_time); // TODO change to google's logging statement
-
-    //    LOG(INFO) << "clock = " << cur_time_ << " seconds";
-    LOG(INFO) << "\n";
+    CHECK_GE(cur_time_, last_time);
 
     // TODO put this functionality somewhere else?
 

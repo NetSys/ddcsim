@@ -3,7 +3,7 @@
 #include "events.h"
 #include "scheduler.h"
 
-#include <assert.h>
+#include <glog/logging.h>
 #include <iostream>
 
 using std::string;
@@ -37,8 +37,9 @@ void Statistics::Init() {
 }
 
 void Statistics::Record(Heartbeat* h) {
-  assert(++(h->AffectedEntitiesBegin()) == h->AffectedEntitiesEnd());
-  Id id = (*(h->AffectedEntitiesBegin()))->id();
+  // TODO why does glog CHECK_EQ throw compiler errors?
+CHECK(h->AffectedEntitiesBegin() + 1 == h->AffectedEntitiesEnd());
+Id id = (*(h->AffectedEntitiesBegin()))->id();
   *(id_to_log_[id]) << h->time() << SEPARATOR << h->size() << "\n";
 }
 
