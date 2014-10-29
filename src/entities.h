@@ -3,6 +3,7 @@
 
 #include <iterator>
 #include <inttypes.h>
+#include <random>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -108,6 +109,10 @@ class Entity {
   Id id_;
   bool is_up_;
   Statistics& stats_;
+  // TODO should be using the same entropy source as in sim.cc?
+  // TODO clean this up
+  std::default_random_engine entropy_src_;
+  std::discrete_distribution<unsigned char> dist_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Entity);

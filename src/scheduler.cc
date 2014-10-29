@@ -8,6 +8,8 @@
 #include "scheduler.h"
 #include "statistics.h"
 
+using std::default_random_engine;
+using std::discrete_distribution;
 using std::string;
 using std::to_string;
 using std::unordered_map;
@@ -130,9 +132,9 @@ void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
     for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
       it->second->UpdateLinkCapacities(cur_time_ - last_time);
 
-    for (auto it = ev->AffectedEntitiesBegin();
-         it != ev->AffectedEntitiesEnd(); ++it)
-      ev->Handle(*it);
+     for (auto it = ev->AffectedEntitiesBegin(); it != ev->AffectedEntitiesEnd();
+         ++it)
+       ev->Handle(*it);
 
     delete ev;
   }

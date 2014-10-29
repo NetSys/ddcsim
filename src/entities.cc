@@ -4,6 +4,10 @@
 
 #include <glog/logging.h>
 
+#include <iostream>
+
+using std::default_random_engine;
+using std::discrete_distribution;
 using std::pair;
 using std::vector;
 
@@ -59,14 +63,21 @@ Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
                                                        is_up_(true), id_(id),
                                                        heart_history_(),
                                                        next_heartbeat_(0),
-                                                       stats_(st) {}
+                                                       stats_(st),
+                                                       entropy_src_(),
+                                                       dist_{1, 99} {}
 
 void Entity::Handle(Up* u) { is_up_ = true; }
 
 void Entity::Handle(Down* d) { is_up_ = false; }
 
 void Entity::Handle(Heartbeat* h) {
-  stats_.Record(h);
+  stats_.Record(h);  // TODO should this be after next line?
+
+  if(dist_(entropy_src_) == 0) {
+    LOG(INFO) << "Packet dropped randomly";
+    return;
+  }
 
   if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
 
