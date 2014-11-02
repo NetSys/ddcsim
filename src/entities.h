@@ -1,6 +1,7 @@
 #ifndef DDCSIM_ROUTERS_H_
 #define DDCSIM_ROUTERS_H_
 
+#include <boost/circular_buffer.hpp>
 #include <iterator>
 #include <inttypes.h>
 #include <random>
@@ -45,7 +46,7 @@ class HeartbeatHistory {
   HeartbeatHistory();
   void MarkAsSeen(const Heartbeat*, Time);
   bool HasBeenSeen(const Heartbeat*) const;
-  Time LastSeen(Id) const;
+  boost::circular_buffer<Time> LastSeen(Id) const;
   bool HasBeenSeen(Id) const;
 
  private:
@@ -56,7 +57,7 @@ class HeartbeatHistory {
   static HeartbeatId MakeHeartbeatId(const Heartbeat* b);
   std::unordered_set<HeartbeatId> seen_;
   // TODO make into array-type mapping for better efficiency?
-  std::unordered_map<Id, Time> last_seen_;
+  std::unordered_map<Id, boost::circular_buffer<Time> > last_seen_;
   DISALLOW_COPY_AND_ASSIGN(HeartbeatHistory);
 };
 
@@ -99,7 +100,12 @@ class Entity {
   SequenceNum NextHeartbeatSeqNum() const;
   std::vector<bool> ComputeRecentlySeen() const;
   void UpdateLinkCapacities(Time);
-  static const Time kMaxRecent;  // TODO should be a commandline arg?
+  /* A switch is considered "recently seen" if its hearbeats have been seen
+   * kMinTimes times in the last kMaxRecent seconds.
+   */
+  // TODO should these be command line args?
+  static const Time kMaxRecent;
+  static const unsigned int kMinTimes;
 
  protected:
   SequenceNum next_heartbeat_;

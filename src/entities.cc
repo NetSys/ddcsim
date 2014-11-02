@@ -6,6 +6,7 @@
 
 #include <iostream>
 
+using boost::circular_buffer;
 using std::default_random_engine;
 using std::discrete_distribution;
 using std::pair;
@@ -15,14 +16,19 @@ using std::vector;
   LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":"; \
   LOG(level) << var->Description();
 
-HeartbeatHistory::HeartbeatHistory() : seen_() {}
+HeartbeatHistory::HeartbeatHistory() : seen_(), last_seen_() {}
 
 void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   // TODO this can throw an exception if seen's allocator fails.  Should I just
   // ignore this possibility?
   seen_.insert(MakeHeartbeatId(b));
-  last_seen_.erase(b->src()->id());
-  last_seen_.insert({b->src()->id(), time_seen});
+
+  Id id = b->src()->id();
+  if(!HasBeenSeen(id))
+    last_seen_.insert({id, circular_buffer<Time>(Entity::kMinTimes)});
+
+  circular_buffer<Time>& times = last_seen_[id];
+  times.push_back(time_seen);
 }
 
 bool HeartbeatHistory::HasBeenSeen(const Heartbeat* b) const {
@@ -33,7 +39,7 @@ bool HeartbeatHistory::HasBeenSeen(Id id) const {
   return last_seen_.count(id) > 0;
 }
 
-Time HeartbeatHistory::LastSeen(Id id) const {
+circular_buffer<Time> HeartbeatHistory::LastSeen(Id id) const {
   return last_seen_.at(id);
 }
 
@@ -65,7 +71,9 @@ Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
                                                        next_heartbeat_(0),
                                                        stats_(st),
                                                        entropy_src_(),
-                                                       dist_{1, 99} {}
+                                                       dist_{1, 99} {
+  CHECK_GE(kMinTimes, 1);
+}
 
 void Entity::Handle(Up* u) { is_up_ = true; }
 
@@ -111,10 +119,15 @@ SequenceNum Entity::NextHeartbeatSeqNum() const { return next_heartbeat_; }
 vector<bool> Entity::ComputeRecentlySeen() const {
   vector<bool> recently_seen(Scheduler::kMaxEntities, false);
 
-  for(Id id = 0; id < Scheduler::kMaxEntities; ++id)
-    if(heart_history_.HasBeenSeen(id))
-      recently_seen[id] =
-          scheduler_.cur_time() - heart_history_.LastSeen(id) < kMaxRecent;
+  for(Id id = 0; id < Scheduler::kMaxEntities; ++id) {
+    if(heart_history_.HasBeenSeen(id)) {
+      circular_buffer<Time> times_seen = heart_history_.LastSeen(id);
+      recently_seen[id] = true;
+      for(auto t = times_seen.begin(); t != times_seen.end(); ++t)
+        recently_seen[id] = recently_seen[id] &&
+            scheduler_.cur_time() - *t < kMaxRecent;
+    }
+  }
 
   return recently_seen;
 }
@@ -123,7 +136,8 @@ void Entity::UpdateLinkCapacities(Time passed) {
   links_.UpdateCapacities(passed);
 }
 
-const Time Entity::kMaxRecent = 5;
+const Time Entity::kMaxRecent = 3;
+const unsigned int Entity::kMinTimes = 2;
 
 Switch::Switch(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st),
                                                        link_history_() {}

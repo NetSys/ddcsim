@@ -5,6 +5,7 @@ from string import split
 separator = ","
 newline = "\n"
 window_size = Decimal(0.05) # measured in seconds
+unit= Decimal(2 ** 10) # kilobytes
 
 # TODO change to a streaming form instead?
 def main():
@@ -23,7 +24,8 @@ def main():
             index_to_bytes[index] = size
 
     for t,total in index_to_bytes.iteritems():
-        print str(float(t * window_size)) + separator + str(float(total / window_size))
+        print str(float(t * window_size)) + separator + \
+            str(float(total / window_size / unit))
 
 if __name__ == "__main__":
     main()

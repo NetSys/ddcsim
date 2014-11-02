@@ -1,0 +1,42 @@
+entities:
+  - {id: 0, type: switch}
+  - {id: 1, type: switch}
+  - {id: 2, type: switch}
+  - {id: 3, type: switch}
+  - {id: 4, type: switch}
+  - {id: 5, type: switch}
+  - {id: 6, type: switch}
+  - {id: 7, type: switch}
+  - {id: 8, type: switch}
+  - {id: 9, type: switch}
+  - {id: 10, type: switch}
+  - {id: 11, type: switch}
+  - {id: 12, type: switch}
+  - {id: 13, type: switch}
+  - {id: 14, type: switch}
+  - {id: 15, type: switch}
+  - {id: 16, type: switch}
+  - {id: 17, type: switch}
+  - {id: 18, type: switch}
+  - {id: 19, type: switch}
+links:
+  0: [8, 12, 4, 16]
+  1: [8, 12, 4, 16]
+  2: [9, 17, 5, 13]
+  3: [9, 17, 5, 13]
+  4: [0, 1, 6, 7]
+  5: [2, 3, 6, 7]
+  6: [4, 5]
+  7: [4, 5]
+  8: [0, 1, 10, 11]
+  9: [2, 3, 10, 11]
+  10: [8, 9]
+  11: [8, 9]
+  12: [0, 1, 14, 15]
+  13: [2, 3, 14, 15]
+  14: [12, 13]
+  15: [12, 13]
+  16: [0, 1, 18, 19]
+  17: [2, 3, 18, 19]
+  18: [16, 17]
+  19: [16, 17]

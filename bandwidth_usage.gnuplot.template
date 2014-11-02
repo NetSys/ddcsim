@@ -15,14 +15,13 @@ set grid back linestyle 81
 # much emphasis on a border.
 set border 3 back linestyle 80
 set xtics nomirror rotate
-set ytics nomirror 750
+set ytics nomirror 25
 
 set title "Absolute Bandwidth Usage"
-set ylabel "Bandwidth (bytes/sec)"
+set ylabel "Bandwidth (KB/s)"
 set xlabel "Time (mm:ss)"
 set xdata time
 set timefmt "%s"
 set key off
 
-#plot "IN_FILE" using 1:2 pt 7 ps 0.5 with steps
 plot "IN_FILE" using 1:2 with impulses

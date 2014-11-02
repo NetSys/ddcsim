@@ -84,7 +84,8 @@ void DeleteEntities(unordered_map<Id, Entity*>& id_to_entity) {
 
 void InitLogging(const char* argv0) {
   google::InitGoogleLogging(argv0);
-  FLAGS_logtostderr = true;
+  FLAGS_stderrthreshold = 1;
+  FLAGS_log_dir = "./logs/";
   FLAGS_log_prefix = false;
 }
 
@@ -128,13 +129,14 @@ int main(int ac, char* av[]) {
   // TODO this will be generalized
   // TODO heartbeat initiation times should be fed in via a file?
   // TODO feed default_random_engine a seed to make it deterministic
-
-  for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end(); ++it)
-    sched.AddEvent(new InitiateHeartbeat(0, it->second)); // TODO add random variations to t=0 too?
-
   default_random_engine entropy_src;
   Time half_hrtbt = heartbeat_period / 2;
+  uniform_real_distribution<Time> init_dist(0, half_hrtbt);
   uniform_real_distribution<Time> dist(-1 * half_hrtbt, half_hrtbt);
+
+  // TODO verify that it's okay to use entropy_src for both init_dist and dist
+  for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end(); ++it)
+    sched.AddEvent(new InitiateHeartbeat(init_dist(entropy_src), it->second));
 
   for (Time t = heartbeat_period; t < sched.end_time(); t+= heartbeat_period)
     for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
