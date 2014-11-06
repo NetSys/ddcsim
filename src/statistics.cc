@@ -38,8 +38,8 @@ void Statistics::Init() {
 
 void Statistics::Record(Heartbeat* h) {
   // TODO why does glog CHECK_EQ throw compiler errors?
-CHECK(h->AffectedEntitiesBegin() + 1 == h->AffectedEntitiesEnd());
-Id id = (*(h->AffectedEntitiesBegin()))->id();
+  CHECK(h->AffectedEntitiesBegin() + 1 == h->AffectedEntitiesEnd());
+  Id id = (*(h->AffectedEntitiesBegin()))->id();
   *(id_to_log_[id]) << h->time() << SEPARATOR << h->size() << "\n";
 }
 

@@ -10,13 +10,15 @@ using boost::circular_buffer;
 using std::default_random_engine;
 using std::discrete_distribution;
 using std::pair;
+using std::unordered_map;
 using std::vector;
 
 #define LOG_HANDLE(level, type, var)                                    \
   LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":"; \
   LOG(level) << var->Description();
 
-HeartbeatHistory::HeartbeatHistory() : seen_(), last_seen_() {}
+HeartbeatHistory::HeartbeatHistory() : seen_(), last_seen_(),
+                                       id_to_recently_seen_() {}
 
 void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   // TODO this can throw an exception if seen's allocator fails.  Should I just
@@ -24,11 +26,14 @@ void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   seen_.insert(MakeHeartbeatId(b));
 
   Id id = b->src()->id();
+
   if(!HasBeenSeen(id))
     last_seen_.insert({id, circular_buffer<Time>(Entity::kMinTimes)});
-
   circular_buffer<Time>& times = last_seen_[id];
   times.push_back(time_seen);
+
+  id_to_recently_seen_.erase(id);
+  id_to_recently_seen_.insert({id, b->recently_seen()});
 }
 
 bool HeartbeatHistory::HasBeenSeen(const Heartbeat* b) const {
@@ -41,6 +46,10 @@ bool HeartbeatHistory::HasBeenSeen(Id id) const {
 
 circular_buffer<Time> HeartbeatHistory::LastSeen(Id id) const {
   return last_seen_.at(id);
+}
+
+unordered_map<Id, vector<bool> > HeartbeatHistory::id_to_recently_seen() const {
+  return id_to_recently_seen_;
 }
 
 HeartbeatHistory::HeartbeatId HeartbeatHistory::MakeHeartbeatId(const Heartbeat* b) {
@@ -71,7 +80,7 @@ Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
                                                        next_heartbeat_(0),
                                                        stats_(st),
                                                        entropy_src_(),
-                                                       dist_{1, 99} {
+                                                       dist_{1, 999} {
   CHECK_GE(kMinTimes, 1);
 }
 
@@ -130,6 +139,104 @@ vector<bool> Entity::ComputeRecentlySeen() const {
   }
 
   return recently_seen;
+}
+
+class Visitor {
+ public:
+  // TODO fix this style of abstract base class
+  Visitor() {}
+  virtual void previsit(Id) {}
+  virtual void postvisit(Id) {}
+  virtual void preexplore(Id) {}
+  virtual void postexplore(Id) {}
+ private:
+  DISALLOW_COPY_AND_ASSIGN(Visitor);
+};
+
+class PostOrder : public Visitor {
+ public:
+  PostOrder() : ascending_post_order_() {}
+  void postvisit(Id id) { ascending_post_order_.push_back(id); }
+  vector<Id> ascending_post_order() { return ascending_post_order_; }
+ private:
+  vector<Id> ascending_post_order_;
+  DISALLOW_COPY_AND_ASSIGN(PostOrder);
+};
+
+class ResolveSCC : public Visitor {
+ public:
+  ResolveSCC(unsigned int num_entities) : cur_scc_(0), id_to_scc_(num_entities) {}
+  void previsit(Id i) { id_to_scc_[i] = cur_scc_; }
+  void postexplore(Id i) { ++cur_scc_; }
+  vector<unsigned int> id_to_scc() { return id_to_scc_; }
+ private:
+  unsigned int cur_scc_;
+  vector<unsigned int> id_to_scc_;
+  DISALLOW_COPY_AND_ASSIGN(ResolveSCC);
+};
+
+void dfs(Id root, unordered_map<Id, vector<bool> >& graph, unsigned int num_entities,
+         vector<bool>& seen, Visitor& v, bool rev) {
+  seen[root] = true;
+
+  v.previsit(root);
+
+  for (Id i = 0; i < num_entities; ++i) {
+    bool edge_exists = rev ? graph.count(i) > 0 && graph[i][root] :
+        graph.count(root) > 0 && graph[root][i];
+    if(edge_exists && !seen[i]) {
+      dfs(i, graph, num_entities, seen, v, rev);
+    }
+  }
+
+  v.postvisit(root);
+}
+
+void explore1(unordered_map<Id, vector<bool> >& graph, unsigned int num_entities,
+              Visitor& v) {
+  vector<bool> seen(num_entities, false);
+
+  for(Id i = 0; i < num_entities; ++i) {
+    if(!seen[i]) {
+      v.preexplore(i);
+      dfs(i, graph, num_entities, seen, v, true);
+      v.postexplore(i);
+    }
+  }
+}
+
+template<class Iter>
+void explore2(unordered_map<Id, vector<bool> >& graph, Visitor& v, unsigned int num_entities,
+              Iter next, Iter beyond) {
+  vector<bool> seen(num_entities, false);
+
+  for( ; next < beyond; ++next) {
+    Id i = *next;
+    if(!seen[i]) {
+      v.preexplore(i);
+      dfs(i, graph, num_entities, seen, v, false);
+      v.postexplore(i);
+    }
+  }
+}
+
+vector<unsigned int> Entity::ComputePartitions() const {
+  unordered_map<Id, vector<bool> > recently_seen =
+      heart_history_.id_to_recently_seen();
+
+  unsigned int num_entities = Scheduler::kMaxEntities;
+
+  // TODO change to explicit stack
+  // TODO how to avoid iterating through bitvectors?
+  // TODO combine explore1 and explore2
+  PostOrder po;
+  explore1(recently_seen, num_entities, po);
+  auto visit_order = po.ascending_post_order();
+
+  ResolveSCC rscc(num_entities);
+  explore2(recently_seen, rscc, num_entities, visit_order.rbegin(), visit_order.rend());
+
+  return rscc.id_to_scc();
 }
 
 void Entity::UpdateLinkCapacities(Time passed) {

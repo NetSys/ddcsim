@@ -48,6 +48,7 @@ class HeartbeatHistory {
   bool HasBeenSeen(const Heartbeat*) const;
   boost::circular_buffer<Time> LastSeen(Id) const;
   bool HasBeenSeen(Id) const;
+  std::unordered_map<Id, std::vector<bool> > id_to_recently_seen() const;
 
  private:
   // TODO combine the set and map?
@@ -56,8 +57,9 @@ class HeartbeatHistory {
   // TODO what does the style guide say about static methods?
   static HeartbeatId MakeHeartbeatId(const Heartbeat* b);
   std::unordered_set<HeartbeatId> seen_;
-  // TODO make into array-type mapping for better efficiency?
+  // TODO make into array-type mapping for better efficiency/style?
   std::unordered_map<Id, boost::circular_buffer<Time> > last_seen_;
+  std::unordered_map<Id, std::vector<bool> > id_to_recently_seen_;
   DISALLOW_COPY_AND_ASSIGN(HeartbeatHistory);
 };
 
@@ -99,6 +101,7 @@ class Entity {
   Id id() const;
   SequenceNum NextHeartbeatSeqNum() const;
   std::vector<bool> ComputeRecentlySeen() const;
+  std::vector<unsigned int> ComputePartitions() const;
   void UpdateLinkCapacities(Time);
   /* A switch is considered "recently seen" if its hearbeats have been seen
    * kMinTimes times in the last kMaxRecent seconds.
