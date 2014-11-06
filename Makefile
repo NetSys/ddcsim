@@ -9,7 +9,7 @@
 
 # USER SETTINGS
 # TODO force recompilation when these variables change
-OPTLVL=$(DBG)
+OPTLVL=$(OPT)
 EXEFILE=pilosim
 GLOGLIB=/usr/local/lib/libglog.a
 PROGOPTSLIB=/home/sam/Documents/netsys/pilo/boost_1_56_0/stage/lib/libboost_program_options.a

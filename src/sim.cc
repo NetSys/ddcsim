@@ -87,6 +87,7 @@ void InitLogging(const char* argv0) {
   FLAGS_stderrthreshold = 1;
   FLAGS_log_dir = "./logs/";
   FLAGS_log_prefix = false;
+  FLAGS_minloglevel = 1;
 }
 
 int main(int ac, char* av[]) {

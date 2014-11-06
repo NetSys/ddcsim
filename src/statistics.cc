@@ -15,32 +15,32 @@ const string Statistics::LOG_SUFFIX = ".txt";
 const string Statistics::USAGE_LOG_NAME = "network_usage.txt";
 const string Statistics::SEPARATOR = ",";
 
-Statistics::Statistics(Scheduler& s) : scheduler_(s), id_to_log_(),
-                                       bandwidth_usage_log_() {}
+//Statistics::Statistics(Scheduler& s) : scheduler_(s), id_to_log_(),
+Statistics::Statistics(Scheduler& s) : scheduler_(s), bandwidth_usage_log_() {}
 
 Statistics::~Statistics() {
-  for(auto it = id_to_log_.begin(); it != id_to_log_.end(); ++it) {
-    (*it)->close();
-    delete(*it);
-  }
+  // for(auto it = id_to_log_.begin(); it != id_to_log_.end(); ++it) {
+  //   (*it)->close();
+  //   delete(*it);
+  // }
 
   bandwidth_usage_log_.close();
 }
 
 void Statistics::Init() {
-  for(Id id = 0; id < scheduler_.kMaxEntities; ++id) {
-    id_to_log_.push_back(new ofstream);
-    id_to_log_[id]->open(LOG_PREFIX + to_string(id) + LOG_SUFFIX);
-  }
+  // for(Id id = 0; id < scheduler_.kMaxEntities; ++id) {
+  //   id_to_log_.push_back(new ofstream);
+  //   id_to_log_[id]->open(LOG_PREFIX + to_string(id) + LOG_SUFFIX);
+  // }
 
   bandwidth_usage_log_.open(USAGE_LOG_NAME);
 }
 
 void Statistics::Record(Heartbeat* h) {
   // TODO why does glog CHECK_EQ throw compiler errors?
-  CHECK(h->AffectedEntitiesBegin() + 1 == h->AffectedEntitiesEnd());
-  Id id = (*(h->AffectedEntitiesBegin()))->id();
-  *(id_to_log_[id]) << h->time() << SEPARATOR << h->size() << "\n";
+  // CHECK(h->AffectedEntitiesBegin() + 1 == h->AffectedEntitiesEnd());
+  // Id id = (*(h->AffectedEntitiesBegin()))->id();
+  // *(id_to_log_[id]) << h->time() << SEPARATOR << h->size() << "\n";
 }
 
 void Statistics::RecordSend(Event* e) {

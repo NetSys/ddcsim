@@ -31,7 +31,7 @@ class Statistics {
    * better solution.
    */
   // TODO more descriptive name
-  std::vector<std::ofstream*> id_to_log_;
+  //  std::vector<std::ofstream*> id_to_log_;
   std::ofstream bandwidth_usage_log_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };

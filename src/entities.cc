@@ -89,7 +89,7 @@ void Entity::Handle(Up* u) { is_up_ = true; }
 void Entity::Handle(Down* d) { is_up_ = false; }
 
 void Entity::Handle(Heartbeat* h) {
-  stats_.Record(h);  // TODO should this be after next line?
+  //  stats_.Record(h);  // TODO should this be after next line?
 
   if(dist_(entropy_src_) == 0) {
     LOG(INFO) << "Packet dropped randomly";

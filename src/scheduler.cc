@@ -109,16 +109,18 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
     stats.RecordSend(new_event);
   } else {
     // TODO better drop message
-    LOG(INFO) << "Packet dropped due to insufficient link capacity";
+    //LOG(INFO) << "Packet dropped due to insufficient link capacity";
+    LOG(ERROR) << "Packet dropped due to insufficient link capacity";
     delete new_event;
   }
 }
 
 // TODO do a better job of sharing the id_to_entity_ mapping between reader
 void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
-  Time last_time;
+  Time last_time, next_milestone, milestone_granularity;
 
   last_time = cur_time_ = START_TIME;
+  next_milestone = milestone_granularity = 0.05;
 
   while(HasNextEvent() && cur_time_ < end_time_) {
     Event* ev = NextEvent();
@@ -126,6 +128,11 @@ void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
     last_time = cur_time_;
     cur_time_ = ev->time();
     CHECK_GE(cur_time_, last_time);
+
+    if (cur_time_ / end_time_ > next_milestone) {
+      LOG(WARNING) << "Progress: " << (next_milestone * 100) << "%";
+      next_milestone += milestone_granularity;
+    }
 
     // TODO put this functionality somewhere else?
 
