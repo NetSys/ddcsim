@@ -77,17 +77,13 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
   return true;
 }
 
-void DeleteEntities(unordered_map<Id, Entity*>& id_to_entity) {
-  for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
-    delete it->second;
-}
-
 void InitLogging(const char* argv0) {
   google::InitGoogleLogging(argv0);
   FLAGS_stderrthreshold = 1;
   FLAGS_log_dir = "./logs/";
   FLAGS_log_prefix = false;
   FLAGS_minloglevel = 1;
+  FLAGS_logbuflevel = 0;
 }
 
 int main(int ac, char* av[]) {
@@ -139,7 +135,8 @@ int main(int ac, char* av[]) {
   for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end(); ++it)
     sched.AddEvent(new InitiateHeartbeat(init_dist(entropy_src), it->second));
 
-  for (Time t = heartbeat_period; t < sched.end_time(); t+= heartbeat_period)
+  // TODO verify semantics of end_time
+  for (Time t = heartbeat_period; t <= sched.end_time(); t += heartbeat_period)
     for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
          ++it)
       sched.AddEvent(new InitiateHeartbeat(t + dist(entropy_src), it->second));
@@ -147,10 +144,6 @@ int main(int ac, char* av[]) {
   stats.Init();
 
   sched.StartSimulation(in.id_to_entity());
-
-  // TODO log remaining events in scheduler for post-morterm inspection
-
-  DeleteEntities(in.id_to_entity());
 
   return 0;
 }

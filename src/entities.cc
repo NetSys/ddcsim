@@ -14,8 +14,9 @@ using std::unordered_map;
 using std::vector;
 
 #define LOG_HANDLE(level, type, var)                                    \
-  LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":"; \
-  LOG(level) << var->Description();
+  if (level >= FLAGS_minloglevel) {                                     \
+    LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":" << var->Description(); \
+  }
 
 HeartbeatHistory::HeartbeatHistory() : seen_(), last_seen_(),
                                        id_to_recently_seen_() {}
@@ -33,7 +34,7 @@ void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   times.push_back(time_seen);
 
   id_to_recently_seen_.erase(id);
-  id_to_recently_seen_.insert({id, b->recently_seen()});
+  //  id_to_recently_seen_.insert({id, b->recently_seen()});
 }
 
 bool HeartbeatHistory::HasBeenSeen(const Heartbeat* b) const {

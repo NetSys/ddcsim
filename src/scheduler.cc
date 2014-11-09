@@ -100,19 +100,24 @@ template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port ou
   Event* new_event = s(sender, msg_in, receiver, in);
 
   // TODO clean this up
-  Size sz = new_event->size();
-  BandwidthMeter& m = l.port_to_link_[out].meter;
+  // Size sz = new_event->size();
+  // BandwidthMeter& m = l.port_to_link_[out].meter;
 
-  if(m.CanSend(sz)) {
-    m.Send(sz);
+  // if(m.CanSend(sz)) {
+  //   m.Send(sz);
+  // TODO move this before allocation of new_event?
+  if(new_event->time() <= end_time_) {
     AddEvent(new_event);
     stats.RecordSend(new_event);
   } else {
-    // TODO better drop message
-    //LOG(INFO) << "Packet dropped due to insufficient link capacity";
-    LOG(ERROR) << "Packet dropped due to insufficient link capacity";
     delete new_event;
   }
+  // } else {
+  //   // TODO better drop message
+  //   //LOG(INFO) << "Packet dropped due to insufficient link capacity";
+  //   LOG(ERROR) << "Packet dropped due to insufficient link capacity";
+  //   delete new_event;
+  // }
 }
 
 // TODO do a better job of sharing the id_to_entity_ mapping between reader
@@ -136,8 +141,8 @@ void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
 
     // TODO put this functionality somewhere else?
 
-    for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
-      it->second->UpdateLinkCapacities(cur_time_ - last_time);
+    // for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
+    //   it->second->UpdateLinkCapacities(cur_time_ - last_time);
 
      for (auto it = ev->AffectedEntitiesBegin(); it != ev->AffectedEntitiesEnd();
          ++it)

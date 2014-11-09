@@ -24,6 +24,8 @@ class LinkAlert;
 class InitiateHeartbeat;
 class Statistics;
 
+enum lvl_to_num : int {INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3};
+
 /* Specialize the standard hash function for HeartbeatId's and LinkId's*/
 namespace std {
 template<> struct hash<pair<unsigned int, const Entity*>> {
