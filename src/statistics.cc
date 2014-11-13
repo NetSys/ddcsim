@@ -4,7 +4,7 @@
 #include "scheduler.h"
 
 #include <glog/logging.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 using std::string;
@@ -13,11 +13,15 @@ using std::ofstream;
 
 const string Statistics::LOG_PREFIX = "log_";
 const string Statistics::LOG_SUFFIX = ".txt";
-const string Statistics::USAGE_LOG_NAME = "/mnt/sda1/sam/network_usage.txt";
+const string Statistics::USAGE_LOG_NAME = "network_usage.txt";
 const string Statistics::SEPARATOR = ",";
+const Time Statistics::WINDOW_SIZE = 0.05; /* 50 ms */
 
 //Statistics::Statistics(Scheduler& s) : scheduler_(s), id_to_log_(),
-Statistics::Statistics(Scheduler& s) : scheduler_(s), bandwidth_usage_log_() {}
+Statistics::Statistics(Scheduler& s) : scheduler_(s), bandwidth_usage_log_(),
+                                       window_left_(START_TIME),
+                                       window_right_(WINDOW_SIZE),
+                                       cur_window_count_(0) {}
 
 Statistics::~Statistics() {
   // for(auto it = id_to_log_.begin(); it != id_to_log_.end(); ++it) {
@@ -46,5 +50,14 @@ void Statistics::Record(Heartbeat* h) {
 
 void Statistics::RecordSend(Event* e) {
   Time put_on_link = e->time() + Scheduler::kComputationDelay;
-  bandwidth_usage_log_ << put_on_link << SEPARATOR << e->size() << "\n";
+
+  if (! (window_left_ <= put_on_link && put_on_link < window_right_)) {
+    bandwidth_usage_log_ << put_on_link << SEPARATOR << cur_window_count_ << "\n";
+
+    cur_window_count_ = 0;
+    window_left_ = floor(put_on_link / WINDOW_SIZE);
+    window_right_ = window_left_ + WINDOW_SIZE;
+  }
+
+  cur_window_count_ += e->size();
 }

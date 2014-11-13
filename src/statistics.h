@@ -23,6 +23,7 @@ class Statistics {
   static const std::string LOG_SUFFIX;
   static const std::string USAGE_LOG_NAME;
   static const std::string SEPARATOR;
+  static const Time WINDOW_SIZE;
 
  private:
   Scheduler& scheduler_;
@@ -33,6 +34,9 @@ class Statistics {
   // TODO more descriptive name
   //  std::vector<std::ofstream*> id_to_log_;
   std::ofstream bandwidth_usage_log_;
+  Time window_left_;
+  Time window_right_;
+  Size cur_window_count_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };
 
