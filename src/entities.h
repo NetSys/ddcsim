@@ -102,7 +102,7 @@ class Entity {
   Links& links(); // TODO didn't want to do it...
   Id id() const;
   SequenceNum NextHeartbeatSeqNum() const;
-  std::vector<bool> ComputeRecentlySeen() const;
+  BV ComputeRecentlySeen() const;
   std::vector<unsigned int> ComputePartitions() const;
   void UpdateLinkCapacities(Time);
   /* A switch is considered "recently seen" if its hearbeats have been seen

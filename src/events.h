@@ -132,10 +132,11 @@ class Broadcast : public Event {
 
 class Heartbeat : public Broadcast {
  public:
-  Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum, std::vector<bool>);
+  Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum, BV);
+  ~Heartbeat();
   SequenceNum sn() const;
   const Entity* src() const;
-  std::vector<bool> recently_seen() const;
+  BV recently_seen() const;
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
@@ -144,7 +145,7 @@ class Heartbeat : public Broadcast {
  protected:
   const SequenceNum sn_;
   const Entity* src_; // TODO better to change to a ref?
-  const std::vector<bool> recently_seen_;
+  BV recently_seen_;
   unsigned int current_partition_;
   Id leader_;
 

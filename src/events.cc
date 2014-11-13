@@ -128,25 +128,36 @@ Size Broadcast::size() const {
 }
 
 Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity,
-                     Port in, SequenceNum sn, vector<bool> r) :
+                     Port in, SequenceNum sn, BV r) :
     Broadcast(t, affected_entity, in), src_(src), sn_(sn), recently_seen_(r),
-    leader_(NONE_ID), current_partition_(0) {}
+    leader_(NONE_ID), current_partition_(0) {
+  recently_seen_.ref_count_ = recently_seen_.ref_count_ + 1;
+}
+
+Heartbeat::~Heartbeat() {
+  *(recently_seen_.ref_count_) = *(recently_seen_.ref_count_) - 1;
+  
+  if(recently_seen_.ref_count_ == 0) {
+    delete recently_seen_.bv_;
+    delete recently_seen_.ref_count_;
+  }
+}
 
 SequenceNum Heartbeat::sn() const { return sn_; }
 
 const Entity* Heartbeat::src() const { return src_; }
 
-vector<bool> Heartbeat::recently_seen() const { return recently_seen_; }
+BV Heartbeat::recently_seen() const { return recently_seen_; }
 
 void Heartbeat::Handle(Entity* e) { e->Handle(this); }
 
 string Heartbeat::Description() const {
   return Broadcast::Description() +
-      " sn_=" + to_string(sn_) +
-      " src_=" + to_string(src_->id()) +
-      " current_parition_=" + to_string(current_partition_) +
-      " leader_=" + to_string(leader_) +
-      " recently_seen_=" + to_string(recently_seen_);
+    " sn_=" + to_string(sn_) +
+    " src_=" + to_string(src_->id()) +
+    " current_parition_=" + to_string(current_partition_) +
+    " leader_=" + to_string(leader_) +
+    " recently_seen_=" + to_string(*recently_seen_.bv_);
 }
 
 string Heartbeat::Name() const { return "Heartbeat"; }
@@ -154,7 +165,7 @@ string Heartbeat::Name() const { return "Heartbeat"; }
 Size Heartbeat::size() const {
   // TODO how to automate this?
   return Broadcast::size() + sizeof(sn_) + sizeof(src_) +
-      ceil(recently_seen_.size() / 8.0) + sizeof(leader_) + sizeof(current_partition_);
+      ceil(recently_seen_.bv_->size() / 8.0) + sizeof(leader_) + sizeof(current_partition_);
 }
 
 LinkAlert::LinkAlert(Time t, Entity* e, Port i, const Entity* s, Port p, bool b)

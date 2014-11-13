@@ -125,8 +125,7 @@ Id Entity::id() const { return id_; }
 
 SequenceNum Entity::NextHeartbeatSeqNum() const { return next_heartbeat_; }
 
-// TODO how to avoid copying here?
-vector<bool> Entity::ComputeRecentlySeen() const {
+BV Entity::ComputeRecentlySeen() const {
   vector<bool> recently_seen(Scheduler::kMaxEntities, false);
 
   for(Id id = 0; id < Scheduler::kMaxEntities; ++id) {
@@ -138,8 +137,12 @@ vector<bool> Entity::ComputeRecentlySeen() const {
             scheduler_.cur_time() - *t < kMaxRecent;
     }
   }
-
-  return recently_seen;
+  
+  BV rtn;
+  rtn.bv_ = new vector<bool>(recently_seen);
+  rtn.ref_count_ = new unsigned int(0);
+  
+  return rtn;
 }
 
 class Visitor {

@@ -4,6 +4,7 @@
 #include "scheduler.h"
 
 #include <glog/logging.h>
+#include <math.h>
 #include <iostream>
 
 using std::string;
@@ -12,7 +13,7 @@ using std::ofstream;
 
 const string Statistics::LOG_PREFIX = "log_";
 const string Statistics::LOG_SUFFIX = ".txt";
-const string Statistics::USAGE_LOG_NAME = "network_usage.txt";
+const string Statistics::USAGE_LOG_NAME = "/mnt/sda1/sam/network_usage.txt";
 const string Statistics::SEPARATOR = ",";
 
 //Statistics::Statistics(Scheduler& s) : scheduler_(s), id_to_log_(),

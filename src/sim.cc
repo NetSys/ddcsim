@@ -80,10 +80,16 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
 void InitLogging(const char* argv0) {
   google::InitGoogleLogging(argv0);
   FLAGS_stderrthreshold = 1;
-  FLAGS_log_dir = "./logs/";
+  FLAGS_log_dir = "/mnt/sda1/sam/";
   FLAGS_log_prefix = false;
   FLAGS_minloglevel = 1;
   FLAGS_logbuflevel = 0;
+}
+
+// TODO remove after valgrind
+void DeleteEntities(unordered_map<Id, Entity*>& id_to_entity) {
+  for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
+    delete it->second;
 }
 
 int main(int ac, char* av[]) {
@@ -144,6 +150,8 @@ int main(int ac, char* av[]) {
   stats.Init();
 
   sched.StartSimulation(in.id_to_entity());
+
+  DeleteEntities(in.id_to_entity());
 
   return 0;
 }
