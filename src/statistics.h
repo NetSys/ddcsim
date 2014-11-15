@@ -11,12 +11,6 @@ class Event;
 class Heartbeat;
 class Scheduler;
 
-typedef struct outpair {
- public:
-  Time put_on_link;
-  Size size;
-} OutPair;
-
 class Statistics {
  public:
   Statistics(Scheduler&);
@@ -24,14 +18,12 @@ class Statistics {
   void Init();
   void Record(Heartbeat*);
   void RecordSend(Event*);
-  void WriteOut();
   // TODO allow the user to set the prefix and suffix
   static const std::string LOG_PREFIX;
   static const std::string LOG_SUFFIX;
   static const std::string USAGE_LOG_NAME;
   static const std::string SEPARATOR;
   static const Time WINDOW_SIZE;
-
  private:
   Scheduler& scheduler_;
   /* Having to store pointers to ofstream's rather than the object itself is an
@@ -44,7 +36,6 @@ class Statistics {
   Time window_left_;
   Time window_right_;
   Size cur_window_count_;
-  std::vector<OutPair> to_write_out_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };
 
