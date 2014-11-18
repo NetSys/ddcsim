@@ -1,5 +1,4 @@
 #include <string>
-#include <utility>
 
 #include <glog/logging.h>
 
@@ -144,9 +143,9 @@ void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
     // for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
     //   it->second->UpdateLinkCapacities(cur_time_ - last_time);
 
-     for (auto it = ev->AffectedEntitiesBegin(); it != ev->AffectedEntitiesEnd();
+    for (auto it = ev->AffectedEntitiesBegin(); it != ev->AffectedEntitiesEnd();
          ++it)
-       ev->Handle(*it);
+      ev->Handle(*it);
 
     delete ev;
   }

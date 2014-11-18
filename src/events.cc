@@ -1,3 +1,4 @@
+#include "bv.h"
 #include "entities.h"
 #include "events.h"
 
@@ -131,13 +132,13 @@ Heartbeat::Heartbeat(Time t, const Entity* src, Entity* affected_entity,
                      Port in, SequenceNum sn, BV r) :
     Broadcast(t, affected_entity, in), src_(src), sn_(sn), recently_seen_(r),
     leader_(NONE_ID), current_partition_(0) {
-  recently_seen_.ref_count_ = recently_seen_.ref_count_ + 1;
+  ++(*recently_seen_.ref_count_);
 }
 
 Heartbeat::~Heartbeat() {
-  *(recently_seen_.ref_count_) = *(recently_seen_.ref_count_) - 1;
-  
-  if(recently_seen_.ref_count_ == 0) {
+  --(*(recently_seen_.ref_count_));
+
+  if(*(recently_seen_.ref_count_) == 0) {
     delete recently_seen_.bv_;
     delete recently_seen_.ref_count_;
   }
@@ -156,16 +157,16 @@ string Heartbeat::Description() const {
     " sn_=" + to_string(sn_) +
     " src_=" + to_string(src_->id()) +
     " current_parition_=" + to_string(current_partition_) +
-    " leader_=" + to_string(leader_) +
-    " recently_seen_=" + to_string(*recently_seen_.bv_);
+      " leader_=" + to_string(leader_);
+    // " recently_seen_=" + to_string(*recently_seen_.bv_);
 }
 
 string Heartbeat::Name() const { return "Heartbeat"; }
 
 Size Heartbeat::size() const {
   // TODO how to automate this?
-  return Broadcast::size() + sizeof(sn_) + sizeof(src_) +
-      ceil(recently_seen_.bv_->size() / 8.0) + sizeof(leader_) + sizeof(current_partition_);
+  return Broadcast::size() + sizeof(sn_) + sizeof(src_);
+      //      ceil(recently_seen_.bv_->size() / 8.0) + sizeof(leader_) + sizeof(current_partition_);
 }
 
 LinkAlert::LinkAlert(Time t, Entity* e, Port i, const Entity* s, Port p, bool b)

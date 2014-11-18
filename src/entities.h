@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 
+#include "bv.h"
 #include "common.h"
 #include "links.h"
 
@@ -102,7 +103,7 @@ class Entity {
   Links& links(); // TODO didn't want to do it...
   Id id() const;
   SequenceNum NextHeartbeatSeqNum() const;
-  BV ComputeRecentlySeen() const;
+  BV ComputeRecentlySeen();
   std::vector<unsigned int> ComputePartitions() const;
   void UpdateLinkCapacities(Time);
   /* A switch is considered "recently seen" if its hearbeats have been seen
@@ -120,6 +121,8 @@ class Entity {
   Id id_;
   bool is_up_;
   Statistics& stats_;
+  BV cached_bv_;
+  bool is_cache_valid_;
   // TODO should be using the same entropy source as in sim.cc?
   // TODO clean this up
   std::default_random_engine entropy_src_;

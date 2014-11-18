@@ -19,11 +19,6 @@ const Id NONE_ID = -1;
 /* Special times */
 const Time START_TIME = 0;
 
-typedef struct BV {
-  std::vector<bool>* bv_;
-  unsigned int* ref_count_;
-} BV;
-
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
   DISALLOW_COPY(TypeName); DISALLOW_ASSIGN(TypeName)
 

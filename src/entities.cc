@@ -1,3 +1,4 @@
+#include "bv.h"
 #include "entities.h"
 #include "events.h"
 #include "statistics.h"
@@ -81,6 +82,8 @@ Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
                                                        next_heartbeat_(0),
                                                        stats_(st),
                                                        entropy_src_(),
+                                                       cached_bv_(nullptr, nullptr),
+                                                       is_cache_valid_(false),
                                                        dist_{1, 999} {
   CHECK_GE(kMinTimes, 1);
 }
@@ -99,8 +102,10 @@ void Entity::Handle(Heartbeat* h) {
 
   if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
 
-  for(Port p = 0; p < links_.PortCount(); ++p)
-    if(h->in_port() != p)
+  is_cache_valid_ = false;
+
+  for(Port p = 0, in = h->in_port(); p < links_.PortCount(); ++p)
+    if(in != p)
       scheduler_.Forward(this, h, p, stats_);
 
   heart_history_.MarkAsSeen(h, scheduler_.cur_time());
@@ -125,24 +130,36 @@ Id Entity::id() const { return id_; }
 
 SequenceNum Entity::NextHeartbeatSeqNum() const { return next_heartbeat_; }
 
-BV Entity::ComputeRecentlySeen() const {
-  vector<bool> recently_seen(Scheduler::kMaxEntities, false);
+BV Entity::ComputeRecentlySeen() {
+  if(!is_cache_valid_) {
+    vector<bool>* rs = new vector<bool>(Scheduler::kMaxEntities, false);
+    vector<bool>& recently_seen = *rs;
 
-  for(Id id = 0; id < Scheduler::kMaxEntities; ++id) {
-    if(heart_history_.HasBeenSeen(id)) {
-      circular_buffer<Time> times_seen = heart_history_.LastSeen(id);
-      recently_seen[id] = true;
-      for(auto t = times_seen.begin(); t != times_seen.end(); ++t)
-        recently_seen[id] = recently_seen[id] &&
-            scheduler_.cur_time() - *t < kMaxRecent;
+    for(Id id = 0; id < Scheduler::kMaxEntities; ++id) {
+      if(heart_history_.HasBeenSeen(id)) {
+        circular_buffer<Time> times_seen = heart_history_.LastSeen(id);
+        recently_seen[id] = true;
+        for(auto t = times_seen.begin(); t != times_seen.end(); ++t)
+          recently_seen[id] = recently_seen[id] &&
+              scheduler_.cur_time() - *t < kMaxRecent;
+      }
     }
+
+    if(cached_bv_.ref_count_ != NULL || cached_bv_.bv_ != NULL) {
+      CHECK_NOTNULL(cached_bv_.ref_count_);
+      CHECK_NOTNULL(cached_bv_.bv_);
+      --(*(cached_bv_.ref_count_));
+      if(*(cached_bv_.ref_count_) == 0) {
+        delete cached_bv_.bv_;
+        delete cached_bv_.ref_count_;
+      }
+    }
+
+    cached_bv_ = BV(rs, new unsigned int(1));
+    is_cache_valid_ = true;
   }
-  
-  BV rtn;
-  rtn.bv_ = new vector<bool>(recently_seen);
-  rtn.ref_count_ = new unsigned int(0);
-  
-  return rtn;
+
+  return cached_bv_;
 }
 
 class Visitor {
@@ -294,7 +311,7 @@ void Switch::Handle(LinkAlert* alert) {
 
   if(! (alert->is_up_ ^ link_history_.LinkIsUp(alert))) return;
 
-  for(Port p = 0; p < links_.PortCount(); ++p)
+  for(Port p = 0, in = alert->in_port(); p < links_.PortCount(); ++p)
     if(alert->in_port() != p)
       scheduler_.Forward(this, alert, p, stats_);
 
