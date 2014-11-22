@@ -13,7 +13,7 @@ using std::ofstream;
 
 const string Statistics::LOG_PREFIX = "log_";
 const string Statistics::LOG_SUFFIX = ".txt";
-const string Statistics::USAGE_LOG_NAME = "/mnt/sam/tmp/r1/network_usage.txt";
+const string Statistics::USAGE_LOG_NAME = "/mnt/sam/tmp/opt/network_usage.txt";
 const string Statistics::SEPARATOR = ",";
 const Time Statistics::WINDOW_SIZE = 0.05; /* 50 ms */
 
@@ -38,7 +38,7 @@ void Statistics::Init() {
   //   id_to_log_[id]->open(LOG_PREFIX + to_string(id) + LOG_SUFFIX);
   // }
 
-  bandwidth_usage_log_.open(USAGE_LOG_NAME);
+  bandwidth_usage_log_.open(USAGE_LOG_NAME, ofstream::out | ofstream::app);
 }
 
 void Statistics::Record(Heartbeat* h) {
@@ -53,7 +53,7 @@ void Statistics::RecordSend(Event* e) {
 
   if (! (window_left_ <= put_on_link && put_on_link < window_right_)) {
     bandwidth_usage_log_ << window_left_ << SEPARATOR << cur_window_count_ << "\n";
-    
+
     cur_window_count_ = 0;
     window_left_ = floor(put_on_link / WINDOW_SIZE) * WINDOW_SIZE;
     window_right_ = window_left_ + WINDOW_SIZE;

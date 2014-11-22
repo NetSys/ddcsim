@@ -65,7 +65,7 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
 
   variables_map vm;
   store(command_line_parser(ac, av).options(desc).positional(p).run(),
-            vm);
+	vm);
   notify(vm);
 
   // TODO only trigger if help is not specified
@@ -80,7 +80,7 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
 void InitLogging(const char* argv0) {
   google::InitGoogleLogging(argv0);
   FLAGS_stderrthreshold = 1;
-  FLAGS_log_dir = "/mnt/sda1/sam/";
+  FLAGS_log_dir = "/mnt/sam/tmp/opt/";
   FLAGS_log_prefix = false;
   FLAGS_minloglevel = 1;
   FLAGS_logbuflevel = 0;
@@ -151,7 +151,7 @@ int main(int ac, char* av[]) {
 
   sched.StartSimulation(in.id_to_entity());
 
-  DeleteEntities(in.id_to_entity());
+  //DeleteEntities(in.id_to_entity()); put in for valgrind
 
   return 0;
 }

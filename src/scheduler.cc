@@ -65,7 +65,7 @@ Scheduler::Scheduler(Time end_time) : event_queue_(),
                                       end_time_(end_time) {}
 
 void Scheduler::AddEvent(Event* e) {
-  event_queue_.push(e);
+  event_queue_.emplace(e->time(), e);
 }
 
 bool Scheduler::HasNextEvent() {
@@ -73,14 +73,14 @@ bool Scheduler::HasNextEvent() {
 }
 
 Event* Scheduler::NextEvent() {
-  Event* next = event_queue_.top();
+  std::pair<Time, Event*> next = event_queue_.top();
   event_queue_.pop();
-  return next;
+  return next.second;
 }
 
-bool Scheduler::Comparator::operator() (const Event* const lhs,
-                                        const Event* const rhs) const {
-  return lhs->time() > rhs->time();
+bool Scheduler::Comparator::operator() (const std::pair<Time, const Event* const> lhs,
+                                        const std::pair<Time, const Event* const> rhs) const {
+  return lhs.first > rhs.first;
 }
 
 // TODO why isn't partial specialization of methods allowed?

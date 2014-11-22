@@ -3,6 +3,7 @@
 
 #include <queue>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "common.h"
@@ -26,7 +27,8 @@ class Scheduler {
    */
   class Comparator {
    public:
-    bool operator() (const Event* const, const Event* const) const;
+    bool operator() (const std::pair<Time, const Event* const>,
+                     const std::pair<Time, const Event* const>) const;
   };
 
  public:
@@ -52,7 +54,8 @@ class Scheduler {
   Event* NextEvent();
   Time cur_time_;
   Time end_time_;
-  std::priority_queue<Event*, std::vector<Event*>, Comparator> event_queue_;
+  std::priority_queue<std::pair<Time, Event*>, std::vector<std::pair<Time, Event*> >, Comparator> event_queue_;
+  //boost::heap::fibonacci_heap<std::pair<Time, Event*>, boost::heap::compare<Comparator> > event_queue_;
   DISALLOW_COPY_AND_ASSIGN(Scheduler);
 };
 
