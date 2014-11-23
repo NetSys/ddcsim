@@ -15,7 +15,7 @@ class Statistics {
  public:
   Statistics(Scheduler&);
   ~Statistics();
-  void Init();
+  void Init(std::string);
   void Record(Heartbeat*);
   void RecordSend(Event*);
   // TODO allow the user to set the prefix and suffix

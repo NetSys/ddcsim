@@ -13,7 +13,7 @@ using std::ofstream;
 
 const string Statistics::LOG_PREFIX = "log_";
 const string Statistics::LOG_SUFFIX = ".txt";
-const string Statistics::USAGE_LOG_NAME = "/mnt/sam/tmp/opt/network_usage.txt";
+const string Statistics::USAGE_LOG_NAME = "network_usage.txt";
 const string Statistics::SEPARATOR = ",";
 const Time Statistics::WINDOW_SIZE = 0.05; /* 50 ms */
 
@@ -32,13 +32,14 @@ Statistics::~Statistics() {
   bandwidth_usage_log_.close();
 }
 
-void Statistics::Init() {
+void Statistics::Init(string out_prefix) {
   // for(Id id = 0; id < scheduler_.kMaxEntities; ++id) {
   //   id_to_log_.push_back(new ofstream);
   //   id_to_log_[id]->open(LOG_PREFIX + to_string(id) + LOG_SUFFIX);
   // }
 
-  bandwidth_usage_log_.open(USAGE_LOG_NAME, ofstream::out | ofstream::app);
+  bandwidth_usage_log_.open(out_prefix + USAGE_LOG_NAME,
+                            ofstream::out | ofstream::app);
 }
 
 void Statistics::Record(Heartbeat* h) {

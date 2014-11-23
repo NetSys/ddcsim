@@ -9,22 +9,24 @@
 
 # USER SETTINGS
 # TODO force recompilation when these variables change
-OPTLVL=$(OPT)
+OPTLVL=$(DBG)
 EXEFILE=pilosim
 GLOGLIB=/usr/local/lib/libglog.a
 PROGOPTSLIB=/home/sam/Documents/netsys/pilo/boost_1_56_0/stage/lib/libboost_program_options.a
+SYSTEMLIB=/home/sam/Documents/netsys/pilo/boost_1_56_0/stage/lib/libboost_system.a
 BOOSTHEADERS=/home/sam/Documents/netsys/pilo/boost_1_56_0
 # END
 
 CXX=g++
 LDLIBS=-lpthread
-STATICLIBS= $(GLOGLIB) $(PROGOPTSLIB)
+STATICLIBS= $(GLOGLIB) $(PROGOPTSLIB) $(SYSTEMLIB)
 # TODO why doesn't this work with relative addressing using period?
 YAMLHEADERS=$(CURDIR)/yaml-cpp-0.5.1/include/
 
 SUBDIRS=src yaml-cpp-0.5.1
 OPT=-O3
 DBG=-O0 -g
+PRO=-O1 -pg
 
 export OPTLVL
 export CXX

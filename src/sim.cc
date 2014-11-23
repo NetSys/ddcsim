@@ -29,7 +29,7 @@ using po::notify;
 bool ParseArgs(int ac, char* av[], string& topo_file_path,
                string& event_file_path, Time& heartbeat_period,
                Time& end_time, int& max_entities,
-               Size& bucket_capacity, Rate& fill_rate) {
+               Size& bucket_capacity, Rate& fill_rate, string& out_prefix) {
   options_description desc("Allowed options");
   desc.add_options()
       ("help",
@@ -55,7 +55,10 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
        "the size of the bucket in the token bucket scheme (in units of bytes)")
       ("fill-rate,R",
        value<Rate>(&fill_rate)->default_value(BandwidthMeter::kDefaultRate),
-       "the rate at which the token bucket fills up (in units of bytes/sec)");
+       "the rate at which the token bucket fills up (in units of bytes/sec)")
+      ("out-prefix,o",
+       value<string>(&out_prefix)->default_value("./"),
+       "directory to put out files");
 
   // TODO better names for the variables R and M
   // TODO add an uncapped option
@@ -77,10 +80,10 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
   return true;
 }
 
-void InitLogging(const char* argv0) {
+void InitLogging(const char* argv0, string out_prefix) {
   google::InitGoogleLogging(argv0);
   FLAGS_stderrthreshold = 1;
-  FLAGS_log_dir = "/mnt/sam/tmp/opt/";
+  FLAGS_log_dir = out_prefix;
   FLAGS_log_prefix = false;
   FLAGS_minloglevel = 1;
   FLAGS_logbuflevel = 0;
@@ -100,14 +103,15 @@ int main(int ac, char* av[]) {
   int max_entities;
   Size bucket_capacity;
   Rate fill_rate;
-
-  InitLogging(av[0]);
+  string out_prefix;
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
                               heartbeat_period, end_time, max_entities,
-                              bucket_capacity, fill_rate);
+                              bucket_capacity, fill_rate, out_prefix);
 
   if(!valid_args) return -1;
+
+  InitLogging(av[0], out_prefix);
 
   Scheduler sched(end_time);
 
@@ -147,7 +151,7 @@ int main(int ac, char* av[]) {
          ++it)
       sched.AddEvent(new InitiateHeartbeat(t + dist(entropy_src), it->second));
 
-  stats.Init();
+  stats.Init(out_prefix);
 
   sched.StartSimulation(in.id_to_entity());
 
