@@ -1,16 +1,26 @@
 #include "bv.h"
 #include "entities.h"
 #include "events.h"
+#include "scheduler.h"
 #include "statistics.h"
 
 #include <glog/logging.h>
 
 #include <iostream>
+#include <tuple>
 
 using boost::circular_buffer;
+
+using boost::add_edge;
+using boost::clear_vertex;
+using boost::out_edges;
+using boost::remove_edge;
+using boost::remove_vertex;
+
 using std::default_random_engine;
 using std::discrete_distribution;
 using std::pair;
+using std::tie;
 using std::unordered_map;
 using std::vector;
 
@@ -27,7 +37,7 @@ void HeartbeatHistory::MarkAsSeen(const Heartbeat* b, Time time_seen) {
   // ignore this possibility?
   seen_.insert(MakeHeartbeatId(b));
 
-  Id id = b->src()->id();
+  Id id = b->src_->id();
 
   if(!HasBeenSeen(id))
     last_seen_.insert({id, circular_buffer<Time>(Entity::kMinTimes)});
@@ -55,25 +65,41 @@ unordered_map<Id, vector<bool> > HeartbeatHistory::id_to_recently_seen() const {
 }
 
 HeartbeatHistory::HeartbeatId HeartbeatHistory::MakeHeartbeatId(const Heartbeat* b) {
-  return {b->sn(), b->src()};
+  return {b->sn_, b->src_};
 }
 
-LinkFailureHistory::LinkFailureHistory() : failures_() {}
+LinkState::LinkState(unsigned int num_entities)
+    : id_to_last_seq_num_(num_entities, NONE_SEQNUM),
+      id_to_exp_(num_entities, 0),
+      topology_() {}
 
-bool LinkFailureHistory::LinkIsUp(const LinkAlert* l) const {
-  return failures_.count(MakeLinkId(l)) <= 0;
+bool LinkState::IsStaleUpdate(LinkStateUpdate* ls) {
+  return id_to_last_seq_num_[ls->src_->id()] < ls->sn_;
 }
 
-void LinkFailureHistory::MarkAsDown(const LinkAlert* l) {
-  failures_.insert(MakeLinkId(l));
+void LinkState::Update(LinkStateUpdate* ls) {
+  Id src = ls->src_->id();
+
+  // TODO how to remove edges with a single function call
+  OutEdgeIter ei, ei_end;
+  for (tie(ei, ei_end) = out_edges(src, topology_); ei != ei_end; ++ei)
+    remove_edge(*ei, topology_);
+
+  for(auto dst : ls->neighbors_)
+    add_edge(src, dst, topology_);
+
+  id_to_last_seq_num_[src] = ls->sn_;
+  id_to_exp_[src] = ls->expiration_;
 }
 
-bool LinkFailureHistory::MarkAsUp(const LinkAlert* l) {
-  failures_.erase(MakeLinkId(l));
-}
-
-LinkFailureHistory::LinkId LinkFailureHistory::MakeLinkId(const LinkAlert* l) {
-  return {l->out_, l->src_};
+void LinkState::Refresh(Time cur_time) {
+  for(int id = 0; id < id_to_exp_.size(); ++id) {
+    if(id_to_last_seq_num_[id] != NONE_SEQNUM && cur_time > id_to_exp_[id]) {
+      id_to_last_seq_num_[id] = NONE_SEQNUM;
+      clear_vertex(id, topology_);
+      remove_vertex(id, topology_);
+    }
+  }
 }
 
 Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
@@ -93,18 +119,24 @@ void Entity::Handle(Up* u) { is_up_ = true; }
 void Entity::Handle(Down* d) { is_up_ = false; }
 
 void Entity::Handle(Heartbeat* h) {
-  //  stats_.Record(h);  // TODO should this be after next line?
-
   if(dist_(entropy_src_) == 0) {
     LOG(INFO) << "Packet dropped randomly";
     return;
   }
 
-  if(!is_up_ || heart_history_.HasBeenSeen(h)) return;
+  if(!is_up_) {
+    LOG(INFO) << "Entity is down";
+    return;
+  }
+
+  if(heart_history_.HasBeenSeen(h)) {
+    LOG(INFO) << "Heartbeat has already been seen";
+    return;
+  }
 
   is_cache_valid_ = false;
 
-  for(Port p = 0, in = h->in_port(); p < links_.PortCount(); ++p)
+  for(Port p = 0, in = h->in_port_; p < links_.PortCount(); ++p)
     if(in != p)
       scheduler_.Forward(this, h, p, stats_);
 
@@ -116,7 +148,10 @@ void Entity::Handle(LinkUp* lu) { links_.SetLinkUp(lu->out_); }
 void Entity::Handle(LinkDown* ld) { links_.SetLinkDown(ld->out_); }
 
 void Entity::Handle(InitiateHeartbeat* init) {
-  if(!is_up_) return;
+  if(!is_up_) {
+    LOG(INFO) << "Entity is down";
+    return;
+  }
 
   for(Port p = 0; p < links_.PortCount(); ++p)
     scheduler_.Forward(this, init, p, stats_);
@@ -132,10 +167,10 @@ SequenceNum Entity::NextHeartbeatSeqNum() const { return next_heartbeat_; }
 
 BV Entity::ComputeRecentlySeen() {
   if(!is_cache_valid_) {
-    vector<bool>* rs = new vector<bool>(Scheduler::kMaxEntities, false);
+    vector<bool>* rs = new vector<bool>(scheduler_.num_entities(), false);
     vector<bool>& recently_seen = *rs;
 
-    for(Id id = 0; id < Scheduler::kMaxEntities; ++id) {
+    for(Id id = 0; id < scheduler_.num_entities(); ++id) {
       if(heart_history_.HasBeenSeen(id)) {
         circular_buffer<Time> times_seen = heart_history_.LastSeen(id);
         recently_seen[id] = true;
@@ -245,7 +280,7 @@ vector<unsigned int> Entity::ComputePartitions() const {
   unordered_map<Id, vector<bool> > recently_seen =
       heart_history_.id_to_recently_seen();
 
-  unsigned int num_entities = Scheduler::kMaxEntities;
+  unsigned int num_entities = scheduler_.num_entities();
 
   // TODO change to explicit stack
   // TODO how to avoid iterating through bitvectors?
@@ -268,12 +303,15 @@ const Time Entity::kMaxRecent = 3;
 const unsigned int Entity::kMinTimes = 2;
 
 Switch::Switch(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st),
-                                                       link_history_() {}
+                                                       next_link_state_(0),
+                                                       link_state_(sc.num_entities()) {}
 
 void Switch::Handle(Event* e) { LOG_HANDLE(ERROR, Switch, e) }
 
 void Switch::Handle(Up* u) {
   LOG_HANDLE(INFO, Switch, u)
+
+  scheduler_.AddEvent(new InitiateLinkState(u->time_, this));
 
   Entity::Handle(u);
 }
@@ -296,35 +334,80 @@ void Switch::Handle(LinkUp* lu) {
   LOG_HANDLE(INFO, Switch, lu)
 
   Entity::Handle(lu);
+
+  // TODO fix hack with factories
+  // TODO allow setting in commandline?
+  scheduler_.AddEvent(
+      new InitiateLinkState(lu->time_ + Scheduler::kDefaultHelloDelay, this));
 }
 
 void Switch::Handle(LinkDown* ld) {
   LOG_HANDLE(INFO, Switch, ld)
 
   Entity::Handle(ld);
-}
 
-void Switch::Handle(LinkAlert* alert) {
-  LOG_HANDLE(INFO, Switch, alert)
-
-  if(!is_up_) return;
-
-  if(! (alert->is_up_ ^ link_history_.LinkIsUp(alert))) return;
-
-  for(Port p = 0, in = alert->in_port(); p < links_.PortCount(); ++p)
-    if(alert->in_port() != p)
-      scheduler_.Forward(this, alert, p, stats_);
-
-  if(alert->is_up_)
-    link_history_.MarkAsUp(alert);
-  else
-    link_history_.MarkAsDown(alert);
+  scheduler_.AddEvent(
+      new InitiateLinkState(ld->time_ + Scheduler::kDefaultHelloDelay, this));
 }
 
 void Switch::Handle(InitiateHeartbeat* init) {
   LOG_HANDLE(INFO, Switch, init)
 
   Entity::Handle(init);
+}
+
+void Switch::Handle(LinkStateUpdate* ls) {
+  LOG_HANDLE(INFO, Switch, ls);
+
+  if(!is_up_) {
+    LOG(INFO) << "Entity is down";
+    return;
+  }
+
+  if(scheduler_.cur_time() > ls->expiration_) {
+    LOG(INFO) << "Link state update died of old age";
+    return;
+  }
+
+  link_state_.Refresh(scheduler_.cur_time());
+
+  if(link_state_.IsStaleUpdate(ls)) {
+    // TODO forward newer entry
+    LOG(INFO) << "Link state update has already been seen";
+    return;
+  }
+
+  for(Port p = 0, in = ls->in_port_; p < links_.PortCount(); ++p)
+    if(in != p)
+      scheduler_.Forward(this, ls, p, stats_);
+
+  link_state_.Update(ls);
+}
+
+void Switch::Handle(InitiateLinkState* ls) {
+  LOG_HANDLE(INFO, Switch, ls);
+
+  if(!is_up_) {
+    LOG(INFO) << "Switch is down";
+    return;
+  }
+
+  for(Port p = 0; p < links_.PortCount(); ++p)
+    scheduler_.Forward(this, ls, p, stats_);
+
+  next_link_state_++;
+}
+
+SequenceNum Switch::NextLSSeqNum() const { return next_link_state_; }
+
+vector<Id> Switch::ComputeUpNeighbors() const {
+  vector<Id> up;
+
+  for(Port p = 0; p < links_.PortCount(); ++p)
+    if(links_.IsLinkUp(p))
+      up.push_back(links_.GetEndpoint(p)->id());
+
+  return up;
 }
 
 Controller::Controller(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st) {}
@@ -363,12 +446,12 @@ void Controller::Handle(LinkDown* ld) {
   Entity::Handle(ld);
 }
 
-void Controller::Handle(LinkAlert* alert) {
-  LOG_HANDLE(INFO, Controller, alert);
-}
-
 void Controller::Handle(InitiateHeartbeat* init) {
   LOG_HANDLE(INFO, Controller, init)
 
   Entity::Handle(init);
 }
+
+void Controller::Handle(LinkStateUpdate* ls) { LOG_HANDLE(ERROR, Controller, ls) }
+
+void Controller::Handle(InitiateLinkState* ls) { LOG_HANDLE(ERROR, Controller, ls) }

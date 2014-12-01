@@ -5,7 +5,6 @@
 #include <glog/logging.h>
 
 #include <cmath>
-#include <iostream>
 
 #define UNINITIALIZED_TIME -1
 
@@ -14,9 +13,6 @@ using std::string;
 using std::to_string;
 using std::ostream;
 using std::vector;
-
-using std::endl;
-using std::cout;
 
 namespace std {
 string to_string(vector<bool> vb) {
@@ -29,26 +25,10 @@ string to_string(vector<bool> vb) {
 }
 }
 
-Event::Event() : time_(UNINITIALIZED_TIME), affected_entities_() {}
+Event::Event(Time t, Entity* e) : time_(t), affected_entities_({e}) {}
 
-Event::Event(Time t, Entity* e) : time_(t), affected_entities_() {
-  affected_entities_.push_back(e);
-}
-
-Event::Event(Time t, Entity* e1, Entity* e2) : time_(t), affected_entities_() {
-  affected_entities_.push_back(e1);
-  affected_entities_.push_back(e2);
-}
-
-Time Event::time() const { return time_; }
-
-vector<Entity*>::iterator Event::AffectedEntitiesBegin() {
-  return affected_entities_.begin();
-}
-
-vector<Entity*>::iterator Event::AffectedEntitiesEnd() {
-  return affected_entities_.end();
-}
+Event::Event(Time t, Entity* e1, Entity* e2) : time_(t),
+                                               affected_entities_({e1, e2}) {}
 
 void Event::Handle(Entity* e) { e->Handle(this); }
 
@@ -113,8 +93,6 @@ string InitiateHeartbeat::Name() const { return "Initiate Heartbeat"; }
 Broadcast::Broadcast(Time t, Entity* affected_entity, Port in) :
     Event(t, affected_entity), in_port_(in) {}
 
-Port Broadcast::in_port() const { return in_port_; }
-
 void Broadcast::Handle(Entity* e) { e->Handle(this); }
 
 string Broadcast::Description() const {
@@ -144,12 +122,6 @@ Heartbeat::~Heartbeat() {
   }
 }
 
-SequenceNum Heartbeat::sn() const { return sn_; }
-
-const Entity* Heartbeat::src() const { return src_; }
-
-BV Heartbeat::recently_seen() const { return recently_seen_; }
-
 void Heartbeat::Handle(Entity* e) { e->Handle(this); }
 
 string Heartbeat::Description() const {
@@ -169,21 +141,27 @@ Size Heartbeat::size() const {
       //      ceil(recently_seen_.bv_->size() / 8.0) + sizeof(leader_) + sizeof(current_partition_);
 }
 
-LinkAlert::LinkAlert(Time t, Entity* e, Port i, const Entity* s, Port p, bool b)
-    : Broadcast(t, e, i), src_(s), out_(p), is_up_(b) {}
+LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, const Entity* s,
+                                 SequenceNum sn, const vector<Id> v, Time exp)
+    : Broadcast(t, e, i), src_(s), sn_(sn), neighbors_(v), expiration_(exp) {}
 
-void LinkAlert::Handle(Entity* e) { e->Handle(this); }
+void LinkStateUpdate::Handle(Entity* e) { e->Handle(this); }
 
-string LinkAlert::Description() const {
-  return Broadcast::Description() +
-      " src_=" + to_string(src_->id()) +
-      " out_=" + to_string(out_) +
-      " is_up_=" + to_string(is_up_);
+string LinkStateUpdate::Description() const {
+  return Broadcast::Description()  + "...";
 }
 
-string LinkAlert::Name() const { return "Link Alert"; }
+string LinkStateUpdate::Name() const { return "Link State Update"; }
 
-Size LinkAlert::size() const { return Broadcast::size() + 50; }
+Size LinkStateUpdate::size() const { return Broadcast::size() + 50; }
+
+InitiateLinkState::InitiateLinkState(Time t, Entity* e) : Event(t, e) {}
+
+void InitiateLinkState::Handle(Entity* e) { e->Handle(this); }
+
+string InitiateLinkState::Description() const { return Event::Description(); }
+
+string InitiateLinkState::Name() const { return "Initiate Link State Update"; }
 
 OVERLOAD_EVENT_OSTREAM_IMPL(Event)
 OVERLOAD_EVENT_OSTREAM_IMPL(Up)
@@ -193,4 +171,5 @@ OVERLOAD_EVENT_OSTREAM_IMPL(LinkDown)
 OVERLOAD_EVENT_OSTREAM_IMPL(InitiateHeartbeat)
 OVERLOAD_EVENT_OSTREAM_IMPL(Broadcast)
 OVERLOAD_EVENT_OSTREAM_IMPL(Heartbeat)
-OVERLOAD_EVENT_OSTREAM_IMPL(LinkAlert)
+OVERLOAD_EVENT_OSTREAM_IMPL(LinkStateUpdate)
+OVERLOAD_EVENT_OSTREAM_IMPL(InitiateLinkState)

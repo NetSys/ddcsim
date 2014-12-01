@@ -42,9 +42,9 @@ void Links::UpdateCapacities(Time passed) {
     it->meter.UpdateCapacity(passed);
 }
 
-bool Links::IsLinkUp(Port p) { return port_to_link_[p].is_up; }
+bool Links::IsLinkUp(Port p) const { return port_to_link_[p].is_up; }
 
-Entity* Links::GetEndpoint(Port p) { return port_to_link_[p].endpoint; }
+Entity* Links::GetEndpoint(Port p) const { return port_to_link_[p].endpoint; }
 
 Port Links::GetPortTo(Entity* dst) {
   for(Port p = 0; p < PortCount(); ++p)
@@ -53,4 +53,4 @@ Port Links::GetPortTo(Entity* dst) {
   return PORT_NOT_FOUND;
 }
 
-unsigned int Links::PortCount() { return port_to_link_.size(); }
+unsigned int Links::PortCount() const { return port_to_link_.size(); }

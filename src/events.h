@@ -12,30 +12,17 @@
 #define OVERLOAD_EVENT_OSTREAM_IMPL(event_type)                     \
   ostream& operator<<(ostream& s, const event_type &e) {            \
     return s << #event_type << " " << e.Description();              \
-  }                                                                 \
+  }
 
-#define OVERLOAD_EVENT_OSTREAM_DECL(event_type) \
+#define OVERLOAD_EVENT_OSTREAM_DECL(event_type)                 \
   std::ostream& operator<<(std::ostream&, const event_type &);
 
 class Entity;
 
 class Event {
  public:
-  Event();
   Event(Time, Entity*);
   Event(Time, Entity*, Entity*);
-  // TODO what does the google stye guide say about using templates?
-  // TODO change last to beyond?
-  template<class Iterator> Event(Time t, Iterator first, Iterator last) :
-      time_(t), affected_entities_(first, last) {}
-
-  // TODO are the contents of Entity considered part of this class with respect
-  // to const-ness?
-  Time time() const;
-  // TODO return generic iterator rather than vector's
-  std::vector<Entity*>::iterator AffectedEntitiesBegin();
-  std::vector<Entity*>::iterator AffectedEntitiesEnd();
-
   /* The following Handle method, and the Handle methods in all descendants
    * of Event, implement the pattern outlined here:
    * http://en.wikipedia.org/wiki/Double_dispatch#Double_dispatch_in_C.2B.2B
@@ -46,10 +33,8 @@ class Event {
   virtual std::string Name() const;
   // TODO remove this eventually and factor into a packettx superclass
   virtual Size size() const;
-
- protected:
-  Time time_;
-  std::vector<Entity*> affected_entities_;
+  const Time time_;
+  const std::vector<Entity*> affected_entities_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Event);
@@ -117,13 +102,10 @@ class InitiateHeartbeat : public Event {
 class Broadcast : public Event {
  public:
   Broadcast(Time, Entity*, Port);
-  Port in_port() const;
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
   virtual Size size() const;
-
- protected:
   const Port in_port_;
 
  private:
@@ -134,38 +116,46 @@ class Heartbeat : public Broadcast {
  public:
   Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum, BV);
   ~Heartbeat();
-  SequenceNum sn() const;
-  const Entity* src() const;
-  BV recently_seen() const;
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
   virtual Size size() const;
-
- protected:
   const SequenceNum sn_;
   const Entity* src_; // TODO better to change to a ref?
-  BV recently_seen_;
-  unsigned int current_partition_;
-  Id leader_;
+  const BV recently_seen_;
+  const unsigned int current_partition_;
+  const Id leader_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Heartbeat);
 };
 
-class LinkAlert : public Broadcast {
+class LinkStateUpdate : public Broadcast {
  public:
-  LinkAlert(Time, Entity*, Port, const Entity*, Port, bool);
+  LinkStateUpdate(Time, Entity*, Port, const Entity*, SequenceNum,
+                  std::vector<Id>, Time);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
   virtual Size size() const;
+  const SequenceNum sn_;
   const Entity* src_;
-  const Port out_;
-  const bool is_up_;
+  const std::vector<Id> neighbors_;
+  const Time expiration_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(LinkAlert);
+  DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);
+};
+
+class InitiateLinkState : public Event {
+ public:
+  InitiateLinkState(Time, Entity*);
+  virtual void Handle(Entity*);
+  virtual std::string Description() const;
+  virtual std::string Name() const;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(InitiateLinkState);
 };
 
 OVERLOAD_EVENT_OSTREAM_DECL(Event)
@@ -176,6 +166,7 @@ OVERLOAD_EVENT_OSTREAM_DECL(LinkDown)
 OVERLOAD_EVENT_OSTREAM_DECL(InitiateHeartbeat)
 OVERLOAD_EVENT_OSTREAM_DECL(Broadcast)
 OVERLOAD_EVENT_OSTREAM_DECL(Heartbeat)
-OVERLOAD_EVENT_OSTREAM_DECL(LinkAlert)
+OVERLOAD_EVENT_OSTREAM_DECL(LinkStateUpdate)
+OVERLOAD_EVENT_OSTREAM_DECL(InitiateLinkState)
 
 #endif

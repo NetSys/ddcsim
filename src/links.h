@@ -52,14 +52,14 @@ class Links {
   void SetLinkUp(Port);
   void SetLinkDown(Port);
   void UpdateCapacities(Time);
-  unsigned int PortCount();
+  unsigned int PortCount() const;
+  bool IsLinkUp(Port) const;
+  Entity* GetEndpoint(Port) const;
 
   template<class E, class M> friend void Scheduler::Forward(E* sender, M* msg_in, Port out, Statistics&);
   friend bool Reader::ParseEvents();
 
  private:
-  bool IsLinkUp(Port);
-  Entity* GetEndpoint(Port);
   Port GetPortTo(Entity*);
   std::vector<Link> port_to_link_;
   DISALLOW_COPY_AND_ASSIGN(Links);

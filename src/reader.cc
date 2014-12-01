@@ -18,8 +18,7 @@ using namespace YAML;
 Reader::Reader(std::string topo_file_path, std::string event_file_path,
                Scheduler& s) : topo_file_path_(topo_file_path),
                                event_file_path_(event_file_path),
-                               scheduler_(s), id_to_entity_(),
-                               num_entities_(0) {}
+                               scheduler_(s), id_to_entity_() {}
 
 bool Reader::IsGenericEntity(Node n) {
   return !n["type"].as<string>().compare("entity");
@@ -51,8 +50,6 @@ bool Reader::ParseEntities(Node raw_entities, Statistics& s) {
       LOG(ERROR) << "Iterated over unrecognizable entity type";
       return false;
     }
-
-    num_entities_++;
   }
 
   return true;
@@ -133,10 +130,6 @@ bool Reader::IsHeartbeat(Node n) {
   return !n["type"].as<string>().compare("heartbeat");
 }
 
-bool Reader::IsLinkAlert(Node n) {
-  return !n["type"].as<string>().compare("linkalert");
-}
-
 bool Reader::ParseEvents() {
   // TODO verify there are no double down's/up's or at least log
   if(event_file_path_ == NO_EVENT_FILE) return true;
@@ -190,10 +183,6 @@ bool Reader::ParseEvents() {
       LOG(ERROR) << "To explicitly initiate a heartbeat, "
           "use the InitiateHeartbeat event";
       return false;
-    } else if(IsLinkAlert(ev)) {
-      LOG(ERROR) << "Expliciti construction of link up/down events is disallowed"
-          ".  To inject link up/down events, use the events input.";
-      return false;
     } else {
       LOG(ERROR) << "Iterated over unrecognizable event type";
       return false;
@@ -206,5 +195,3 @@ bool Reader::ParseEvents() {
 std::unordered_map<Id, Entity*>& Reader::id_to_entity() {
   return id_to_entity_;
 }
-
-int Reader::num_entities() { return num_entities_; }

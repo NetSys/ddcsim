@@ -10,6 +10,8 @@
 
 class Entity;
 class Event;
+class Heartbeat;
+class LinkStateUpdate;
 class Statistics;
 
 class Scheduler {
@@ -32,30 +34,33 @@ class Scheduler {
   };
 
  public:
-  Scheduler(Time);
+  Scheduler(Time, unsigned int);
   void AddEvent(Event*);
   // TODO more descriptive template type names? what is the convention?
   template<class E, class M> void Forward(E* sender, M* msg_in, Port out,
                                           Statistics&);
+  void SchedulePeriodicEvents(std::unordered_map<Id, Entity*>&, Time, Time);
   void StartSimulation(std::unordered_map<Id, Entity*>&);
   Time cur_time();
   Time end_time();
+  unsigned int num_entities();
   static Time Delay();
-  static int kMaxEntities;
   static const Time kComputationDelay;
   static const Time kTransDelay;
   static const Time kPropDelay;
+  static const Time kExpireDelta;
   static const Time kDefaultHeartbeatPeriod;
+  static const Time kDefaultLSUpdatePeriod;
   static const Time kDefaultEndTime;
-  static const int kNoMaxEntities;
+  static const Time kDefaultHelloDelay;
 
  private:
   bool HasNextEvent();
   Event* NextEvent();
   Time cur_time_;
   Time end_time_;
+  unsigned int num_entities_;
   std::priority_queue<std::pair<Time, Event*>, std::vector<std::pair<Time, Event*> >, Comparator> event_queue_;
-  //boost::heap::fibonacci_heap<std::pair<Time, Event*>, boost::heap::compare<Comparator> > event_queue_;
   DISALLOW_COPY_AND_ASSIGN(Scheduler);
 };
 

@@ -22,7 +22,6 @@ public:
   // TODO take out type of iterator
   // TODO just make id_to_entity_ public?
   std::unordered_map<Id, Entity*>& id_to_entity();
-  int num_entities();
 
 private:
   bool IsGenericEntity(YAML::Node);
@@ -37,13 +36,11 @@ private:
   bool IsInitiateHeartbeat(YAML::Node);
   bool IsBroadcast(YAML::Node);
   bool IsHeartbeat(YAML::Node);
-  bool IsLinkAlert(YAML::Node);
   bool ParseLinks(YAML::Node&&, Size, Rate);
   std::string topo_file_path_;
   std::string event_file_path_;
   Scheduler& scheduler_;
   std::unordered_map<Id, Entity*> id_to_entity_;
-  int num_entities_;
   DISALLOW_COPY_AND_ASSIGN(Reader);
 };
 

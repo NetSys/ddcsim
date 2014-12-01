@@ -1,7 +1,7 @@
 #include <boost/program_options.hpp>
 #include <glog/logging.h>
 
-#include <random>
+#include <iostream>
 #include <string>
 
 #include "common.h"
@@ -11,9 +11,9 @@
 #include "scheduler.h"
 #include "statistics.h"
 
-using std::default_random_engine;
+using std::cerr;
+using std::endl;
 using std::string;
-using std::uniform_real_distribution;
 using std::unordered_map;
 
 namespace po = boost::program_options;
@@ -28,7 +28,7 @@ using po::notify;
 // TODO does Google have special conventions for out params?
 bool ParseArgs(int ac, char* av[], string& topo_file_path,
                string& event_file_path, Time& heartbeat_period,
-               Time& end_time, int& max_entities,
+               Time& ls_update_period, Time& end_time, unsigned int& num_entities,
                Size& bucket_capacity, Rate& fill_rate, string& out_prefix) {
   options_description desc("Allowed options");
   desc.add_options()
@@ -44,11 +44,15 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
        value<Time>(&heartbeat_period)->default_value(
            Scheduler::kDefaultHeartbeatPeriod),
        "emit a heartbeat every heartbeat-period seconds")
+      ("ls-update-period,l",
+       value<Time>(&ls_update_period)->default_value(
+           Scheduler::kDefaultLSUpdatePeriod),
+       "flood link state information every ls-update-period seconds")
       ("end-time,t",
        value<Time>(&end_time)->default_value(Scheduler::kDefaultEndTime),
        "stop the simulation after end-time seconds have passed")
-      ("max-entities,m",
-       value<int>(&max_entities)->default_value(Scheduler::kNoMaxEntities),
+      ("num-entities,n",
+       value<unsigned int>(&num_entities),
        "the maximum number of entities that can exist at any point")
       ("bucket-capacity,M",
        value<Size>(&bucket_capacity)->default_value(BandwidthMeter::kDefaultCapacity),
@@ -56,7 +60,7 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
       ("fill-rate,R",
        value<Rate>(&fill_rate)->default_value(BandwidthMeter::kDefaultRate),
        "the rate at which the token bucket fills up (in units of bytes/sec)")
-      ("out-prefix,o",
+      ("out-prefix,O",
        value<string>(&out_prefix)->default_value("./"),
        "directory to put out files");
 
@@ -71,10 +75,17 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
 	vm);
   notify(vm);
 
-  // TODO only trigger if help is not specified
-  if (!vm.count("topo")) {
-    LOG(FATAL) << "Path to file containing network topology ";
-    return false;
+  if(!vm.count("help")) {
+    if (!vm.count("topo")) {
+      cerr << "Path to file containing network topology missing" << endl;
+      return false;
+    }
+
+    if(!vm.count("num-entities")) {
+      cerr << "The number of entities in the simulation needs to be specified" << endl;
+      return false;
+    }
+
   }
 
   return true;
@@ -85,47 +96,39 @@ void InitLogging(const char* argv0, string out_prefix) {
   FLAGS_stderrthreshold = 1;
   FLAGS_log_dir = out_prefix;
   FLAGS_log_prefix = false;
-  FLAGS_minloglevel = 1;
+  FLAGS_minloglevel = 0;
   FLAGS_logbuflevel = 0;
-}
-
-// TODO remove after valgrind
-void DeleteEntities(unordered_map<Id, Entity*>& id_to_entity) {
-  for(auto it = id_to_entity.begin(); it != id_to_entity.end(); ++it)
-    delete it->second;
 }
 
 int main(int ac, char* av[]) {
   string topo_file_path;
   string event_file_path;
   Time heartbeat_period;
+  Time ls_update_period;
   Time end_time;
-  int max_entities;
+  unsigned int num_entities;
   Size bucket_capacity;
   Rate fill_rate;
   string out_prefix;
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
-                              heartbeat_period, end_time, max_entities,
-                              bucket_capacity, fill_rate, out_prefix);
+                              heartbeat_period, ls_update_period, end_time,
+                              num_entities, bucket_capacity, fill_rate,
+                              out_prefix);
 
   if(!valid_args) return -1;
 
   InitLogging(av[0], out_prefix);
 
-  Scheduler sched(end_time);
-
-  Reader in(topo_file_path, event_file_path, sched);
+  Scheduler sched(end_time, num_entities);
 
   Statistics stats(sched);
+
+  Reader in(topo_file_path, event_file_path, sched);
 
   bool valid_topology = in.ParseTopology(bucket_capacity, fill_rate, stats);
 
   if(!valid_topology) return -1;
-
-  sched.kMaxEntities =
-      max_entities == Scheduler::kNoMaxEntities ?
-      in.num_entities() : max_entities;
 
   // TODO check that entities and links are correct by implementing print
   // functions for them
@@ -133,29 +136,13 @@ int main(int ac, char* av[]) {
 
   if(!valid_events) return -1;
 
-  // TODO this will be generalized
-  // TODO heartbeat initiation times should be fed in via a file?
-  // TODO feed default_random_engine a seed to make it deterministic
-  default_random_engine entropy_src;
-  Time half_hrtbt = heartbeat_period / 2;
-  uniform_real_distribution<Time> init_dist(0, half_hrtbt);
-  uniform_real_distribution<Time> dist(-1 * half_hrtbt, half_hrtbt);
-
-  // TODO verify that it's okay to use entropy_src for both init_dist and dist
-  for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end(); ++it)
-    sched.AddEvent(new InitiateHeartbeat(init_dist(entropy_src), it->second));
-
-  // TODO verify semantics of end_time
-  for (Time t = heartbeat_period; t <= sched.end_time(); t += heartbeat_period)
-    for (auto it = in.id_to_entity().begin(); it != in.id_to_entity().end();
-         ++it)
-      sched.AddEvent(new InitiateHeartbeat(t + dist(entropy_src), it->second));
+  sched.SchedulePeriodicEvents(in.id_to_entity(),
+                               heartbeat_period,
+                               ls_update_period);
 
   stats.Init(out_prefix);
 
   sched.StartSimulation(in.id_to_entity());
-
-  //DeleteEntities(in.id_to_entity()); put in for valgrind
 
   return 0;
 }

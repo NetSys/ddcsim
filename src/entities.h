@@ -21,23 +21,18 @@ class LinkUp;
 class LinkDown;
 class Broadcast;
 class Heartbeat;
-class LinkAlert;
 class InitiateHeartbeat;
+class LinkStateUpdate;
+class InitiateLinkState;
 class Statistics;
 
 enum lvl_to_num : int {INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3};
 
 /* Specialize the standard hash function for HeartbeatId's and LinkId's*/
 namespace std {
-template<> struct hash<pair<unsigned int, const Entity*>> {
-  size_t operator()(const pair<unsigned int, const Entity*>& id) const {
-    return hash<unsigned int>()(id.first) ^
-        hash<uint64_t>()(reinterpret_cast<uint64_t>(id.second));
-  }
-};
 template<> struct hash<pair<int, const Entity*>> {
   size_t operator()(const pair<int, const Entity*>& id) const {
-    return hash<unsigned int>()(id.first) ^
+    return hash<int>()(id.first) ^
         hash<uint64_t>()(reinterpret_cast<uint64_t>(id.second));
   }
 };
@@ -66,26 +61,23 @@ class HeartbeatHistory {
   DISALLOW_COPY_AND_ASSIGN(HeartbeatHistory);
 };
 
-// TODO combine HeartbeatHistory and LinkHistory
-
-class LinkFailureHistory {
+class LinkState {
  public:
-  LinkFailureHistory();
-  bool LinkIsUp(const LinkAlert*) const;
-  void MarkAsDown(const LinkAlert*);
-  bool MarkAsUp(const LinkAlert*);
+  LinkState(unsigned int);
+  bool IsStaleUpdate(LinkStateUpdate*);
+  void Update(LinkStateUpdate*);
+  void Refresh(Time);
 
  private:
-  typedef std::pair<Port, const Entity*> LinkId;
-  // TODO what does the style guide say about static methods?
-  static LinkId MakeLinkId(const LinkAlert* b);
-  std::unordered_set<LinkId> failures_;
-  DISALLOW_COPY_AND_ASSIGN(LinkFailureHistory);
+  std::vector<SequenceNum> id_to_last_seq_num_;
+  std::vector<Time> id_to_exp_;
+  // TODO intialize properly
+  Topology topology_;
+  DISALLOW_COPY_AND_ASSIGN(LinkState);
 };
 
 class Entity {
  public:
-  Entity(Scheduler&);
   Entity(Scheduler&, Id, Statistics&);
   template<class Iterator> void InitLinks(Iterator first, Iterator last,
                                           Size capacity, Rate rate) {
@@ -98,8 +90,9 @@ class Entity {
   virtual void Handle(Heartbeat*);
   virtual void Handle(LinkUp*);
   virtual void Handle(LinkDown*);
-  virtual void Handle(LinkAlert*) = 0;
   virtual void Handle(InitiateHeartbeat*);
+  virtual void Handle(LinkStateUpdate*) = 0;
+  virtual void Handle(InitiateLinkState*) = 0;
   Links& links(); // TODO didn't want to do it...
   Id id() const;
   SequenceNum NextHeartbeatSeqNum() const;
@@ -134,7 +127,6 @@ class Entity {
 
 class Switch : public Entity {
  public:
-  Switch(Scheduler&);
   Switch(Scheduler&, Id, Statistics&);
   void Handle(Event*);
   void Handle(Up*);
@@ -143,17 +135,20 @@ class Switch : public Entity {
   void Handle(Heartbeat*);
   void Handle(LinkUp*);
   void Handle(LinkDown*);
-  void Handle(LinkAlert*);
   void Handle(InitiateHeartbeat*);
+  void Handle(LinkStateUpdate*);
+  void Handle(InitiateLinkState*);
+  SequenceNum NextLSSeqNum() const;
+  std::vector<Id> ComputeUpNeighbors() const;
 
  private:
-  LinkFailureHistory link_history_;
+  SequenceNum next_link_state_;
+  LinkState link_state_;
   DISALLOW_COPY_AND_ASSIGN(Switch);
 };
 
 class Controller : public Entity {
  public:
-  Controller(Scheduler&);
   Controller(Scheduler&, Id, Statistics&);
   void Handle(Event*);
   void Handle(Up*);
@@ -162,8 +157,9 @@ class Controller : public Entity {
   void Handle(Heartbeat*);
   void Handle(LinkUp*);
   void Handle(LinkDown*);
-  void Handle(LinkAlert*);
   void Handle(InitiateHeartbeat*);
+  void Handle(LinkStateUpdate*);
+  void Handle(InitiateLinkState*);
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Controller);
