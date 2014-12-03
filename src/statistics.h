@@ -15,7 +15,7 @@ class Statistics {
  public:
   Statistics(Scheduler&);
   ~Statistics();
-  void Init(std::string);
+  void Init(std::string, Topology);
   void RecordSend(Event*);
   static const std::string USAGE_LOG_NAME;
   static const std::string SEPARATOR;
@@ -31,7 +31,7 @@ class Statistics {
   Time window_left_;
   Time window_right_;
   Size cur_window_count_;
-  //Topology physical_topology_;
+  Topology physical_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };
 

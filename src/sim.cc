@@ -101,15 +101,11 @@ void InitLogging(const char* argv0, string out_prefix) {
 }
 
 int main(int ac, char* av[]) {
-  string topo_file_path;
-  string event_file_path;
-  Time heartbeat_period;
-  Time ls_update_period;
-  Time end_time;
+  string topo_file_path, event_file_path, out_prefix;
+  Time heartbeat_period, ls_update_period, end_time;
   unsigned int num_entities;
   Size bucket_capacity;
   Rate fill_rate;
-  string out_prefix;
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
                               heartbeat_period, ls_update_period, end_time,
@@ -140,7 +136,7 @@ int main(int ac, char* av[]) {
                                heartbeat_period,
                                ls_update_period);
 
-  stats.Init(out_prefix);
+  stats.Init(out_prefix, in.physical_topo());
 
   sched.StartSimulation(in.id_to_entity());
 

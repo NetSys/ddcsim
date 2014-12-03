@@ -4,7 +4,9 @@
 
 #include <glog/logging.h>
 
+#include "common.h"
 #include "scheduler.h"
+#include "statistics.h"
 #include "reader.h"
 #include "entities.h"
 #include "events.h"
@@ -16,9 +18,9 @@ using namespace YAML;
 // TODO complicated initialization on allowed in constructor?
 // TODO is yaml constructor considered complicated?
 Reader::Reader(std::string topo_file_path, std::string event_file_path,
-               Scheduler& s) : topo_file_path_(topo_file_path),
-                               event_file_path_(event_file_path),
-                               scheduler_(s), id_to_entity_() {}
+               Scheduler& sched)
+    : topo_file_path_(topo_file_path), event_file_path_(event_file_path),
+      scheduler_(sched), id_to_entity_(), physical_topo_(sched.num_entities()) {}
 
 bool Reader::IsGenericEntity(Node n) {
   return !n["type"].as<string>().compare("entity");
@@ -73,6 +75,7 @@ bool Reader::ParseLinks(Node&& raw_links, Size bucket_capacity,
     }
     src_ent->InitLinks(dst_ents.begin(), dst_ents.end(),
                        bucket_capacity, fill_rate);
+    physical_topo_[src_id] = dst_ids;
   }
   return true;
 }
@@ -195,3 +198,5 @@ bool Reader::ParseEvents() {
 std::unordered_map<Id, Entity*>& Reader::id_to_entity() {
   return id_to_entity_;
 }
+
+Topology Reader::physical_topo() { return physical_topo_; }

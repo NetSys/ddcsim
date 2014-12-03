@@ -89,12 +89,14 @@ template<> class Schedule<Switch, InitiateLinkState> {
 const Time Scheduler::kComputationDelay = 0.00001; /* 10 micros */
 const Time Scheduler::kTransDelay = 0.001;         /* 1 ms */
 const Time Scheduler::kPropDelay = 0.01;           /* 10 ms */
+const Time Scheduler::kDefaultHelloDelay = 0.001;  /* 1 ms */
+
 const Time Scheduler::kDefaultHeartbeatPeriod = 3;
 const Time Scheduler::kDefaultLSUpdatePeriod = 3;
 const Time Scheduler::kDefaultEndTime = 60;
-const Time Scheduler::kDefaultHelloDelay = 0.001;  /* 1 ms */
+
 // TODO this depends on topology and should probably be set according to each input
-const Time Scheduler::kExpireDelta = 5;
+const Time Scheduler::kExpireDelta = 3;
 
 Scheduler::Scheduler(Time end_time, unsigned int num_entities) :
     event_queue_(), end_time_(end_time),  num_entities_(num_entities) {}
@@ -115,7 +117,6 @@ bool Scheduler::Comparator::operator() (const std::pair<Time, const Event* const
 }
 
 // TODO why isn't partial specialization of methods allowed?
-// TODO don't pass in stats
 template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out,
                                                    Statistics& stats) {
   Links& l = sender->links();
@@ -166,13 +167,14 @@ void Scheduler::SchedulePeriodicEvents(unordered_map<Id, Entity*>& id_to_entity,
   uniform_real_distribution<Time> ls_dist(-1 * half_ls, half_ls);
 
   for(auto it : id_to_entity)
-    AddEvent(new InitiateLinkState(ls_init_dist(entropy_src),
-                                         it.second));
+    // AddEvent(new InitiateLinkState(ls_init_dist(entropy_src),
+    //                                      it.second));
+    AddEvent(new InitiateLinkState(0, it.second));
+
 
   for (Time t = ls_update_period; t <= end_time_; t += ls_update_period)
     for(auto it : id_to_entity)
-      AddEvent(new InitiateLinkState(t + ls_dist(entropy_src),
-                                           it.second));
+      AddEvent(new InitiateLinkState(t, it.second));
 }
 
 // TODO do a better job of sharing the id_to_entity_ mapping between reader

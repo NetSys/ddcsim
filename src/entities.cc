@@ -7,27 +7,61 @@
 #include <glog/logging.h>
 
 #include <iostream>
-#include <tuple>
 
 using boost::circular_buffer;
 
-using boost::add_edge;
 using boost::clear_vertex;
-using boost::out_edges;
-using boost::remove_edge;
 using boost::remove_vertex;
 
 using std::default_random_engine;
 using std::discrete_distribution;
+using std::ostream;
 using std::pair;
-using std::tie;
+using std::string;
+using std::to_string;
 using std::unordered_map;
 using std::vector;
 
-#define LOG_HANDLE(level, type, var)                                    \
+// TODO avoid if statement in logging macros
+#define LOG_HANDLE_EVENT(level, type, var)                              \
   if (level >= FLAGS_minloglevel) {                                     \
-    LOG(level) << #type << " " << id_ << " received event " << var->Name() << ":" << var->Description(); \
+    LOG(level) << Name() << " " << id_ << " received event " << var->Name() << ":" << var->Description(); \
   }
+
+#define LOG_HANDLE_ENTITY                                               \
+  if (INFO >= FLAGS_minloglevel) { LOG(INFO) << Description(); }
+
+
+namespace std {
+/* There is a note in the Boost graph library (in graph_utility.hpp) that their
+ * graph printing functions should take an ostream object.  In the meantime,
+ * I've written a to_string function specialized on Topology.
+ */
+string to_string(const Topology& G) {
+  string rtn = "";
+
+  for(Id i = 0; i < G.size(); ++i)
+    if(G[i].size() > 0)
+      rtn += to_string(i) + " --> " + to_string(G[i]) + "\n";
+
+  return rtn;
+}
+string to_string(const std::vector<Time>& times) {
+  string rtn = "";
+  for(Time t : times)
+    rtn += to_string(t) + " ";
+
+  return rtn;
+}
+string to_string(const std::vector<int>& ints) {
+  string rtn = "";
+
+  for(int i : ints)
+    rtn += to_string(i) + " ";
+
+  return rtn;
+}
+};
 
 HeartbeatHistory::HeartbeatHistory() : seen_(), last_seen_(),
                                        id_to_recently_seen_() {}
@@ -71,25 +105,27 @@ HeartbeatHistory::HeartbeatId HeartbeatHistory::MakeHeartbeatId(const Heartbeat*
 LinkState::LinkState(unsigned int num_entities)
     : id_to_last_seq_num_(num_entities, NONE_SEQNUM),
       id_to_exp_(num_entities, 0),
-      topology_() {}
+      topology_(num_entities) {}
+
+string LinkState::Description() const {
+  return "id_to_last_seq_num_=" + to_string(id_to_last_seq_num_) +
+      " id_to_exp_=" + to_string(id_to_exp_) + " topology_=" + to_string(topology_);
+}
 
 bool LinkState::IsStaleUpdate(LinkStateUpdate* ls) {
-  return id_to_last_seq_num_[ls->src_->id()] < ls->sn_;
+  return id_to_last_seq_num_[ls->src_->id()] >= ls->sn_;
 }
 
 void LinkState::Update(LinkStateUpdate* ls) {
   Id src = ls->src_->id();
 
-  // TODO how to remove edges with a single function call
-  OutEdgeIter ei, ei_end;
-  for (tie(ei, ei_end) = out_edges(src, topology_); ei != ei_end; ++ei)
-    remove_edge(*ei, topology_);
-
-  for(auto dst : ls->neighbors_)
-    add_edge(src, dst, topology_);
-
+  topology_[src] = ls->neighbors_;
   id_to_last_seq_num_[src] = ls->sn_;
   id_to_exp_[src] = ls->expiration_;
+}
+
+void LinkState::Update(Id self, vector<Id> up_neighbors) {
+  topology_[self] = up_neighbors;
 }
 
 void LinkState::Refresh(Time cur_time) {
@@ -97,7 +133,6 @@ void LinkState::Refresh(Time cur_time) {
     if(id_to_last_seq_num_[id] != NONE_SEQNUM && cur_time > id_to_exp_[id]) {
       id_to_last_seq_num_[id] = NONE_SEQNUM;
       clear_vertex(id, topology_);
-      remove_vertex(id, topology_);
     }
   }
 }
@@ -113,6 +148,11 @@ Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
                                                        dist_{1, 999} {
   CHECK_GE(kMinTimes, 1);
 }
+
+// TODO
+string Entity::Description() const { return ""; }
+
+string Entity::Name() const { return "Entity"; }
 
 void Entity::Handle(Up* u) { is_up_ = true; }
 
@@ -306,32 +346,45 @@ Switch::Switch(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st),
                                                        next_link_state_(0),
                                                        link_state_(sc.num_entities()) {}
 
-void Switch::Handle(Event* e) { LOG_HANDLE(ERROR, Switch, e) }
+string Switch::Description() const {
+  return Entity::Description() + "next_link_state_=" +
+      to_string(next_link_state_) + " " + link_state_.Description();
+}
+
+string Switch::Name() const { return "Switch"; }
+
+void Switch::Handle(Event* e) { LOG_HANDLE_EVENT(ERROR, Switch, e) }
 
 void Switch::Handle(Up* u) {
-  LOG_HANDLE(INFO, Switch, u)
+  LOG_HANDLE_EVENT(INFO, Switch, u)
 
   scheduler_.AddEvent(new InitiateLinkState(u->time_, this));
 
   Entity::Handle(u);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Switch::Handle(Down* d) {
-  LOG_HANDLE(INFO, Switch, d)
+  LOG_HANDLE_EVENT(INFO, Switch, d)
 
   Entity::Handle(d);
+
+  LOG_HANDLE_ENTITY
 }
 
-void Switch::Handle(Broadcast* b) { LOG_HANDLE(ERROR, Switch, b); }
+void Switch::Handle(Broadcast* b) { LOG_HANDLE_EVENT(ERROR, Switch, b); }
 
 void Switch::Handle(Heartbeat* h) {
-  LOG_HANDLE(INFO, Switch, h)
+  LOG_HANDLE_EVENT(INFO, Switch, h)
 
   Entity::Handle(h);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Switch::Handle(LinkUp* lu) {
-  LOG_HANDLE(INFO, Switch, lu)
+  LOG_HANDLE_EVENT(INFO, Switch, lu)
 
   Entity::Handle(lu);
 
@@ -339,25 +392,31 @@ void Switch::Handle(LinkUp* lu) {
   // TODO allow setting in commandline?
   scheduler_.AddEvent(
       new InitiateLinkState(lu->time_ + Scheduler::kDefaultHelloDelay, this));
+
+  LOG_HANDLE_ENTITY
 }
 
 void Switch::Handle(LinkDown* ld) {
-  LOG_HANDLE(INFO, Switch, ld)
+  LOG_HANDLE_EVENT(INFO, Switch, ld)
 
   Entity::Handle(ld);
 
   scheduler_.AddEvent(
       new InitiateLinkState(ld->time_ + Scheduler::kDefaultHelloDelay, this));
+
+  LOG_HANDLE_ENTITY
 }
 
 void Switch::Handle(InitiateHeartbeat* init) {
-  LOG_HANDLE(INFO, Switch, init)
+  LOG_HANDLE_EVENT(INFO, Switch, init)
 
   Entity::Handle(init);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Switch::Handle(LinkStateUpdate* ls) {
-  LOG_HANDLE(INFO, Switch, ls);
+  LOG_HANDLE_EVENT(INFO, Switch, ls);
 
   if(!is_up_) {
     LOG(INFO) << "Entity is down";
@@ -382,10 +441,12 @@ void Switch::Handle(LinkStateUpdate* ls) {
       scheduler_.Forward(this, ls, p, stats_);
 
   link_state_.Update(ls);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Switch::Handle(InitiateLinkState* ls) {
-  LOG_HANDLE(INFO, Switch, ls);
+  LOG_HANDLE_EVENT(INFO, Switch, ls);
 
   if(!is_up_) {
     LOG(INFO) << "Switch is down";
@@ -395,7 +456,13 @@ void Switch::Handle(InitiateLinkState* ls) {
   for(Port p = 0; p < links_.PortCount(); ++p)
     scheduler_.Forward(this, ls, p, stats_);
 
+  // TODO cache UpNeighbors
+  link_state_.Update(id_, ComputeUpNeighbors());
+
+  // TODO delete this variable and just go by link_state db
   next_link_state_++;
+
+  LOG_HANDLE_ENTITY
 }
 
 SequenceNum Switch::NextLSSeqNum() const { return next_link_state_; }
@@ -412,46 +479,66 @@ vector<Id> Switch::ComputeUpNeighbors() const {
 
 Controller::Controller(Scheduler& sc, Id id, Statistics& st) : Entity(sc, id, st) {}
 
-void Controller::Handle(Event* e) { LOG_HANDLE(ERROR, Controller, e) }
+string Controller::Description() const { return Entity::Description(); }
+
+string Controller::Name() const { return "Controller"; }
+
+void Controller::Handle(Event* e) { LOG_HANDLE_EVENT(ERROR, Controller, e) }
 
 void Controller::Handle(Up* u) {
-  LOG_HANDLE(INFO, Controller, u)
+  LOG_HANDLE_EVENT(INFO, Controller, u)
 
   Entity::Handle(u);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Controller::Handle(Down* d) {
-  LOG_HANDLE(INFO, Controller, d)
+  LOG_HANDLE_EVENT(INFO, Controller, d)
 
   Entity::Handle(d);
+
+  LOG_HANDLE_ENTITY
 }
 
-void Controller::Handle(Broadcast* b) { LOG_HANDLE(ERROR, Controller, b) }
+void Controller::Handle(Broadcast* b) { LOG_HANDLE_EVENT(ERROR, Controller, b) }
 
 void Controller::Handle(Heartbeat* h) {
-  LOG_HANDLE(INFO, Controller, h)
+  LOG_HANDLE_EVENT(INFO, Controller, h)
 
   Entity::Handle(h);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Controller::Handle(LinkUp* lu) {
-  LOG_HANDLE(INFO, Controller, lu)
+  LOG_HANDLE_EVENT(INFO, Controller, lu)
 
   Entity::Handle(lu);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Controller::Handle(LinkDown* ld) {
-  LOG_HANDLE(INFO, Controller, ld)
+  LOG_HANDLE_EVENT(INFO, Controller, ld)
 
   Entity::Handle(ld);
+
+  LOG_HANDLE_ENTITY
 }
 
 void Controller::Handle(InitiateHeartbeat* init) {
-  LOG_HANDLE(INFO, Controller, init)
+  LOG_HANDLE_EVENT(INFO, Controller, init)
 
   Entity::Handle(init);
+
+  LOG_HANDLE_ENTITY
 }
 
-void Controller::Handle(LinkStateUpdate* ls) { LOG_HANDLE(ERROR, Controller, ls) }
+void Controller::Handle(LinkStateUpdate* ls) { LOG_HANDLE_EVENT(ERROR, Controller, ls) }
 
-void Controller::Handle(InitiateLinkState* ls) { LOG_HANDLE(ERROR, Controller, ls) }
+void Controller::Handle(InitiateLinkState* ls) { LOG_HANDLE_EVENT(ERROR, Controller, ls) }
+
+OVERLOAD_ENTITY_OSTREAM_IMPL(Entity)
+OVERLOAD_ENTITY_OSTREAM_IMPL(Switch)
+OVERLOAD_ENTITY_OSTREAM_IMPL(Controller)

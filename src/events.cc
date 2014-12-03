@@ -15,15 +15,15 @@ using std::ostream;
 using std::vector;
 
 namespace std {
-string to_string(vector<bool> vb) {
-  string rtn = "";
+std::string to_string(const std::vector<bool>& vb) {
+  std::string rtn = "";
 
-  for(int i = 0; i < vb.size(); ++i)
-    rtn += vb[i] ? "1" : "0";
+  for(bool b : vb)
+    rtn += b ? "1" : "0";
 
   return rtn;
 }
-}
+};
 
 Event::Event(Time t, Entity* e) : time_(t), affected_entities_({e}) {}
 
@@ -148,7 +148,11 @@ LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, const Entity* s,
 void LinkStateUpdate::Handle(Entity* e) { e->Handle(this); }
 
 string LinkStateUpdate::Description() const {
-  return Broadcast::Description()  + "...";
+  return Broadcast::Description()  +
+      " sn_=" + to_string(sn_) +
+      " src_=" + to_string(src_->id()) +
+      " neighbors_=" + to_string(neighbors_) +
+      " expiration_=" + to_string(expiration_);
 }
 
 string LinkStateUpdate::Name() const { return "Link State Update"; }

@@ -22,6 +22,7 @@ public:
   // TODO take out type of iterator
   // TODO just make id_to_entity_ public?
   std::unordered_map<Id, Entity*>& id_to_entity();
+  Topology physical_topo();
 
 private:
   bool IsGenericEntity(YAML::Node);
@@ -41,6 +42,7 @@ private:
   std::string event_file_path_;
   Scheduler& scheduler_;
   std::unordered_map<Id, Entity*> id_to_entity_;
+  Topology physical_topo_;
   DISALLOW_COPY_AND_ASSIGN(Reader);
 };
 

@@ -2,9 +2,12 @@
 #define DDCSIM_ROUTERS_H_
 
 #include <boost/circular_buffer.hpp>
+#include <boost/graph/graph_traits.hpp>
 #include <iterator>
 #include <inttypes.h>
 #include <random>
+#include <string>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -26,17 +29,29 @@ class LinkStateUpdate;
 class InitiateLinkState;
 class Statistics;
 
+#define OVERLOAD_ENTITY_OSTREAM_IMPL(entity_type)               \
+  ostream& operator<<(ostream& s, const entity_type &e) {       \
+    return s << #entity_type << " " << e.Description();         \
+  }
+
+#define OVERLOAD_ENTITY_OSTREAM_DECL(entity_type)               \
+  std::ostream& operator<<(std::ostream&, const entity_type &);
+
 enum lvl_to_num : int {INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3};
 
-/* Specialize the standard hash function for HeartbeatId's and LinkId's*/
 namespace std {
+/* Specialize the standard hash function for HeartbeatId's */
+// TODO only put decl in header file
 template<> struct hash<pair<int, const Entity*>> {
   size_t operator()(const pair<int, const Entity*>& id) const {
     return hash<int>()(id.first) ^
         hash<uint64_t>()(reinterpret_cast<uint64_t>(id.second));
   }
 };
-}
+// TODO fix this unholy hack
+std::string to_string(const std::vector<int>& ints);
+};
+
 
 // TODO move into entity?
 class HeartbeatHistory {
@@ -64,14 +79,15 @@ class HeartbeatHistory {
 class LinkState {
  public:
   LinkState(unsigned int);
+  std::string Description() const;
   bool IsStaleUpdate(LinkStateUpdate*);
   void Update(LinkStateUpdate*);
+  void Update(Id, std::vector<Id>);
   void Refresh(Time);
 
  private:
   std::vector<SequenceNum> id_to_last_seq_num_;
   std::vector<Time> id_to_exp_;
-  // TODO intialize properly
   Topology topology_;
   DISALLOW_COPY_AND_ASSIGN(LinkState);
 };
@@ -83,6 +99,8 @@ class Entity {
                                           Size capacity, Rate rate) {
     links_.Init(first, last, capacity, rate);
   }
+  virtual std::string Description() const;
+  virtual std::string Name() const;
   virtual void Handle(Event*) = 0;
   virtual void Handle(Up*);
   virtual void Handle(Down*);
@@ -99,7 +117,7 @@ class Entity {
   BV ComputeRecentlySeen();
   std::vector<unsigned int> ComputePartitions() const;
   void UpdateLinkCapacities(Time);
-  /* A switch is considered "recently seen" if its hearbeats have been seen
+  /* An entity is considered "recently seen" if its hearbeats have been seen
    * kMinTimes times in the last kMaxRecent seconds.
    */
   // TODO should these be command line args?
@@ -128,6 +146,8 @@ class Entity {
 class Switch : public Entity {
  public:
   Switch(Scheduler&, Id, Statistics&);
+  std::string Description() const;
+  std::string Name() const;
   void Handle(Event*);
   void Handle(Up*);
   void Handle(Down*);
@@ -150,6 +170,8 @@ class Switch : public Entity {
 class Controller : public Entity {
  public:
   Controller(Scheduler&, Id, Statistics&);
+  std::string Description() const;
+  std::string Name() const;
   void Handle(Event*);
   void Handle(Up*);
   void Handle(Down*);
@@ -164,5 +186,9 @@ class Controller : public Entity {
  private:
   DISALLOW_COPY_AND_ASSIGN(Controller);
 };
+
+OVERLOAD_ENTITY_OSTREAM_DECL(Entity)
+OVERLOAD_ENTITY_OSTREAM_DECL(Switch)
+OVERLOAD_ENTITY_OSTREAM_DECL(Controller)
 
 #endif

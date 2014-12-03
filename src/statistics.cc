@@ -22,9 +22,11 @@ Statistics::Statistics(Scheduler& s) : scheduler_(s), bandwidth_usage_log_(),
 
 Statistics::~Statistics() { bandwidth_usage_log_.close(); }
 
-void Statistics::Init(string out_prefix) {
+void Statistics::Init(string out_prefix, Topology physical) {
   bandwidth_usage_log_.open(out_prefix + USAGE_LOG_NAME,
                             ofstream::out | ofstream::app);
+
+  physical_ = physical;
 }
 
 void Statistics::RecordSend(Event* e) {
