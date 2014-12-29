@@ -1,0 +1,32 @@
+{
+   google_LogMessage_LogMessage_dtor_reach
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6google10LogMessageD1Ev
+   ...
+}
+{
+   google_LogMessage_LogMessage_dtor_def
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:_ZN6google10LogMessageD1Ev
+   ...
+}
+{
+   google_LogMessage_LogMessage_dtor_indir
+   Memcheck:Leak
+   match-leak-kinds: indirect
+   ...
+   fun:_ZN6google10LogMessageD1Ev
+   ...
+}
+{
+   google_LogMessage_LogMessage_dtor_poss
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:_ZN6google10LogMessageD1Ev
+   ...
+}
