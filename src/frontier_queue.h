@@ -13,22 +13,21 @@ class FrontierQueue {
   // TODO can you only forward declare?
   class Frontier {
    public:
-    Frontier(Time);
+    Frontier(Time, size_t);
 #ifndef NDEBUG
     ~Frontier();
 #endif
-    //    Frontier(Time, std::vector<Event*>*);
     void Push(Event*);
     Event* Pop();
     bool Empty() const;
-    //    std::vector<Event*>* events() const;
     Time time() const;
     std::string Description() const;
 
    private:
+    void Update();
     Time time_;
-    int next_free_;
-    std::vector<Event*> events_;
+    Id cur_;
+    std::vector<std::vector<Event*> > id_to_events_;
     static const size_t kEventCapacity = 1000000;
   };
 
@@ -38,7 +37,7 @@ class FrontierQueue {
   };
 
  public:
-  FrontierQueue();
+  FrontierQueue(size_t);
 #ifndef NDEBUG
   ~FrontierQueue();
 #endif
@@ -50,7 +49,7 @@ class FrontierQueue {
   // TODO check if having a pointer to Frontier is dangerous
   std::unordered_map<Time, Frontier*> frontiers_;
   std::priority_queue<Frontier*, std::vector<Frontier*>, Comparator> event_queue_;
-  //  std::vector<std::vector<Event*>*> unused_;
+  size_t entity_count_;
   DISALLOW_COPY_AND_ASSIGN(FrontierQueue);
 };
 

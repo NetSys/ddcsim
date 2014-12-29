@@ -24,9 +24,9 @@ STATICLIBS= $(GLOGLIB) $(PROGOPTSLIB) $(SYSTEMLIB)
 YAMLHEADERS=$(CURDIR)/yaml-cpp-0.5.1/include/
 
 SUBDIRS=src yaml-cpp-0.5.1
-OPT=-O3
+OPT=-O3 -D NDEBUG
 DBG=-O0 -g
-PRO=-O1 -pg
+PRO=-O1 -pg -D NDEBUG
 
 export OPTLVL
 export CXX

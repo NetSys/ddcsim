@@ -2,55 +2,80 @@
 #include "entities.h"
 
 #include <algorithm>
+#include <array>
 #include <limits>
 
+using std::array;
 using std::min;
 using std::numeric_limits;
 using std::vector;
 using std::unordered_map;
 
-BandwidthMeter::BandwidthMeter(Size s, Rate r) : max_capacity_(s),
-                                                 cur_capacity_(s),
-                                                 fill_rate_(r) {}
+// BandwidthMeter::BandwidthMeter(Size s, Rate r) : max_capacity_(s),
+//                                                  cur_capacity_(s),
+//                                                  fill_rate_(r) {}
 
-bool BandwidthMeter::CanSend(Size s) { return s <= cur_capacity_; }
+// bool BandwidthMeter::CanSend(Size s) { return s <= cur_capacity_; }
 
-void BandwidthMeter::UpdateCapacity(Time t) {
-  /* Token buckets fill up at a rate of fill_rate bytes/sec so for each
-   * link, we need to add fill_rate * (cur_time_ - last_time) bytes to its
-   * bucket UNLESS it is already full.  Thus, we update each token bucket by
-   * size = min{ size + fill_rate * (cur_time_ - last_time), bucket_capacity }
-   */
-  // TODO need to worry about overflow?
-  cur_capacity_ = min(max_capacity_, cur_capacity_ + fill_rate_ * t);
-}
+// void BandwidthMeter::UpdateCapacity(Time t) {
+//   /* Token buckets fill up at a rate of fill_rate bytes/sec so for each
+//    * link, we need to add fill_rate * (cur_time_ - last_time) bytes to its
+//    * bucket UNLESS it is already full.  Thus, we update each token bucket by
+//    * size = min{ size + fill_rate * (cur_time_ - last_time), bucket_capacity }
+//    */
+//   // TODO need to worry about overflow?
+//   cur_capacity_ = min(max_capacity_, cur_capacity_ + fill_rate_ * t);
+// }
 
-void BandwidthMeter::Send(Size s) { cur_capacity_-= s; }
+// void BandwidthMeter::Send(Size s) { cur_capacity_-= s; }
 
-const Size BandwidthMeter::kDefaultCapacity = numeric_limits<Size>::max();
+// const Size BandwidthMeter::kDefaultCapacity = numeric_limits<Size>::max();
 
-const Rate BandwidthMeter::kDefaultRate = numeric_limits<Rate>::max();
+// const Rate BandwidthMeter::kDefaultRate = numeric_limits<Rate>::max();
 
-Links::Links() : port_to_link_() {}
+Links::Links() : port_to_link_(), endpoint_to_out_port_() {}
 
 void Links::SetLinkUp(Port p) { port_to_link_[p].is_up = true; }
 
 void Links::SetLinkDown(Port p) { port_to_link_[p].is_up = false; }
 
-void Links::UpdateCapacities(Time passed) {
-  for(auto it = port_to_link_.begin(); it != port_to_link_.end(); ++it)
-    it->meter.UpdateCapacity(passed);
-}
+// void Links::UpdateCapacities(Time passed) {
+//   for(auto it = port_to_link_.begin(); it != port_to_link_.end(); ++it)
+//     it->meter.UpdateCapacity(passed);
+// }
 
 bool Links::IsLinkUp(Port p) const { return port_to_link_[p].is_up; }
 
 Entity* Links::GetEndpoint(Port p) const { return port_to_link_[p].endpoint; }
 
 Port Links::GetPortTo(Entity* dst) {
-  for(Port p = 0; p < PortCount(); ++p)
-    if(port_to_link_[p].endpoint == dst)
-      return p;
-  return PORT_NOT_FOUND;
+  // for(Port p = 0; p < PortCount(); ++p)
+  //   if(port_to_link_[p].endpoint == dst)
+  //     return p;
+  // return PORT_NOT_FOUND;
+  if(endpoint_to_out_port_.count(dst) > 0)
+    return endpoint_to_out_port_[dst];
+  else
+    return PORT_NOT_FOUND;
 }
 
 unsigned int Links::PortCount() const { return port_to_link_.size(); }
+
+array<Id, 13> Links::UpNeighbors() const {
+  array<Id, 13> up;
+
+  int i = 0;
+  for(Port p = 0; p < PortCount(); ++p) {
+    if(IsLinkUp(p)) {
+      up[i] = GetEndpoint(p)->id();
+      ++i;
+    }
+  }
+
+  for(; i < 13; ++i)
+    up[i] = NONE_ID;
+
+  return up;
+}
+
+Id Links::GetEndpointId(Port p) const { return port_to_link_[p].endpoint_id; }

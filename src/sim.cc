@@ -1,8 +1,9 @@
 #include <boost/program_options.hpp>
-#include <glog/logging.h>
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <unordered_map>
 
 #include "common.h"
 #include "entities.h"
@@ -10,10 +11,12 @@
 #include "reader.h"
 #include "scheduler.h"
 #include "statistics.h"
+#include "links.h"
 
 using std::cerr;
 using std::endl;
 using std::string;
+using std::vector;
 using std::unordered_map;
 
 namespace po = boost::program_options;
@@ -25,11 +28,14 @@ using po::store;
 using po::command_line_parser;
 using po::notify;
 
+using std::to_string;
+
 // TODO does Google have special conventions for out params?
 bool ParseArgs(int ac, char* av[], string& topo_file_path,
                string& event_file_path, Time& heartbeat_period,
-               Time& ls_update_period, Time& end_time, unsigned int& num_entities,
-               Size& bucket_capacity, Rate& fill_rate, string& out_prefix) {
+               Time& ls_update_period, Time& end_time, Size& bucket_capacity,
+               Rate& fill_rate, string& out_prefix,
+               size_t& switch_count, size_t& host_count, size_t& controller_count) {
   options_description desc("Allowed options");
   desc.add_options()
       ("help",
@@ -51,18 +57,18 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
       ("end-time,t",
        value<Time>(&end_time)->default_value(Scheduler::kDefaultEndTime),
        "stop the simulation after end-time seconds have passed")
-      ("num-entities,n",
-       value<unsigned int>(&num_entities),
-       "the maximum number of entities that can exist at any point")
-      ("bucket-capacity,M",
-       value<Size>(&bucket_capacity)->default_value(BandwidthMeter::kDefaultCapacity),
-       "the size of the bucket in the token bucket scheme (in units of bytes)")
-      ("fill-rate,R",
-       value<Rate>(&fill_rate)->default_value(BandwidthMeter::kDefaultRate),
-       "the rate at which the token bucket fills up (in units of bytes/sec)")
+      // ("bucket-capacity,M",
+      //  value<Size>(&bucket_capacity)->default_value(BandwidthMeter::kDefaultCapacity),
+      //  "the size of the bucket in the token bucket scheme (in units of bytes)")
+      // ("fill-rate,R",
+      //  value<Rate>(&fill_rate)->default_value(BandwidthMeter::kDefaultRate),
+      //  "the rate at which the token bucket fills up (in units of bytes/sec)")
       ("out-prefix,O",
        value<string>(&out_prefix)->default_value("./"),
-       "directory to put out files");
+       "directory to put out files")
+      ("switch-count,S", value<size_t>(&switch_count), "number of switches")
+      ("host-count,H", value<size_t>(&host_count), "number of hosts")
+      ("controller-count,C", value<size_t>(&controller_count), "number of controllers");
 
   // TODO better names for the variables R and M
   // TODO add an uncapped option
@@ -80,12 +86,18 @@ bool ParseArgs(int ac, char* av[], string& topo_file_path,
       cerr << "Path to file containing network topology missing" << endl;
       return false;
     }
-
-    if(!vm.count("num-entities")) {
-      cerr << "The number of entities in the simulation needs to be specified" << endl;
+    if (!vm.count("switch-count")) {
+      cerr << "Switch count missing" << endl;
       return false;
     }
-
+    if (!vm.count("controller-count")) {
+      cerr << "Conotroller count missing" << endl;
+      return false;
+    }
+    if (!vm.count("host-count")) {
+      cerr << "Host count missing" << endl;
+      return false;
+    }
   }
 
   return true;
@@ -95,50 +107,87 @@ void InitLogging(const char* argv0, string out_prefix) {
   google::InitGoogleLogging(argv0);
   FLAGS_stderrthreshold = 1;
   FLAGS_log_dir = out_prefix;
+#ifdef NDEBUG
+  FLAGS_log_prefix = true;
+#else
   FLAGS_log_prefix = false;
-  FLAGS_minloglevel = 0;
+#endif
   FLAGS_logbuflevel = 0;
+}
+bool CreateWorld(string topo_file_path, string event_file_path,
+                 Size bucket_capacity, Rate fill_rate,
+                 Statistics& stats, Scheduler& sched, vector<Switch*>& switches,
+                 vector<Controller*>& controllers, vector<Host*>& hosts,
+                 Topology& physical, unordered_map<Id, Entity*>& id_to_entity) {
+  Reader in(topo_file_path, event_file_path, bucket_capacity, fill_rate, stats,
+            sched, switches, controllers, hosts, physical, id_to_entity);
+
+  bool valid_topology = in.ParseTopology();
+
+  if(!valid_topology) return false;
+
+  bool valid_events = in.ParseEvents();
+
+  if(!valid_events) return false;
+
+  return true;
 }
 
 int main(int ac, char* av[]) {
   string topo_file_path, event_file_path, out_prefix;
   Time heartbeat_period, ls_update_period, end_time;
-  unsigned int num_entities;
   Size bucket_capacity;
   Rate fill_rate;
+  size_t switch_count, host_count, controller_count;
 
   bool valid_args = ParseArgs(ac, av, topo_file_path, event_file_path,
                               heartbeat_period, ls_update_period, end_time,
-                              num_entities, bucket_capacity, fill_rate,
-                              out_prefix);
+                              bucket_capacity, fill_rate, out_prefix,
+                              switch_count, host_count, controller_count);
 
   if(!valid_args) return -1;
 
   InitLogging(av[0], out_prefix);
 
-  Scheduler sched(end_time, num_entities);
+  Scheduler sched(end_time, switch_count, controller_count, host_count);
 
-  Statistics stats(sched);
+  Statistics stats(out_prefix, sched);
 
-  Reader in(topo_file_path, event_file_path, sched);
+  // TODO allocate elsewhere?
+  // TODO get rid of completely?
+  vector<Switch*> switches;
+  vector<Controller*> controllers;
+  vector<Host*> hosts;
 
-  bool valid_topology = in.ParseTopology(bucket_capacity, fill_rate, stats);
+  Topology phys;
 
-  if(!valid_topology) return -1;
+  bool valid_world = CreateWorld(topo_file_path, event_file_path,
+                                 bucket_capacity, fill_rate, stats, sched,
+                                 switches, controllers, hosts, phys,
+                                 stats.id_to_entity());
 
-  // TODO check that entities and links are correct by implementing print
-  // functions for them
-  bool valid_events = in.ParseEvents();
+  // for(auto s : switches)
+  //   LOG(INFO) << to_string(s->id()) + ":" + to_string(reinterpret_cast<long>(s)) + "+" + to_string(sizeof(*s));
+  // for(auto c : controllers)
+  //   LOG(INFO) << to_string(c->id()) + ":" + to_string(reinterpret_cast<long>(c)) + "+" + to_string(sizeof(*c));
+  // for(auto h : hosts)
+  //   LOG(INFO) << to_string(h->id()) + ":" + to_string(reinterpret_cast<long>(h)) + "+" + to_string(sizeof(*h));
 
-  if(!valid_events) return -1;
+  if (!valid_world) return -1;
 
-  sched.SchedulePeriodicEvents(in.id_to_entity(),
-                               heartbeat_period,
-                               ls_update_period);
+  stats.Init(phys);
 
-  stats.Init(out_prefix, in.physical_topo());
+  //std::cout << stats.MaxPathLength() << std::endl;
 
-  sched.StartSimulation(in.id_to_entity());
+  sched.SchedulePeriodicEvents(switches, heartbeat_period, ls_update_period);
+
+  sched.StartSimulation(stats, switches);
+
+#ifndef NDEBUG
+  for(auto s : switches) delete s;
+  for(auto c : controllers) delete c;
+  for(auto h : hosts) delete h;
+#endif
 
   return 0;
 }

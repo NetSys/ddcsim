@@ -1,21 +1,13 @@
-#include <string>
-
-#include <glog/logging.h>
-
 #include "entities.h"
 #include "events.h"
 #include "scheduler.h"
 #include "statistics.h"
 
-#include <iostream>
-#include <random>
+// #include <random>
 
-using std::default_random_engine;
-using std::discrete_distribution;
-using std::uniform_real_distribution;
-using std::string;
-using std::to_string;
-using std::unordered_map;
+// using std::default_random_engine;
+// using std::discrete_distribution;
+// using std::uniform_real_distribution;
 using std::vector;
 
 /* The type-specific parts of Scheduler::Forward are deferred to this class.
@@ -23,66 +15,108 @@ using std::vector;
  * method (with appropriate specializations) so that we can leverage partial
  * specialization, which is forbidden for methods but not classes.
  */
-template<class E, class M> class Schedule {
+template<class E, class In, class Out> class Schedule {
  public:
-  Event* operator()(E* sender, M* msg_in, Entity* reciever, Port in) {};
+  void operator()(E* sender, In* msg_in, Out* msg_out, Entity* reciever, Port in) {};
 };
 
-// TODO should the scheduler create messages?
-template<> class Schedule<Entity, Heartbeat> {
+template<> class Schedule<Switch, Up, LinkStateUpdate> {
  public:
-  Event* operator()(Entity* sender, Heartbeat* heartbeat_in, Entity* receiver,
-                    Port in) {
-    return new Heartbeat(heartbeat_in->time_ + Scheduler::Delay(),
-                         heartbeat_in->src_,
-                         receiver,
-                         in,
-                         heartbeat_in->sn_,
-                         heartbeat_in->recently_seen_);
+  void operator()(Switch* sender, Up* u, LinkStateUpdate* lsu, Entity* receiver,
+                  Port in) {
+    lsu->time_ = u->time_ + Scheduler::Delay();
+    lsu->affected_entities_ = {receiver};
+    lsu->in_port_ = in;
   }
 };
 
-template<> class Schedule<Entity, InitiateHeartbeat> {
+template<> class Schedule<Switch, LinkUp, LinkStateUpdate> {
  public:
-  Event* operator()(Entity* sender, InitiateHeartbeat* init, Entity* receiver,
-                    Port in) {
-    return new Heartbeat(init->time_ + Scheduler::Delay(),
-                         sender,
-                         receiver,
-                         in,
-                         sender->NextHeartbeatSeqNum(),
-                         sender->ComputeRecentlySeen());
+  void operator()(Switch* sender, LinkUp* lu, LinkStateUpdate* lsu,
+                  Entity* receiver, Port in) {
+    lsu->time_ = lu->time_ + Scheduler::Delay() + Scheduler::kDefaultHelloDelay;
+    lsu->affected_entities_ = {receiver};
+    lsu->in_port_ = in;
   }
 };
 
-template<> class Schedule<Switch, LinkStateUpdate> {
+template<> class Schedule<Switch, LinkDown, LinkStateUpdate> {
  public:
-  Event* operator()(Entity* sender, LinkStateUpdate* ls, Entity* receiver,
-                    Port in) {
-    return new LinkStateUpdate(ls->time_ + Scheduler::Delay(),
-                               receiver,
-                               in,
-                               ls->src_,
-                               ls->sn_,
-                               ls->neighbors_,
-                               ls->expiration_);
+  void operator()(Switch* sender, LinkDown* ld, LinkStateUpdate* lsu,
+                  Entity* receiver, Port in) {
+    lsu->time_ = ld->time_ + Scheduler::Delay() + Scheduler::kDefaultHelloDelay;
+    lsu->affected_entities_ = {receiver};
+    lsu->in_port_ = in;
   }
 };
 
-template<> class Schedule<Switch, InitiateLinkState> {
+template<> class Schedule<Switch, LinkStateUpdate, LinkStateUpdate> {
  public:
-  Event* operator()(Switch* sender, InitiateLinkState* ls, Entity* receiver,
-                    Port in) {
-    return new LinkStateUpdate(ls->time_ + Scheduler::Delay(),
-                               receiver,
-                               in,
-                               sender,
-                               sender->NextLSSeqNum(),
-                               sender->ComputeUpNeighbors(),
-                               ls->time_ +
-                               Scheduler::kComputationDelay +
-                               Scheduler::kExpireDelta);
-    // TODO use either the encapsulated message time or the global scheduler time
+  void operator()(Switch* sender, LinkStateUpdate* lsu_in, LinkStateUpdate* lsu_out,
+                  Entity* receiver, Port in) {
+    lsu_out->time_ = lsu_in->time_ + Scheduler::Delay();
+    lsu_out->affected_entities_ = {receiver};
+    lsu_out->in_port_ = in;
+  }
+};
+
+template<> class Schedule<Switch, InitiateLinkState, LinkStateUpdate> {
+ public:
+  void operator()(Switch* sender, InitiateLinkState* init, LinkStateUpdate* lsu,
+                  Entity* receiver, Port in) {
+    lsu->time_ = init->time_ + Scheduler::Delay();
+    lsu->affected_entities_ = {receiver};
+    lsu->in_port_ = in;
+  }
+};
+
+template<> class Schedule<Controller, LinkStateUpdate, RoutingUpdate> {
+ public:
+  void operator()(Controller* sender, LinkStateUpdate* lsu, RoutingUpdate* ru,
+                  Entity* receiver, Port in) {
+    ru->time_ = lsu->time_ + Scheduler::Delay();
+    ru->affected_entities_ = {receiver};
+    ru->in_port_ = in;
+  }
+};
+
+template<> class Schedule<Switch, RoutingUpdate, RoutingUpdate> {
+ public:
+  void operator()(Switch* sender, RoutingUpdate* ru_in, RoutingUpdate* ru_out,
+                  Entity* receiver, Port in) {
+    ru_out->time_ = ru_in->time_ + Scheduler::Delay();
+    ru_out->affected_entities_ = {receiver};
+    ru_out->in_port_ = in;
+  }
+};
+
+template<> class Schedule<Controller, LinkStateUpdate, LinkStateRequest> {
+ public:
+  void operator()(Controller* sender, LinkStateUpdate* lsu_in,
+                  LinkStateRequest* lsr_out, Entity* receiver, Port in) {
+    lsr_out->time_ = lsu_in->time_ + Scheduler::Delay();
+    lsr_out->affected_entities_ = {receiver};
+    lsr_out->in_port_ = in;
+  }
+};
+
+template<> class Schedule<Switch, LinkStateRequest, LinkStateRequest> {
+ public:
+  void operator()(Switch* sender, LinkStateRequest* lsr_in,
+                  LinkStateRequest* lsr_out, Entity* receiver, Port in) {
+    lsr_out->time_ = lsr_in->time_ + Scheduler::Delay();
+    lsr_out->affected_entities_ = {receiver};
+    lsr_out->in_port_ = in;
+  }
+};
+
+template<> class Schedule<Switch, LinkStateRequest, LinkStateUpdate> {
+ public:
+  void operator()(Switch* sender, LinkStateRequest* lsr_in,
+                  LinkStateUpdate* lsu_out, Entity* receiver, Port in) {
+    lsu_out->time_ = lsr_in->time_ + Scheduler::Delay();
+    lsu_out->affected_entities_ = {receiver};
+    lsu_out->in_port_ = in;
   }
 };
 
@@ -95,109 +129,106 @@ const Time Scheduler::kDefaultHeartbeatPeriod = 3;
 const Time Scheduler::kDefaultLSUpdatePeriod = 3;
 const Time Scheduler::kDefaultEndTime = 60;
 
-// TODO this depends on topology and should probably be set according to each input
-const Time Scheduler::kExpireDelta = 3;
+Scheduler::Scheduler(Time end_time, size_t switch_count,
+                     size_t controller_count, size_t host_count)
+    : event_queue_(switch_count + controller_count + host_count),
+      end_time_(end_time), kSwitchCount(switch_count),
+      kControllerCount(controller_count), kHostCount(host_count) {}
 
-Scheduler::Scheduler(Time end_time, unsigned int num_entities) :
-    event_queue_(), end_time_(end_time),  num_entities_(num_entities) {}
+void Scheduler::AddEvent(Time t, Event* e) { event_queue_.Push(t, e); }
 
-void Scheduler::AddEvent(Event* e) {  event_queue_.emplace(e->time_, e); }
+bool Scheduler::HasNextEvent() { return ! event_queue_.Empty(); }
 
-bool Scheduler::HasNextEvent() { return ! event_queue_.empty(); }
-
-Event* Scheduler::NextEvent() {
-  std::pair<Time, Event*> next = event_queue_.top();
-  event_queue_.pop();
-  return next.second;
-}
-
-bool Scheduler::Comparator::operator() (const std::pair<Time, const Event* const> lhs,
-                                        const std::pair<Time, const Event* const> rhs) const {
-  return lhs.first > rhs.first;
-}
+Event* Scheduler::NextEvent() { return event_queue_.Pop(); }
 
 // TODO why isn't partial specialization of methods allowed?
-template<class E, class M> void Scheduler::Forward(E* sender, M* msg_in, Port out,
-                                                   Statistics& stats) {
+template<class E, class In, class Out>
+void Scheduler::Forward(E* sender, In* msg_in, Out* msg_out, Port out) {
   Links& l = sender->links();
 
-  if(! l.IsLinkUp(out)) return;
-
-  Entity* receiver = l.GetEndpoint(out);
-
-  Port in = receiver->links().GetPortTo(sender);
-  CHECK_NE(in, PORT_NOT_FOUND);
-
-  Schedule<E, M> s;
-  Event* new_event = s(sender, msg_in, receiver, in);
-
-  // TODO move this before allocation of new_event?
-  if(new_event->time_ <= end_time_) {
-    AddEvent(new_event);
-    stats.RecordSend(new_event);
-  } else {
-    delete new_event;
+  if(! l.IsLinkUp(out)) {
+    delete msg_out;
+    return;
   }
+
+  Entity* receiver = CHECK_NOTNULL(l.GetEndpoint(out));
+
+  Port in_port = receiver->links().GetPortTo(sender);
+  CHECK_NE(in_port, PORT_NOT_FOUND);
+
+  // TODO what the fuck compiler error...
+  Schedule<E, In, Out> s;
+  s(sender, msg_in, msg_out, receiver, in_port);
+
+  if(msg_out->time_ <= end_time_)
+    AddEvent(msg_out->time_, msg_out);
+  else
+    delete msg_out;
 }
 
 // TODO generalize
 // TODO feed default_random_engine a seed to make it deterministic
-void Scheduler::SchedulePeriodicEvents(unordered_map<Id, Entity*>& id_to_entity,
+void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
                                        Time heartbeat_period,
                                        Time ls_update_period) {
-  default_random_engine entropy_src;
+  // default_random_engine entropy_src;
 
-  Time half_hrtbt = heartbeat_period / 2;
-  uniform_real_distribution<Time> hrtbt_init_dist(0, half_hrtbt);
-  uniform_real_distribution<Time> hrtbt_dist(-1 * half_hrtbt, half_hrtbt);
+  // Time half_hrtbt = heartbeat_period / 2;
+  // uniform_real_distribution<Time> hrtbt_init_dist(0, half_hrtbt);
+  // uniform_real_distribution<Time> hrtbt_dist(-1 * half_hrtbt, half_hrtbt);
 
-  // TODO verify that it's okay to use entropy_src for both init_dist and dist
-  for(auto it : id_to_entity)
-    AddEvent(new InitiateHeartbeat(hrtbt_init_dist(entropy_src),
-                                         it.second));
+  // // TODO verify that it's okay to use entropy_src for both init_dist and dist
+  // for(auto it : id_to_entity)
+  //   AddEvent(new InitiateHeartbeat(hrtbt_init_dist(entropy_src),
+  //                                        it.second));
 
-  // TODO verify semantics of end_time
-  for (Time t = heartbeat_period; t <= end_time_; t += heartbeat_period)
-    for(auto it : id_to_entity)
-      AddEvent(new InitiateHeartbeat(t + hrtbt_dist(entropy_src),
-                                           it.second));
+  // // TODO verify semantics of end_time
+  // for (Time t = heartbeat_period; t <= end_time_; t += heartbeat_period)
+  //   for(auto it : id_to_entity)
+  //     AddEvent(new InitiateHeartbeat(t + hrtbt_dist(entropy_src),
+  //                                          it.second));
 
-  Time half_ls = ls_update_period / 2;
-  uniform_real_distribution<Time> ls_init_dist(0, half_ls);
-  uniform_real_distribution<Time> ls_dist(-1 * half_ls, half_ls);
+  // Time half_ls = ls_update_period / 2;
+  // uniform_real_distribution<Time> ls_init_dist(0, half_ls);
+  // uniform_real_distribution<Time> ls_dist(-1 * half_ls, half_ls);
 
-  for(auto it : id_to_entity)
-    // AddEvent(new InitiateLinkState(ls_init_dist(entropy_src),
-    //                                      it.second));
-    AddEvent(new InitiateLinkState(0, it.second));
+  // for(auto it : id_to_entity)
+  //   AddEvent(new InitiateLinkState(ls_init_dist(entropy_src), it.second));
 
+  // for (Time t = ls_update_period; t <= end_time_; t += ls_update_period)
+  //   for(auto it : id_to_entity)
+  //     AddEvent(new InitiateLinkState(t, it.second));
 
-  for (Time t = ls_update_period; t <= end_time_; t += ls_update_period)
-    for(auto it : id_to_entity)
-      AddEvent(new InitiateLinkState(t, it.second));
+  for(Switch* s : switches)
+    AddEvent(START_TIME, new InitiateLinkState(START_TIME, s));
 }
 
-// TODO do a better job of sharing the id_to_entity_ mapping between reader
-void Scheduler::StartSimulation(unordered_map<Id, Entity*>& id_to_entity) {
-  Time last_time, next_milestone, milestone_granularity;
+void Scheduler::StartSimulation(Statistics& statistics, vector<Switch*>& switches) {
+  Time last_time = cur_time_ = START_TIME;
 
-  last_time = cur_time_ = START_TIME;
-  next_milestone = milestone_granularity = 0.05;
+  unsigned int cur_bucket_size = 0;
+  Time cur_bucket_time = -1;
 
-  while(HasNextEvent() && cur_time_ < end_time_) {
+  while (HasNextEvent() && cur_time_ < end_time_) {
     Event* ev = NextEvent();
 
     last_time = cur_time_;
     cur_time_ = ev->time_;
     CHECK_GE(cur_time_, last_time);
 
-    if (cur_time_ / end_time_ > next_milestone) {
-      LOG(WARNING) << "Progress: " << (next_milestone * 100) << "%";
-      next_milestone += milestone_granularity;
+    if (cur_time_ > cur_bucket_time) {
+      LOG(WARNING) << cur_bucket_time << " had " << cur_bucket_size << " events";
+      cur_bucket_time = cur_time_;
+      cur_bucket_size = 0;
+    } else {
+      cur_bucket_size++;
     }
 
-    for (Entity* e : ev->affected_entities_)
+    for (Entity* e : ev->affected_entities_) {
+      DLOG(INFO) << e->Name() << " " << e->id() << " received event " << ev->Name() << ":" << ev->Description();
       ev->Handle(e);
+      DLOG(INFO) << e->Description();
+    }
 
     delete ev;
   }
@@ -207,26 +238,73 @@ Time Scheduler::cur_time() { return cur_time_; }
 
 Time Scheduler::end_time() { return end_time_; }
 
-unsigned int Scheduler::num_entities() { return num_entities_; }
-
 Time Scheduler::Delay() {
   // TODO make these functions of link bandwidth and length
   return kComputationDelay + kTransDelay + kPropDelay;
 }
 
+bool Scheduler::IsHost(Id id) {
+  return  kSwitchCount + kControllerCount <= id &&
+      id < kSwitchCount + kControllerCount + kHostCount;
+}
+
+bool Scheduler::IsController(Id id) {
+  return kSwitchCount <= id && id < kSwitchCount + kControllerCount;
+}
+
+bool Scheduler::IsSwitch(Id id) { return 0 <= id && id < kSwitchCount; }
+
+// TODO how to force generic instantiations to respect subtype polymorphism?
 /* TODO explain why we need to oblige the compiler to instantiate this templated
-* method explicity
-*/
-template void Scheduler::Forward<Entity, Heartbeat>(Entity*, Heartbeat*, Port,
-                                                    Statistics&);
-template void Scheduler::Forward<Entity, InitiateHeartbeat>(Entity*,
-                                                            InitiateHeartbeat*,
-                                                            Port, Statistics&);
-template void Scheduler::Forward<Switch, LinkStateUpdate>(Switch*,
-                                                          LinkStateUpdate*,
-                                                          Port,
-                                                          Statistics&);
-template void Scheduler::Forward<Switch, InitiateLinkState>(Switch*,
-                                                            InitiateLinkState*,
-                                                            Port,
-                                                            Statistics&);
+ * method explicity
+ */
+template void
+Scheduler::Forward<Switch, Up, LinkStateUpdate>(Switch*,
+                                                Up*,
+                                                LinkStateUpdate*,
+                                                Port);
+template void
+Scheduler::Forward<Switch, LinkUp, LinkStateUpdate>(Switch*,
+                                                    LinkUp*,
+                                                    LinkStateUpdate*,
+                                                    Port);
+template void
+Scheduler::Forward<Switch, LinkDown, LinkStateUpdate>(Switch*,
+                                                      LinkDown*,
+                                                      LinkStateUpdate*,
+                                                      Port);
+template void
+Scheduler::Forward<Switch, LinkStateUpdate, LinkStateUpdate>(Switch*,
+                                                             LinkStateUpdate*,
+                                                             LinkStateUpdate*,
+                                                             Port);
+template void
+Scheduler::Forward<Switch, InitiateLinkState, LinkStateUpdate>(Switch*,
+                                                               InitiateLinkState*,
+                                                               LinkStateUpdate*,
+                                                               Port);
+template void
+Scheduler::Forward<Controller, LinkStateUpdate, RoutingUpdate>(Controller*,
+                                                               LinkStateUpdate*,
+                                                               RoutingUpdate*,
+                                                               Port);
+template void
+Scheduler::Forward<Switch, RoutingUpdate, RoutingUpdate>(Switch*,
+                                                         RoutingUpdate*,
+                                                         RoutingUpdate*,
+                                                         Port);
+template void
+Scheduler::Forward<Controller, LinkStateUpdate, LinkStateRequest>(Controller*,
+                                                                  LinkStateUpdate*,
+                                                                  LinkStateRequest*,
+                                                                  Port);
+template void
+Scheduler::Forward<Switch, LinkStateRequest, LinkStateRequest>(Switch*,
+                                                               LinkStateRequest*,
+                                                               LinkStateRequest*,
+                                                               Port);
+template void
+Scheduler::Forward<Switch, LinkStateRequest, LinkStateUpdate>(Switch*,
+                                                              LinkStateRequest*,
+                                                              LinkStateUpdate*,
+                                                              Port);

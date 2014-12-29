@@ -1,28 +1,21 @@
 #ifndef DDCSIM_EVENTS_H_
 #define DDCSIM_EVENTS_H_
 
-#include <iostream>
+#include <array>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "common.h"
 
-// TODO do this with templates as we are essentially attempting to generate
-// a family of (overloaded) functions
-#define OVERLOAD_EVENT_OSTREAM_IMPL(event_type)                     \
-  ostream& operator<<(ostream& s, const event_type &e) {            \
-    return s << #event_type << " " << e.Description();              \
-  }
-
-#define OVERLOAD_EVENT_OSTREAM_DECL(event_type)                 \
-  std::ostream& operator<<(std::ostream&, const event_type &);
-
 class Entity;
 
 class Event {
  public:
+  Event();
   Event(Time, Entity*);
   Event(Time, Entity*, Entity*);
+  virtual ~Event();
   /* The following Handle method, and the Handle methods in all descendants
    * of Event, implement the pattern outlined here:
    * http://en.wikipedia.org/wiki/Double_dispatch#Double_dispatch_in_C.2B.2B
@@ -31,10 +24,8 @@ class Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
-  // TODO remove this eventually and factor into a packettx superclass
-  virtual Size size() const;
-  const Time time_;
-  const std::vector<Entity*> affected_entities_;
+  Time time_;
+  std::vector<Entity*> affected_entities_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Event);
@@ -88,60 +79,32 @@ class LinkDown : public Event {
   DISALLOW_COPY_AND_ASSIGN(LinkDown);
 };
 
-class InitiateHeartbeat : public Event {
- public:
-  InitiateHeartbeat(Time, Entity*);
-  virtual void Handle(Entity*);
-  virtual std::string Description() const;
-  virtual std::string Name() const;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(InitiateHeartbeat);
-};
-
 class Broadcast : public Event {
  public:
+  Broadcast();
   Broadcast(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
-  virtual Size size() const;
-  const Port in_port_;
+  Port in_port_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Broadcast);
 };
 
-class Heartbeat : public Broadcast {
- public:
-  Heartbeat(Time, const Entity*, Entity*, Port, SequenceNum, BV);
-  ~Heartbeat();
-  virtual void Handle(Entity*);
-  virtual std::string Description() const;
-  virtual std::string Name() const;
-  virtual Size size() const;
-  const SequenceNum sn_;
-  const Entity* src_; // TODO better to change to a ref?
-  const BV recently_seen_;
-  const unsigned int current_partition_;
-  const Id leader_;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(Heartbeat);
-};
-
 class LinkStateUpdate : public Broadcast {
  public:
-  LinkStateUpdate(Time, Entity*, Port, const Entity*, SequenceNum,
-                  std::vector<Id>, Time);
+  LinkStateUpdate(Time, Entity*, Port, Entity*, SequenceNum, Time,
+                  std::array<Id, 13>, Id);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
-  virtual Size size() const;
-  const SequenceNum sn_;
-  const Entity* src_;
-  const std::vector<Id> neighbors_;
-  const Time expiration_;
+  SequenceNum sn_;
+  // TODO const on the right thing?
+  Entity* src_;
+  std::array<Id, 13> up_links_;
+  Time expiration_;
+  Id src_id_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);
@@ -158,15 +121,36 @@ class InitiateLinkState : public Event {
   DISALLOW_COPY_AND_ASSIGN(InitiateLinkState);
 };
 
-OVERLOAD_EVENT_OSTREAM_DECL(Event)
-OVERLOAD_EVENT_OSTREAM_DECL(Up)
-OVERLOAD_EVENT_OSTREAM_DECL(Down)
-OVERLOAD_EVENT_OSTREAM_DECL(LinkUp)
-OVERLOAD_EVENT_OSTREAM_DECL(LinkDown)
-OVERLOAD_EVENT_OSTREAM_DECL(InitiateHeartbeat)
-OVERLOAD_EVENT_OSTREAM_DECL(Broadcast)
-OVERLOAD_EVENT_OSTREAM_DECL(Heartbeat)
-OVERLOAD_EVENT_OSTREAM_DECL(LinkStateUpdate)
-OVERLOAD_EVENT_OSTREAM_DECL(InitiateLinkState)
+class RoutingUpdate : public Broadcast {
+ public:
+  RoutingUpdate(Time, Entity*, Port, Entity*, SequenceNum,
+                std::shared_ptr<std::vector<Id> >, Id, Id);
+  ~RoutingUpdate();
+  virtual void Handle(Entity*);
+  virtual std::string Description() const;
+  virtual std::string Name() const;
+  const SequenceNum sn_;
+  Entity* src_;
+  std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
+  const Id dst_;
+  const Id src_id_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(RoutingUpdate);
+};
+
+class LinkStateRequest : public Broadcast {
+ public:
+  LinkStateRequest(Time, Entity*, Port, Entity*, SequenceNum, Id);
+  virtual void Handle(Entity*);
+  virtual std::string Description() const;
+  virtual std::string Name() const;
+  SequenceNum sn_;
+  Entity* src_;
+  Id src_id_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(LinkStateRequest);
+};
 
 #endif

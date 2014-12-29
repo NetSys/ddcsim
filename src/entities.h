@@ -1,21 +1,13 @@
-#ifndef DDCSIM_ROUTERS_H_
-#define DDCSIM_ROUTERS_H_
+#ifndef DDCSIM_ENTITIES_H_
+#define DDCSIM_ENTITIES_H_
 
-#include <boost/circular_buffer.hpp>
-#include <boost/graph/graph_traits.hpp>
-#include <iterator>
-#include <inttypes.h>
+#include <memory>
 #include <random>
 #include <string>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <vector>
 
-#include "bv.h"
 #include "common.h"
 #include "links.h"
+#include "link_state.h"
 
 class Event;
 class Up;
@@ -23,74 +15,11 @@ class Down;
 class LinkUp;
 class LinkDown;
 class Broadcast;
-class Heartbeat;
-class InitiateHeartbeat;
+class LinkStateRequest;
 class LinkStateUpdate;
 class InitiateLinkState;
+class RoutingUpdate;
 class Statistics;
-
-#define OVERLOAD_ENTITY_OSTREAM_IMPL(entity_type)               \
-  ostream& operator<<(ostream& s, const entity_type &e) {       \
-    return s << #entity_type << " " << e.Description();         \
-  }
-
-#define OVERLOAD_ENTITY_OSTREAM_DECL(entity_type)               \
-  std::ostream& operator<<(std::ostream&, const entity_type &);
-
-enum lvl_to_num : int {INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3};
-
-namespace std {
-/* Specialize the standard hash function for HeartbeatId's */
-// TODO only put decl in header file
-template<> struct hash<pair<int, const Entity*>> {
-  size_t operator()(const pair<int, const Entity*>& id) const {
-    return hash<int>()(id.first) ^
-        hash<uint64_t>()(reinterpret_cast<uint64_t>(id.second));
-  }
-};
-// TODO fix this unholy hack
-std::string to_string(const std::vector<int>& ints);
-};
-
-
-// TODO move into entity?
-class HeartbeatHistory {
- public:
-  HeartbeatHistory();
-  void MarkAsSeen(const Heartbeat*, Time);
-  bool HasBeenSeen(const Heartbeat*) const;
-  boost::circular_buffer<Time> LastSeen(Id) const;
-  bool HasBeenSeen(Id) const;
-  std::unordered_map<Id, std::vector<bool> > id_to_recently_seen() const;
-
- private:
-  // TODO combine the set and map?
-  // TODO make into a pair of sequence number and id?
-  typedef std::pair<SequenceNum, const Entity*> HeartbeatId;
-  // TODO what does the style guide say about static methods?
-  static HeartbeatId MakeHeartbeatId(const Heartbeat* b);
-  std::unordered_set<HeartbeatId> seen_;
-  // TODO make into array-type mapping for better efficiency/style?
-  std::unordered_map<Id, boost::circular_buffer<Time> > last_seen_;
-  std::unordered_map<Id, std::vector<bool> > id_to_recently_seen_;
-  DISALLOW_COPY_AND_ASSIGN(HeartbeatHistory);
-};
-
-class LinkState {
- public:
-  LinkState(unsigned int);
-  std::string Description() const;
-  bool IsStaleUpdate(LinkStateUpdate*);
-  void Update(LinkStateUpdate*);
-  void Update(Id, std::vector<Id>);
-  void Refresh(Time);
-
- private:
-  std::vector<SequenceNum> id_to_last_seq_num_;
-  std::vector<Time> id_to_exp_;
-  Topology topology_;
-  DISALLOW_COPY_AND_ASSIGN(LinkState);
-};
 
 class Entity {
  public:
@@ -105,18 +34,15 @@ class Entity {
   virtual void Handle(Up*);
   virtual void Handle(Down*);
   virtual void Handle(Broadcast*) = 0;
-  virtual void Handle(Heartbeat*);
   virtual void Handle(LinkUp*);
   virtual void Handle(LinkDown*);
-  virtual void Handle(InitiateHeartbeat*);
-  virtual void Handle(LinkStateUpdate*) = 0;
   virtual void Handle(InitiateLinkState*) = 0;
-  Links& links(); // TODO didn't want to do it...
+  virtual void Handle(LinkStateUpdate*) = 0;
+  virtual void Handle(RoutingUpdate*) = 0;
+  virtual void Handle(LinkStateRequest*) = 0;
+  Links& links();
   Id id() const;
-  SequenceNum NextHeartbeatSeqNum() const;
-  BV ComputeRecentlySeen();
-  std::vector<unsigned int> ComputePartitions() const;
-  void UpdateLinkCapacities(Time);
+  //  void UpdateLinkCapacities(Time);
   /* An entity is considered "recently seen" if its hearbeats have been seen
    * kMinTimes times in the last kMaxRecent seconds.
    */
@@ -125,22 +51,41 @@ class Entity {
   static const unsigned int kMinTimes;
 
  protected:
-  SequenceNum next_heartbeat_;
-  HeartbeatHistory heart_history_;
   Links links_;
   Scheduler& scheduler_;
   Id id_;
   bool is_up_;
   Statistics& stats_;
-  BV cached_bv_;
-  bool is_cache_valid_;
   // TODO should be using the same entropy source as in sim.cc?
   // TODO clean this up
-  std::default_random_engine entropy_src_;
-  std::discrete_distribution<unsigned char> dist_;
+  //  std::default_random_engine entropy_src_;
+  //  std::discrete_distribution<unsigned char> dist_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Entity);
+};
+
+namespace std {
+template<> struct hash<pair<int, int>> {
+  size_t operator()(const pair<int, int>& p) const {
+    return hash<unsigned int>()(p.first) ^
+        hash<unsigned int>()(p.second);
+  }
+};
+};
+
+class RoutingUpdateHistory {
+ public:
+  RoutingUpdateHistory();
+  std::string Description() const;
+  void MarkAsSeen(const RoutingUpdate*);
+  bool HasBeenSeen(const RoutingUpdate*) const;
+  SequenceNum NextSeqNum(Id);
+
+ private:
+  std::unordered_map<std::pair<Id,Id>, SequenceNum> last_seen_;
+  std::unordered_map<Id, SequenceNum> dst_to_next_sn_;
+  DISALLOW_COPY_AND_ASSIGN(RoutingUpdateHistory);
 };
 
 class Switch : public Entity {
@@ -152,18 +97,20 @@ class Switch : public Entity {
   void Handle(Up*);
   void Handle(Down*);
   void Handle(Broadcast*);
-  void Handle(Heartbeat*);
   void Handle(LinkUp*);
   void Handle(LinkDown*);
-  void Handle(InitiateHeartbeat*);
   void Handle(LinkStateUpdate*);
   void Handle(InitiateLinkState*);
-  SequenceNum NextLSSeqNum() const;
-  std::vector<Id> ComputeUpNeighbors() const;
+  void Handle(RoutingUpdate*);
+  void Handle(LinkStateRequest*);
+  Id NextHop(Id);
+  static constexpr Time kLSExpireDelta = 10;
 
  private:
-  SequenceNum next_link_state_;
-  LinkState link_state_;
+  LinkState ls_;
+  RoutingUpdateHistory ru_history_;
+  std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
+  std::vector<SequenceNum> lsr_history_;
   DISALLOW_COPY_AND_ASSIGN(Switch);
 };
 
@@ -176,19 +123,38 @@ class Controller : public Entity {
   void Handle(Up*);
   void Handle(Down*);
   void Handle(Broadcast*);
-  void Handle(Heartbeat*);
   void Handle(LinkUp*);
   void Handle(LinkDown*);
-  void Handle(InitiateHeartbeat*);
   void Handle(LinkStateUpdate*);
   void Handle(InitiateLinkState*);
+  void Handle(RoutingUpdate*);
+  void Handle(LinkStateRequest*);
 
  private:
+  LinkStateControl ls_;
+  std::vector<SequenceNum> switch_to_next_sn_;
+  SequenceNum next_lsr_;
   DISALLOW_COPY_AND_ASSIGN(Controller);
 };
 
-OVERLOAD_ENTITY_OSTREAM_DECL(Entity)
-OVERLOAD_ENTITY_OSTREAM_DECL(Switch)
-OVERLOAD_ENTITY_OSTREAM_DECL(Controller)
+class Host : public Entity {
+ public:
+  Host(Scheduler&, Id, Statistics&);
+  std::string Description() const;
+  std::string Name() const;
+  void Handle(Event*);
+  void Handle(Up*);
+  void Handle(Down*);
+  void Handle(Broadcast*);
+  void Handle(LinkUp*);
+  void Handle(LinkDown*);
+  void Handle(LinkStateUpdate*);
+  void Handle(InitiateLinkState*);
+  void Handle(RoutingUpdate*);
+  void Handle(LinkStateRequest*);
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(Host);
+};
 
 #endif
