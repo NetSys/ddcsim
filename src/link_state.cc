@@ -104,7 +104,7 @@ bool LinkStateControl::ArePartitioned(Id id1, Id id2) const {
 // TODO make computation more lazy, don't remove all edges until you have to operate on graph
 void LinkState::Refresh(Time cur_time) {
   for(int i = 0; i < id_to_exp_.size(); ++i) {
-    if(cur_time > id_to_exp_[i]) {
+    if(id_to_last_sn_[i] != NONE_SEQNUM && cur_time > id_to_exp_[i]) {
       id_to_last_sn_[i] = NONE_SEQNUM;
       clear_vertex(vertex(i, topology_), topology_);
     }
