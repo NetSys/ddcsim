@@ -178,11 +178,11 @@ string RoutingUpdate::Description() const {
       " src_=" + to_string(src_->id()) + " dst_=" + to_string(dst_) +
       " dst_to_neighbor_=";
 
-  if(dst_to_neighbor_ == nullptr) {
-    rtn += "null";
-  } else {
+  if(dst_to_neighbor_) {
     for(int i : *dst_to_neighbor_)
       rtn += to_string(i) + " ";
+  } else {
+    rtn += "null";
   }
 
   return rtn;

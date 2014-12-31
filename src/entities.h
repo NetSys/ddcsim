@@ -42,6 +42,7 @@ class Entity {
   virtual void Handle(LinkStateRequest*) = 0;
   Links& links();
   Id id() const;
+  virtual Id NextHop(Id);
   //  void UpdateLinkCapacities(Time);
   /* An entity is considered "recently seen" if its hearbeats have been seen
    * kMinTimes times in the last kMaxRecent seconds.
@@ -152,8 +153,10 @@ class Host : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
+  Id NextHop(Id);
 
  private:
+  Id next_hop_switch_;
   DISALLOW_COPY_AND_ASSIGN(Host);
 };
 

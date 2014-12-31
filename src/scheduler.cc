@@ -203,7 +203,7 @@ void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
     AddEvent(START_TIME, new InitiateLinkState(START_TIME, s));
 }
 
-void Scheduler::StartSimulation(Statistics& statistics, vector<Switch*>& switches) {
+void Scheduler::StartSimulation(Statistics& statistics) {
   Time last_time = cur_time_ = START_TIME;
 
   // TODO move into statistics
@@ -222,6 +222,7 @@ void Scheduler::StartSimulation(Statistics& statistics, vector<Switch*>& switche
       cur_bucket_time = cur_time_;
       cur_bucket_size = 1;
       statistics.RecordEventCounts();
+      statistics.RecordReachability();
       LOG(WARNING) << "\n";
     } else {
       cur_bucket_size++;

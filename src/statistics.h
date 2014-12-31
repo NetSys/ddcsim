@@ -24,7 +24,7 @@ class Statistics {
   void RecordEventCounts();
   //int MaxPathLength();
   static const std::string REACHABILITY_LOG_NAME;
-  static const int NO_PATH = 0;
+  const int NO_PATH = 0;
 
  private:
   /* Having to store pointers to ofstream's rather than the object itself is an
@@ -37,6 +37,7 @@ class Statistics {
   // std::vector<int> dst_to_distance_;
   //std::vector<boost::graph_traits<Topology>::vertices_size_type> dst_to_distance_;
   //  std::vector<boost::graph_traits<Topology>::vertices_size_type> d;//[num_vertices(physical_)];
+  std::vector<boost::graph_traits<Topology>::vertices_size_type> d; //[num_vertices(physical_)];
   Scheduler& scheduler_;
   std::unordered_map<Id, Entity*> id_to_entity_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);

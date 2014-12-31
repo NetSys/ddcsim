@@ -39,18 +39,20 @@ void Entity::Handle(Down* d) {
 void Entity::Handle(LinkUp* lu) {
   CHECK(!links_.IsLinkUp(lu->out_));
   links_.SetLinkUp(lu->out_);
-  //  stats_.LinkUp(id_, links_.GetEndpoint(lu->out_)->id());
+  stats_.LinkUp(id_, links_.GetEndpoint(lu->out_)->id());
 }
 
 void Entity::Handle(LinkDown* ld) {
   CHECK(links_.IsLinkUp(ld->out_));
   links_.SetLinkDown(ld->out_);
-  //  stats_.LinkDown(id_, links_.GetEndpoint(ld->out_)->id());
+  stats_.LinkDown(id_, links_.GetEndpoint(ld->out_)->id());
 }
 
 Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }
+
+Id Entity::NextHop(Id dst) { return DROP; }
 
 // void Entity::UpdateLinkCapacities(Time passed) {
 //   links_.UpdateCapacities(passed);
@@ -93,11 +95,11 @@ string Switch::Description() const {
   string rtn = Entity::Description() + " ls_=" + ls_.Description() +
       " dst_to_neighbor_=";
 
-  if (dst_to_neighbor_ == nullptr) {
-    rtn += "null";
-  } else {
+  if (dst_to_neighbor_) {
     for(int i : *dst_to_neighbor_)
       rtn += to_string(i) + " ";
+  } else {
+    rtn += "null";
   }
 
   return rtn;
@@ -378,9 +380,9 @@ void Switch::Handle(LinkStateRequest* lsr_in) {
   }
 }
 
-Id Switch::NextHop(Id dst) {
-  //  return dst_to_neighbor_ == nullptr ? DROP : dst_to_neighbor_->NextHop(dst);
-  return 0;
+Id Switch::NextHop(Id dst_host) {
+  Id translated = dst_host - scheduler_.kSwitchCount - scheduler_.kControllerCount;
+  return ! dst_to_neighbor_ ? DROP : (*dst_to_neighbor_)[translated];
 }
 
 Controller::Controller(Scheduler& sc, Id id, Statistics& st)
@@ -501,7 +503,8 @@ void Controller::Handle(LinkStateRequest* ru) {
   LOG(FATAL) << "Controller received LinkStateRequest";
 }
 
-Host::Host(Scheduler& sched, Id id, Statistics& stats) : Entity(sched, id, stats) {}
+Host::Host(Scheduler& sched, Id id, Statistics& stats) : Entity(sched, id, stats),
+                                                         next_hop_switch_(NONE_ID) {}
 
 string Host::Description() const { return "..."; }
 
@@ -537,4 +540,24 @@ void Host::Handle(RoutingUpdate* ru) {
 
 void Host::Handle(LinkStateRequest* lsr) {
   LOG(FATAL) << "Host received link state request";
+}
+
+Id Host::NextHop(Id dst) {
+  if(next_hop_switch_ == NONE_SEQNUM) {
+    /* Assume hosts are singly homed, so their next hop is always the one switch
+       they are connected to */
+    Port p;
+    for(p = 0; p < links_.PortCount(); ++p) {
+      next_hop_switch_ = links_.GetEndpointId(p);
+      if(next_hop_switch_ < scheduler_.kSwitchCount)
+        break;
+    }
+
+    ++p;
+
+    for(; p < links_.PortCount(); ++p)
+      CHECK(links_.GetEndpointId(p) >= scheduler_.kSwitchCount);
+  }
+
+  return next_hop_switch_;
 }

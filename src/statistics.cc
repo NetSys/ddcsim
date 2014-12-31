@@ -6,27 +6,32 @@
 
 #include <algorithm>
 #include "boost/graph/breadth_first_search.hpp"
-//#include "boost/graph/johnson_all_pairs_shortest.hpp"
 #include "boost/tuple/tuple.hpp"
 
+using std::fill;
 using std::string;
+using std::to_string;
 using std::ofstream;
 using std::vector;
 using std::unordered_map;
 
-const string Statistics::REACHABILITY_LOG_NAME = "reachability.txt";
-
-using boost::vertex;
-using boost::edge;
 using boost::add_edge;
-//using boost::johnson_all_pairs_shortest_paths;
+using boost::breadth_first_search;
+using boost::edge;
+using boost::record_distances;
+using boost::remove_edge;
+using boost::make_bfs_visitor;
+using boost::on_tree_edge;
+using boost::vertex;
+using boost::visitor;
+
+const string Statistics::REACHABILITY_LOG_NAME = "reachability.txt";
 
 Statistics::Statistics(string out_prefix, Scheduler& s) :
     scheduler_(s),
-    out_prefix_(out_prefix), //physical_(num_entities),
+    out_prefix_(out_prefix),
     reachability_log_(),
-    //    d(s.kSwitchCount + s.kControllerCount + s.kHostCount),
-    //    dst_to_distance_(
+    d(s.kSwitchCount + s.kControllerCount + s.kHostCount),
     id_to_entity_() {}
 
 unordered_map<Id, Entity*>& Statistics::id_to_entity() { return id_to_entity_; }
@@ -48,33 +53,56 @@ void Statistics::EntityDown(Id entity){
 }
 
 void Statistics::LinkUp(Id src, Id dst) {
-  // Edge e;
-  // bool exists;
-  // boost::tie(e, exists) = edge(vertex(src, physical_),
-  //                              vertex(dst, physical_),
-  //                              physical_h);
-  // if(!exists)
-  //   add_edge(vertex(src, physical_), vertex(dst, physical_), physical_);
+  add_edge(vertex(src, physical_),
+           vertex(dst, physical_),
+           physical_);
 }
 
 void Statistics::LinkDown(Id src, Id dst) {
-  //  LOG(FATAL) << "linkdown";
+  remove_edge(vertex(src, physical_),
+              vertex(dst, physical_),
+              physical_);
 }
 
 void Statistics::RecordReachability() {
-  int virt_reachable = 0;
-
   Id begin_host = scheduler_.kSwitchCount + scheduler_.kControllerCount;
   Id beyond_host = scheduler_.kSwitchCount +
       scheduler_.kControllerCount +
       scheduler_.kHostCount;
 
+  int phys_reachable = 0;
+  for(Id src = begin_host; src < beyond_host; ++src) {
+    fill(d.begin(), d.end(), NO_PATH);
+
+    breadth_first_search(physical_,
+                         vertex(src, physical_),
+                         visitor(make_bfs_visitor(record_distances(&d[0],
+                                                                   on_tree_edge()))));
+
+    for(Id dst = begin_host; dst < beyond_host; ++dst)
+      if(src != dst && d[dst] > NO_PATH)
+        ++phys_reachable;
+  }
+
+  int virt_reachable = 0;
   for(Id src = begin_host; src < beyond_host; ++src) {
     for(Id dst = begin_host; dst < beyond_host; ++dst) {
       Id cur;
 
+      if(src == dst)
+        continue;
+
+      Id next;
+      bool has_edge;
       for(cur = src; cur != DROP && cur != dst; ) {
-        cur = (static_cast<Switch*>(id_to_entity_[cur]))->NextHop(dst);
+        next = id_to_entity_[cur]->NextHop(dst);
+
+        has_edge = edge(vertex(cur, physical_),
+                        vertex(next, physical_),
+                        physical_).second;
+        if(!has_edge) break;
+
+        cur = next;
       }
 
       if(cur == dst)
@@ -82,31 +110,10 @@ void Statistics::RecordReachability() {
     }
   }
 
-  // int phys_reachable = 0;
-
-  // //  boost::graph_traits<Topology>::vertices_size_type d[num_vertices(physical_)];
-
-  // for(Id src = begin_host; src < beyond_host; ++src) {
-  //   std::fill_n(d, num_vertices(physical_), 0);
-
-  //   boost::breadth_first_search(physical_, vertex(src, physical_),
-  //                               boost::visitor(
-  //                                   boost::make_bfs_visitor(
-  //                                       boost::record_distances(&d,
-  //                                                               boost::on_tree_edge()))));
-
-  //   for(int dist : d)
-  //     if(dist > NO_PATH)
-  //       ++phys_reachable;
-  // }
-
-  // for(Id src = begin_host; src < beyond_host; ++src)
-  //   for(Id dst = begin_host; dst < beyond_host; ++dst)
-  //     if(distance_matrix_[src][dst] != NO_PATH)
-  //       ++phys_reachable;
-
-  // write time, percentage reachable to file
+  reachability_log_ << scheduler_.cur_time() << "," <<
+      virt_reachable << "/" << phys_reachable << "\n";
 }
+
 // throw away function for finding the diameter of input graph
 // int Statistics::MaxPathLength() {
 //   int max = -1;

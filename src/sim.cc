@@ -181,7 +181,7 @@ int main(int ac, char* av[]) {
 
   sched.SchedulePeriodicEvents(switches, heartbeat_period, ls_update_period);
 
-  sched.StartSimulation(stats, switches);
+  sched.StartSimulation(stats);
 
 #ifndef NDEBUG
   for(auto s : switches) delete s;
