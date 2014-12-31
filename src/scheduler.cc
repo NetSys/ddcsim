@@ -206,6 +206,7 @@ void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
 void Scheduler::StartSimulation(Statistics& statistics, vector<Switch*>& switches) {
   Time last_time = cur_time_ = START_TIME;
 
+  // TODO move into statistics
   unsigned int cur_bucket_size = 0;
   Time cur_bucket_time = -1;
 
@@ -219,7 +220,9 @@ void Scheduler::StartSimulation(Statistics& statistics, vector<Switch*>& switche
     if (cur_time_ > cur_bucket_time) {
       LOG(WARNING) << cur_bucket_time << " had " << cur_bucket_size << " events";
       cur_bucket_time = cur_time_;
-      cur_bucket_size = 0;
+      cur_bucket_size = 1;
+      statistics.RecordEventCounts();
+      LOG(WARNING) << "\n";
     } else {
       cur_bucket_size++;
     }

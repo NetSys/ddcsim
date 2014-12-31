@@ -44,11 +44,10 @@ LinkState::LinkState(Scheduler& s) : scheduler_(s),
                                                s.kControllerCount +
                                                s.kHostCount),
                                      next_(0),
-                                     id_to_exp_(s.kSwitchCount),
-                                     id_to_last_sn_(s.kSwitchCount, NONE_SEQNUM) {}
+                                     id_to_last_(s.kSwitchCount, {NONE_SEQNUM, -1}) {}
 
 bool LinkState::IsStaleUpdate(LinkStateUpdate* ls) const {
-  return id_to_last_sn_[ls->src_id_] >= ls->sn_;
+  return id_to_last_[ls->src_id_].sn >= ls->sn_;
 }
 
 bool LinkStateControl::Update(LinkStateUpdate* ls) {
@@ -63,9 +62,8 @@ bool LinkStateControl::Update(LinkStateUpdate* ls) {
     old_links.insert(target(*ei, topology_));
 
   if(new_links == old_links) {
-      id_to_last_sn_[id] = ls->sn_;
-      id_to_exp_[id] = ls->expiration_;
-      return false;
+    id_to_last_[id] = {ls->sn_, ls->expiration_};
+    return false;
   }
 
   clear_vertex(src, topology_);
@@ -75,8 +73,7 @@ bool LinkStateControl::Update(LinkStateUpdate* ls) {
     add_edge(src, vertex(*it, topology_), topology_);
   }
 
-  id_to_last_sn_[id] = ls->sn_;
-  id_to_exp_[id] = ls->expiration_;
+  id_to_last_[id] = {ls->sn_, ls->expiration_};
 
   return true;
 }
@@ -91,8 +88,7 @@ bool LinkState::Update(LinkStateUpdate* ls) {
     add_edge(src, vertex(*it, topology_), topology_);
   }
 
-  id_to_last_sn_[id] = ls->sn_;
-  id_to_exp_[id] = ls->expiration_;
+  id_to_last_[id] = {ls->sn_, ls->expiration_};
 
   return true;
 }
@@ -103,9 +99,9 @@ bool LinkStateControl::ArePartitioned(Id id1, Id id2) const {
 
 // TODO make computation more lazy, don't remove all edges until you have to operate on graph
 void LinkState::Refresh(Time cur_time) {
-  for(int i = 0; i < id_to_exp_.size(); ++i) {
-    if(id_to_last_sn_[i] != NONE_SEQNUM && cur_time > id_to_exp_[i]) {
-      id_to_last_sn_[i] = NONE_SEQNUM;
+  for(int i = 0; i < id_to_last_.size(); ++i) {
+    if(id_to_last_[i].sn != NONE_SEQNUM && cur_time > id_to_last_[i].exp) {
+      id_to_last_[i].sn = NONE_SEQNUM;
       clear_vertex(vertex(i, topology_), topology_);
     }
   }

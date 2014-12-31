@@ -2,6 +2,7 @@
 #include "statistics.h"
 #include "scheduler.h"
 #include "entities.h"
+#include "events.h"
 
 #include <algorithm>
 #include "boost/graph/breadth_first_search.hpp"
@@ -127,3 +128,18 @@ void Statistics::RecordReachability() {
 
 //   return max;
 // }
+
+void Statistics::RecordEventCounts() {
+  LOG(WARNING) << "Up=" << Up::count_;
+  LOG(WARNING) << "Down=" << Down::count_;
+  LOG(WARNING) << "LinkUp=" << LinkUp::count_;
+  LOG(WARNING) << "LinkDown=" << LinkDown::count_;
+  LOG(WARNING) << "LinkStateRequest=" << LinkStateRequest::count_;
+  LOG(WARNING) << "LinkStateUpdate=" << LinkStateUpdate::count_;
+  LOG(WARNING) << "InitiateLinkState=" << InitiateLinkState::count_;
+  LOG(WARNING) << "RoutingUpdate=" << RoutingUpdate::count_;
+
+  Up::count_ = Down::count_ = LinkUp::count_ = LinkDown::count_ =
+      LinkStateRequest::count_ = LinkStateUpdate::count_ =
+      InitiateLinkState::count_ = RoutingUpdate::count_ = 0;
+}

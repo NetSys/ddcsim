@@ -10,7 +10,7 @@
 # USER SETTINGS
 # TODO force recompilation when these variables change
 OPTLVL=$(DBG)
-EXEFILE=pilosim
+EXEFILE=pilosim_cachegrind
 GLOGLIB=/usr/local/lib/libglog.a
 PROGOPTSLIB=/home/sam/Documents/netsys/pilo/boost_1_56_0/stage/lib/libboost_program_options.a
 SYSTEMLIB=/home/sam/Documents/netsys/pilo/boost_1_56_0/stage/lib/libboost_system.a
@@ -27,6 +27,7 @@ SUBDIRS=src yaml-cpp-0.5.1
 OPT=-O3 -D NDEBUG
 DBG=-O0 -g
 PRO=-O1 -pg -D NDEBUG
+CACHE=-O3 -g -D NDEBUG
 
 export OPTLVL
 export CXX

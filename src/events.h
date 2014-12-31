@@ -38,6 +38,7 @@ class Up : public Event {
   // TODO is virtual here redundant?
   virtual std::string Description() const;
   virtual std::string Name() const;
+  static unsigned int count_;
 
  private:
   // TODO need disallow in derived classes?
@@ -50,6 +51,7 @@ class Down : public Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(Down);
@@ -62,6 +64,7 @@ class LinkUp : public Event {
   virtual std::string Description() const;
   virtual std::string Name() const;
   const Port out_;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkUp);
@@ -74,6 +77,7 @@ class LinkDown : public Event {
   virtual std::string Description() const;
   virtual std::string Name() const;
   const Port out_;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkDown);
@@ -105,6 +109,7 @@ class LinkStateUpdate : public Broadcast {
   std::array<Id, 13> up_links_;
   Time expiration_;
   Id src_id_;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);
@@ -116,6 +121,7 @@ class InitiateLinkState : public Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(InitiateLinkState);
@@ -134,6 +140,7 @@ class RoutingUpdate : public Broadcast {
   std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
   const Id dst_;
   const Id src_id_;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(RoutingUpdate);
@@ -148,6 +155,7 @@ class LinkStateRequest : public Broadcast {
   SequenceNum sn_;
   Entity* src_;
   Id src_id_;
+  static unsigned int count_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkStateRequest);

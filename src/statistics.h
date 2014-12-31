@@ -21,6 +21,7 @@ class Statistics {
   void LinkDown(Id, Id);
   void RecordReachability();
   std::unordered_map<Id, Entity*>& id_to_entity();
+  void RecordEventCounts();
   //int MaxPathLength();
   static const std::string REACHABILITY_LOG_NAME;
   static const int NO_PATH = 0;

@@ -22,11 +22,13 @@ class LinkState {
   SequenceNum NextSeqNum();
 
  protected:
+  typedef struct { SequenceNum sn; Time exp; } pair;
   Topology topology_;
   Scheduler& scheduler_;
   SequenceNum next_;
-  std::vector<SequenceNum> id_to_last_sn_;
-  std::vector<Time> id_to_exp_;
+  std::vector<pair> id_to_last_;
+  //  std::vector<SequenceNum> id_to_last_sn_;
+  //  std::vector<Time> id_to_exp_;
   DISALLOW_COPY_AND_ASSIGN(LinkState);
 };
 

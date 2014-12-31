@@ -39,7 +39,7 @@ Event::Event(Time t, Entity* e1, Entity* e2) : time_(t),
 
 Event::~Event() { return; }
 
-void Event::Handle(Entity* e) { e->Handle(this); }
+void Event::Handle(Entity* e) {  e->Handle(this); }
 
 string Event::Description() const {
   string ids = "";
@@ -54,7 +54,12 @@ string Event::Name() const { return "Event"; }
 
 Up::Up(Time t, Entity* e) : Event(t, e) {}
 
-void Up::Handle(Entity* e) { e->Handle(this); }
+unsigned int Up::count_ = 0;
+
+void Up::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string Up::Description() const { return Event::Description(); }
 
@@ -62,7 +67,12 @@ string Up::Name() const { return "Up"; }
 
 Down::Down(Time t, Entity* e) : Event(t, e) {}
 
-void Down::Handle(Entity* e) { e->Handle(this); }
+unsigned int Down::count_ = 0;
+
+void Down::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string Down::Description() const { return Event::Description(); }
 
@@ -70,7 +80,12 @@ string Down::Name() const { return "Down"; }
 
 LinkUp::LinkUp(Time t, Entity* e, Port p) : Event(t, e), out_(p) {}
 
-void LinkUp::Handle(Entity* e) { e->Handle(this); }
+unsigned int LinkUp::count_ = 0;
+
+void LinkUp::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string LinkUp::Description() const {
   return Event::Description() + " out_=" + to_string(out_);
@@ -80,7 +95,12 @@ string LinkUp::Name() const { return "Link Up"; }
 
 LinkDown::LinkDown(Time t, Entity* e, Port p) : Event(t, e), out_(p) {}
 
-void LinkDown::Handle(Entity* e) { e->Handle(this); }
+unsigned int LinkDown::count_ = 0;
+
+void LinkDown::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string LinkDown::Description() const {
   return Event::Description() + " out_=" + to_string(out_);
@@ -93,7 +113,7 @@ Broadcast::Broadcast() {}
 Broadcast::Broadcast(Time t, Entity* affected_entity, Port in) :
     Event(t, affected_entity), in_port_(in) {}
 
-void Broadcast::Handle(Entity* e) { e->Handle(this); }
+void Broadcast::Handle(Entity* e) {  e->Handle(this); }
 
 string Broadcast::Description() const {
   return Event::Description() + " in_port_=" + to_string(in_port_);
@@ -107,7 +127,12 @@ LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, Entity* src,
     : Broadcast(t, e, i), src_(src), sn_(sn), expiration_(expiration),
       up_links_(up_links), src_id_(src_id) {}
 
-void LinkStateUpdate::Handle(Entity* e) { e->Handle(this); }
+unsigned int LinkStateUpdate::count_ = 0;
+
+void LinkStateUpdate::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string LinkStateUpdate::Description() const {
    return Broadcast::Description()  +
@@ -121,7 +146,12 @@ string LinkStateUpdate::Name() const { return "Link State Update"; }
 
 InitiateLinkState::InitiateLinkState(Time t, Entity* e) : Event(t, e) {}
 
-void InitiateLinkState::Handle(Entity* e) { e->Handle(this); }
+unsigned int InitiateLinkState::count_ = 0;
+
+void InitiateLinkState::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string InitiateLinkState::Description() const { return Event::Description(); }
 
@@ -129,14 +159,19 @@ string InitiateLinkState::Name() const { return "Initiate Link State Update"; }
 
 RoutingUpdate::RoutingUpdate(Time t, Entity* e, Port in, Entity* src,
                              SequenceNum sn,
-                             shared_ptr<vector<Id> > dst_to_neighbor, Id dst, Id src_id) :
-    //Table dst_to_neighbor, Id dst, Id src_id) :
+                             shared_ptr<vector<Id> > dst_to_neighbor,
+                             Id dst, Id src_id) :
     Broadcast(t, e, in), sn_(sn), src_(src),
     dst_to_neighbor_(dst_to_neighbor), dst_(dst), src_id_(src_id) {}
 
 RoutingUpdate::~RoutingUpdate() { dst_to_neighbor_ = nullptr; }
 
-void RoutingUpdate::Handle(Entity* e) { e->Handle(this); }
+unsigned int RoutingUpdate::count_ = 0;
+
+void RoutingUpdate::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string RoutingUpdate::Description() const {
   string rtn = Broadcast::Description() + " sn_=" + to_string(sn_) +
@@ -159,7 +194,12 @@ LinkStateRequest::LinkStateRequest(Time t, Entity* e, Port in, Entity* src,
                                    SequenceNum sn, Id id) :
     Broadcast(t, e, in), src_(src), sn_(sn), src_id_(id) {}
 
-void LinkStateRequest::Handle(Entity* e) { e->Handle(this); }
+unsigned int LinkStateRequest::count_ = 0;
+
+void LinkStateRequest::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
 
 string LinkStateRequest::Description() const {
   return Broadcast::Description()  +
