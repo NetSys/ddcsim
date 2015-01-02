@@ -30,8 +30,6 @@ string to_string(const array<Id, 13>& ints) {
 }
 };
 
-Event::Event() {}
-
 Event::Event(Time t, Entity* e) : time_(t), affected_entities_({e}) {}
 
 Event::Event(Time t, Entity* e1, Entity* e2) : time_(t),
@@ -107,8 +105,6 @@ string LinkDown::Description() const {
 }
 
 string LinkDown::Name() const { return "Link Down"; }
-
-Broadcast::Broadcast() {}
 
 Broadcast::Broadcast(Time t, Entity* affected_entity, Port in) :
     Event(t, affected_entity), in_port_(in) {}

@@ -118,7 +118,7 @@ bool CreateWorld(string topo_file_path, string event_file_path,
                  Size bucket_capacity, Rate fill_rate,
                  Statistics& stats, Scheduler& sched, vector<Switch*>& switches,
                  vector<Controller*>& controllers, vector<Host*>& hosts,
-                 Topology& physical, unordered_map<Id, Entity*>& id_to_entity) {
+                 Topology& physical, vector<Entity*>& id_to_entity) {
   Reader in(topo_file_path, event_file_path, bucket_capacity, fill_rate, stats,
             sched, switches, controllers, hosts, physical, id_to_entity);
 

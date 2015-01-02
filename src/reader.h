@@ -23,7 +23,7 @@ class Reader {
 public:
   Reader(std::string, std::string, Size, Rate, Statistics&, Scheduler&,
          std::vector<Switch*>&, std::vector<Controller*>&, std::vector<Host*>&,
-         Topology&, std::unordered_map<Id, Entity*>&);
+         Topology&, std::vector<Entity*>&);
   bool ParseTopology();
   bool ParseEvents();
 
@@ -54,7 +54,7 @@ private:
   std::vector<Controller*>& controllers_;
   std::vector<Host*>& hosts_;
   Topology& physical_;
-  std::unordered_map<Id, Entity*>& id_to_entity_;
+  std::vector<Entity*>& id_to_entity_;
   DISALLOW_COPY_AND_ASSIGN(Reader);
 };
 

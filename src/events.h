@@ -12,7 +12,6 @@ class Entity;
 
 class Event {
  public:
-  Event();
   Event(Time, Entity*);
   Event(Time, Entity*, Entity*);
   virtual ~Event();
@@ -85,7 +84,6 @@ class LinkDown : public Event {
 
 class Broadcast : public Event {
  public:
-  Broadcast();
   Broadcast(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description() const;

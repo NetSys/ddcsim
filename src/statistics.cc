@@ -4,11 +4,12 @@
 #include "entities.h"
 #include "events.h"
 
-#include <algorithm>
-#include "boost/graph/breadth_first_search.hpp"
+#include "boost/graph/connected_components.hpp"
 #include "boost/tuple/tuple.hpp"
 
-using std::fill;
+#include <bitset>
+
+using std::bitset;
 using std::string;
 using std::to_string;
 using std::ofstream;
@@ -16,14 +17,9 @@ using std::vector;
 using std::unordered_map;
 
 using boost::add_edge;
-using boost::breadth_first_search;
 using boost::edge;
-using boost::record_distances;
 using boost::remove_edge;
-using boost::make_bfs_visitor;
-using boost::on_tree_edge;
 using boost::vertex;
-using boost::visitor;
 
 const string Statistics::REACHABILITY_LOG_NAME = "reachability.txt";
 
@@ -31,10 +27,14 @@ Statistics::Statistics(string out_prefix, Scheduler& s) :
     scheduler_(s),
     out_prefix_(out_prefix),
     reachability_log_(),
-    d(s.kSwitchCount + s.kControllerCount + s.kHostCount),
-    id_to_entity_() {}
+    id_to_component_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
+    id_to_entity_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
+    switch_to_table_(s.kSwitchCount),
+    begin_host_(s.kSwitchCount + s.kControllerCount),
+    beyond_host_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
+    host_to_edge_switch_(s.kHostCount) {}
 
-unordered_map<Id, Entity*>& Statistics::id_to_entity() { return id_to_entity_; }
+vector<Entity*>& Statistics::id_to_entity() { return id_to_entity_; }
 
 Statistics::~Statistics() { reachability_log_.close(); }
 
@@ -42,6 +42,13 @@ void Statistics::Init(Topology physical) {
   reachability_log_.open(out_prefix_ + REACHABILITY_LOG_NAME,
                          ofstream::out | ofstream::app);
   physical_ = physical;
+
+  for(int i = 0; i < host_to_edge_switch_.size(); ++i)
+    host_to_edge_switch_[i] =
+        (static_cast<Host*>(id_to_entity_[i +
+                                          scheduler_.kSwitchCount +
+                                          scheduler_.kControllerCount]))->EdgeSwitch();
+
 }
 
 void Statistics::EntityUp(Id entity) {
@@ -65,52 +72,13 @@ void Statistics::LinkDown(Id src, Id dst) {
 }
 
 void Statistics::RecordReachability() {
-  Id begin_host = scheduler_.kSwitchCount + scheduler_.kControllerCount;
-  Id beyond_host = scheduler_.kSwitchCount +
-      scheduler_.kControllerCount +
-      scheduler_.kHostCount;
-
-  int phys_reachable = 0;
-  for(Id src = begin_host; src < beyond_host; ++src) {
-    fill(d.begin(), d.end(), NO_PATH);
-
-    breadth_first_search(physical_,
-                         vertex(src, physical_),
-                         visitor(make_bfs_visitor(record_distances(&d[0],
-                                                                   on_tree_edge()))));
-
-    for(Id dst = begin_host; dst < beyond_host; ++dst)
-      if(src != dst && d[dst] > NO_PATH)
-        ++phys_reachable;
-  }
-
-  int virt_reachable = 0;
-  for(Id src = begin_host; src < beyond_host; ++src) {
-    for(Id dst = begin_host; dst < beyond_host; ++dst) {
-      Id cur;
-
-      if(src == dst)
-        continue;
-
-      Id next;
-      bool has_edge;
-      for(cur = src; cur != DROP && cur != dst; ) {
-        next = id_to_entity_[cur]->NextHop(dst);
-
-        has_edge = edge(vertex(cur, physical_),
-                        vertex(next, physical_),
-                        physical_).second;
-        if(!has_edge) break;
-
-        cur = next;
-      }
-
-      if(cur == dst)
-        ++virt_reachable;
-    }
-  }
+  int phys_reachable = ComputePhysReachable();
+  int virt_reachable = ComputeVirtReachable();
 
   reachability_log_ << scheduler_.cur_time() << "," <<
+      virt_reachable << "/" << phys_reachable << "\n";
+
+  LOG(WARNING) << "reachability=" << scheduler_.cur_time() << "," <<
       virt_reachable << "/" << phys_reachable << "\n";
 }
 
@@ -149,4 +117,73 @@ void Statistics::RecordEventCounts() {
   Up::count_ = Down::count_ = LinkUp::count_ = LinkDown::count_ =
       LinkStateRequest::count_ = LinkStateUpdate::count_ =
       InitiateLinkState::count_ = RoutingUpdate::count_ = 0;
+}
+
+void Statistics::InitComponents() {
+  for(int i = 0; i < id_to_component_.size(); ++i)
+    id_to_component_[i] = i;
+}
+
+int Statistics::ComputePhysReachable() {
+  // TODO is this necessary?
+  InitComponents();
+
+  connected_components(physical_, &id_to_component_[0]);
+
+  int reachable = 0;
+
+  for(Id src = begin_host_; src < beyond_host_; ++src)
+    for(Id dst = begin_host_; dst < beyond_host_; ++dst)
+      if(src != dst && id_to_component_[src] == id_to_component_[dst])
+        ++reachable;
+
+  return reachable;
+}
+
+int Statistics::ComputeVirtReachable() {
+  for(int i = 0; i < scheduler_.kSwitchCount; ++i)
+    switch_to_table_[i] = (static_cast<Switch*>(id_to_entity_[i]))->dst_to_neighbor_;
+
+  int reachable = 0;
+  Id cur, prev;
+  bool has_edge;
+  static bitset<10000> visited(scheduler_.kSwitchCount);
+
+  for(Id src = begin_host_; src < beyond_host_; ++src) {
+    for(Id dst = begin_host_; dst < beyond_host_; ++dst) {
+      if(src == dst) continue;
+
+      prev = src;
+      cur = host_to_edge_switch_[src - scheduler_.kSwitchCount
+                                 - scheduler_.kControllerCount];
+
+      visited.reset();
+      for( ; cur != DROP && cur != dst && !visited[cur]; ) {
+        has_edge = edge(vertex(prev, physical_),
+                        vertex(cur, physical_),
+                        physical_).second;
+
+        if(! has_edge) break;
+
+        visited[cur] = true;
+        prev = cur;
+
+        if(switch_to_table_[cur])
+          cur = (*switch_to_table_[cur])
+              [dst - scheduler_.kSwitchCount - scheduler_.kControllerCount];
+        else
+          cur = DROP;
+      }
+
+      if(cur == dst) {
+        has_edge = edge(vertex(prev, physical_),
+                        vertex(cur, physical_),
+                        physical_).second;
+        if(has_edge)
+          ++reachable;
+      }
+    }
+  }
+
+  return reachable;
 }

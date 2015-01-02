@@ -42,7 +42,6 @@ class Entity {
   virtual void Handle(LinkStateRequest*) = 0;
   Links& links();
   Id id() const;
-  virtual Id NextHop(Id);
   //  void UpdateLinkCapacities(Time);
   /* An entity is considered "recently seen" if its hearbeats have been seen
    * kMinTimes times in the last kMaxRecent seconds.
@@ -104,13 +103,13 @@ class Switch : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
-  Id NextHop(Id);
   static constexpr Time kLSExpireDelta = 10;
+  // TODO make private again
+  std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
 
  private:
   LinkState ls_;
   RoutingUpdateHistory ru_history_;
-  std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
   std::vector<SequenceNum> lsr_history_;
   DISALLOW_COPY_AND_ASSIGN(Switch);
 };
@@ -153,10 +152,9 @@ class Host : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
-  Id NextHop(Id);
+  Id EdgeSwitch();
 
  private:
-  Id next_hop_switch_;
   DISALLOW_COPY_AND_ASSIGN(Host);
 };
 

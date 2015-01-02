@@ -52,8 +52,6 @@ Links& Entity::links() { return links_; }
 
 Id Entity::id() const { return id_; }
 
-Id Entity::NextHop(Id dst) { return DROP; }
-
 // void Entity::UpdateLinkCapacities(Time passed) {
 //   links_.UpdateCapacities(passed);
 // }
@@ -380,11 +378,6 @@ void Switch::Handle(LinkStateRequest* lsr_in) {
   }
 }
 
-Id Switch::NextHop(Id dst_host) {
-  Id translated = dst_host - scheduler_.kSwitchCount - scheduler_.kControllerCount;
-  return ! dst_to_neighbor_ ? DROP : (*dst_to_neighbor_)[translated];
-}
-
 Controller::Controller(Scheduler& sc, Id id, Statistics& st)
     : Entity(sc, id, st), ls_(sc), switch_to_next_sn_(sc.kSwitchCount, 0),
       next_lsr_(0) {}
@@ -503,8 +496,7 @@ void Controller::Handle(LinkStateRequest* ru) {
   LOG(FATAL) << "Controller received LinkStateRequest";
 }
 
-Host::Host(Scheduler& sched, Id id, Statistics& stats) : Entity(sched, id, stats),
-                                                         next_hop_switch_(NONE_ID) {}
+Host::Host(Scheduler& sched, Id id, Statistics& stats) : Entity(sched, id, stats) {}
 
 string Host::Description() const { return "..."; }
 
@@ -542,22 +534,22 @@ void Host::Handle(LinkStateRequest* lsr) {
   LOG(FATAL) << "Host received link state request";
 }
 
-Id Host::NextHop(Id dst) {
-  if(next_hop_switch_ == NONE_SEQNUM) {
-    /* Assume hosts are singly homed, so their next hop is always the one switch
-       they are connected to */
-    Port p;
-    for(p = 0; p < links_.PortCount(); ++p) {
-      next_hop_switch_ = links_.GetEndpointId(p);
-      if(next_hop_switch_ < scheduler_.kSwitchCount)
-        break;
-    }
+Id Host::EdgeSwitch() {
+  /* Assume hosts are singly homed, so their next hop is always the one switch
+     they are connected to */
+  Port p;
+  Id rtn;
 
-    ++p;
-
-    for(; p < links_.PortCount(); ++p)
-      CHECK(links_.GetEndpointId(p) >= scheduler_.kSwitchCount);
+  for(p = 0; p < links_.PortCount(); ++p) {
+    rtn = links_.GetEndpointId(p);
+    if(rtn < scheduler_.kSwitchCount)
+      break;
   }
 
-  return next_hop_switch_;
+  ++p;
+
+  for(; p < links_.PortCount(); ++p)
+    CHECK(links_.GetEndpointId(p) >= scheduler_.kSwitchCount);
+
+  return rtn;
 }

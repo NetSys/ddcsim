@@ -27,8 +27,6 @@ class LinkState {
   Scheduler& scheduler_;
   SequenceNum next_;
   std::vector<pair> id_to_last_;
-  //  std::vector<SequenceNum> id_to_last_sn_;
-  //  std::vector<Time> id_to_exp_;
   DISALLOW_COPY_AND_ASSIGN(LinkState);
 };
 
@@ -45,8 +43,8 @@ class LinkStateControl : public LinkState {
  private:
   void InitComponents();
   Id NextHop(Id, Id, std::vector<boost::graph_traits<Topology>::vertex_descriptor>&);
-  std::vector<int> id_to_component_;
-  std::vector<Vertex> pred_;
+  static std::vector<int> id_to_component_;
+  static std::vector<Vertex> pred_;
   DISALLOW_COPY_AND_ASSIGN(LinkStateControl);
 };
 

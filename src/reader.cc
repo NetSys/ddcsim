@@ -23,8 +23,8 @@ using namespace YAML;
 Reader::Reader(string topo_file_path, string event_file_path, Size bucket_capacity,
                Rate fill_rate, Statistics& stats, Scheduler& sched,
                vector<Switch*>& switches, vector<Controller*>& controllers,
-               vector<Host*>& hosts, Topology& physical, unordered_map<Id, Entity*>&
-               id_to_entity)
+               vector<Host*>& hosts, Topology& physical,
+               vector<Entity*>& id_to_entity)
     : topo_file_path_(topo_file_path), event_file_path_(event_file_path),
       bucket_capacity_(bucket_capacity), fill_rate_(fill_rate), statistics_(stats),
       scheduler_(sched), switches_(switches), controllers_(controllers),
@@ -57,15 +57,15 @@ bool Reader::ParseEntities(Node raw_entities) {
     if(IsController(n)) {
       c = new Controller(scheduler_, id, statistics_);
       controllers_.push_back(c);
-      id_to_entity_.insert({id, c});
+      id_to_entity_[id] = c;
     } else if(IsSwitch(n)) {
       s = new Switch(scheduler_, id, statistics_);
       switches_.push_back(s);
-      id_to_entity_.insert({id, s});
+      id_to_entity_[id] = s;
     } else if(IsHost(n)) {
       h = new Host(scheduler_, id, statistics_);
       hosts_.push_back(h);
-      id_to_entity_.insert({id, h});
+      id_to_entity_[id] = h;
     } else if(IsGenericEntity(n)) {
       LOG(ERROR) << "Construction of generic entities is disallowed";
       return false;

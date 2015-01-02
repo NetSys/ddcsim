@@ -196,9 +196,13 @@ vector<Id> LinkStateControl::SwitchesInParition(Id src) {
   return switches;
 }
 
+// TODO fix hack
+vector<Vertex> LinkStateControl::pred_ = vector<Vertex>(11020);
+vector<int> LinkStateControl::id_to_component_ = vector<int>(11020);
+
 LinkStateControl::LinkStateControl(Scheduler& s)
-    : LinkState(s),
-      id_to_component_(s.kSwitchCount + s.kControllerCount +  s.kHostCount),
-      pred_(s.kSwitchCount + s.kControllerCount + s.kHostCount) {
+    : LinkState(s) {
+      //      id_to_component_(s.kSwitchCount + s.kControllerCount +  s.kHostCount),
+      //      pred_(s.kSwitchCount + s.kControllerCount + s.kHostCount) {
   InitComponents();
 }
