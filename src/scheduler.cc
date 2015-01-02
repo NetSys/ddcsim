@@ -133,7 +133,10 @@ Scheduler::Scheduler(Time end_time, size_t switch_count,
                      size_t controller_count, size_t host_count)
     : event_queue_(switch_count + controller_count + host_count),
       end_time_(end_time), kSwitchCount(switch_count),
-      kControllerCount(controller_count), kHostCount(host_count) {}
+      kControllerCount(controller_count), kHostCount(host_count),
+      statistics_(nullptr) {}
+
+void Scheduler::Init(Statistics* s) { statistics_ = s; }
 
 void Scheduler::AddEvent(Time t, Event* e) { event_queue_.Push(t, e); }
 
@@ -160,10 +163,12 @@ void Scheduler::Forward(E* sender, In* msg_in, Out* msg_out, Port out) {
   Schedule<E, In, Out> s;
   s(sender, msg_in, msg_out, receiver, in_port);
 
-  if(msg_out->time_ <= end_time_)
+  if(msg_out->time_ <= end_time_) {
+    statistics_->RecordSend(msg_out);
     AddEvent(msg_out->time_, msg_out);
-  else
+  }  else {
     delete msg_out;
+  }
 }
 
 // TODO generalize
@@ -204,11 +209,14 @@ void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
 }
 
 void Scheduler::StartSimulation(Statistics& statistics) {
-  Time last_time = cur_time_ = START_TIME;
+  Time next_reach, reach_granularity, last_time;
+  last_time = cur_time_ = START_TIME;
 
   // TODO move into statistics
   unsigned int cur_bucket_size = 0;
   Time cur_bucket_time = -1;
+
+  next_reach = reach_granularity = 0.05; /* 50 ms */
 
   while (HasNextEvent() && cur_time_ < end_time_) {
     Event* ev = NextEvent();
@@ -222,10 +230,14 @@ void Scheduler::StartSimulation(Statistics& statistics) {
       cur_bucket_time = cur_time_;
       cur_bucket_size = 1;
       statistics.RecordEventCounts();
-      statistics.RecordReachability();
-      LOG(WARNING) << "\n";
     } else {
       cur_bucket_size++;
+    }
+
+    if(cur_time_ > next_reach) {
+       LOG(WARNING) << "reachability @ " << next_reach << " is " <<
+           statistics.Reachability();
+       next_reach = cur_time_ + reach_granularity;
     }
 
     for (Entity* e : ev->affected_entities_) {

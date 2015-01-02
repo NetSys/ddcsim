@@ -23,6 +23,7 @@ class Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual unsigned int size() const;
   Time time_;
   std::vector<Entity*> affected_entities_;
 
@@ -88,6 +89,7 @@ class Broadcast : public Event {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual unsigned int size() const;
   Port in_port_;
 
  private:
@@ -101,8 +103,8 @@ class LinkStateUpdate : public Broadcast {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual unsigned int size() const;
   SequenceNum sn_;
-  // TODO const on the right thing?
   Entity* src_;
   std::array<Id, 13> up_links_;
   Time expiration_;
@@ -133,6 +135,7 @@ class RoutingUpdate : public Broadcast {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual unsigned int size() const;
   const SequenceNum sn_;
   Entity* src_;
   std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
@@ -150,6 +153,7 @@ class LinkStateRequest : public Broadcast {
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
+  virtual unsigned int size() const;
   SequenceNum sn_;
   Entity* src_;
   Id src_id_;

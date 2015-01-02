@@ -3,39 +3,35 @@
 
 #include "common.h"
 
-#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <memory>
 
 class Scheduler;
 class Entity;
+class Event;
 
 class Statistics {
  public:
   Statistics(std::string, Scheduler&);
-  ~Statistics();
   void Init(Topology);
   void EntityUp(Id);
   void EntityDown(Id);
   void LinkUp(Id, Id);
   void LinkDown(Id, Id);
-  void RecordReachability();
+  std::string Reachability();
   std::vector<Entity*>& id_to_entity();
   void RecordEventCounts();
+  void RecordSend(Event*);
   //int MaxPathLength();
-  static const std::string REACHABILITY_LOG_NAME;
+  static const std::string SEPARATOR;
+  static const Time WINDOW_SIZE;
   const int NO_PATH = 0;
 
  private:
   void InitComponents();
   int ComputePhysReachable();
   int ComputeVirtReachable();
-  /* Having to store pointers to ofstream's rather than the object itself is an
-   * unfortunate consequence of ofstreams not being copyable.  I do not know of a
-   * better solution.
-   */
-  std::ofstream reachability_log_;
   Topology physical_;
   std::string out_prefix_;
   std::vector<int> id_to_component_;
@@ -45,6 +41,9 @@ class Statistics {
   std::vector<Id> host_to_edge_switch_;
   size_t begin_host_;
   size_t beyond_host_;
+  Time window_left_;
+  Time window_right_;
+  unsigned int cur_window_count_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };
 

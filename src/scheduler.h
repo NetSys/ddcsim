@@ -14,6 +14,7 @@ class Switch;
 class Scheduler {
  public:
   Scheduler(Time, size_t, size_t, size_t);
+  void Init(Statistics*);
   void AddEvent(Time, Event*);
   template<class E, class In, class Out> void Forward(E*, In*, Out*, Port);
   void SchedulePeriodicEvents(std::vector<Switch*>, Time, Time);
@@ -41,6 +42,7 @@ class Scheduler {
   Time cur_time_;
   Time end_time_;
   FrontierQueue event_queue_;
+  Statistics* statistics_;
   DISALLOW_COPY_AND_ASSIGN(Scheduler);
 };
 

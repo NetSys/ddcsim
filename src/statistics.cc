@@ -12,7 +12,6 @@
 using std::bitset;
 using std::string;
 using std::to_string;
-using std::ofstream;
 using std::vector;
 using std::unordered_map;
 
@@ -21,26 +20,25 @@ using boost::edge;
 using boost::remove_edge;
 using boost::vertex;
 
-const string Statistics::REACHABILITY_LOG_NAME = "reachability.txt";
+const string Statistics::SEPARATOR = ",";
+const Time Statistics::WINDOW_SIZE = 0.05; /* 50 ms */
 
 Statistics::Statistics(string out_prefix, Scheduler& s) :
     scheduler_(s),
     out_prefix_(out_prefix),
-    reachability_log_(),
     id_to_component_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
     id_to_entity_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
     switch_to_table_(s.kSwitchCount),
     begin_host_(s.kSwitchCount + s.kControllerCount),
     beyond_host_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
-    host_to_edge_switch_(s.kHostCount) {}
+    host_to_edge_switch_(s.kHostCount),
+    window_left_(START_TIME),
+    window_right_(WINDOW_SIZE),
+    cur_window_count_(0) {}
 
 vector<Entity*>& Statistics::id_to_entity() { return id_to_entity_; }
 
-Statistics::~Statistics() { reachability_log_.close(); }
-
 void Statistics::Init(Topology physical) {
-  reachability_log_.open(out_prefix_ + REACHABILITY_LOG_NAME,
-                         ofstream::out | ofstream::app);
   physical_ = physical;
 
   for(int i = 0; i < host_to_edge_switch_.size(); ++i)
@@ -71,15 +69,14 @@ void Statistics::LinkDown(Id src, Id dst) {
               physical_);
 }
 
-void Statistics::RecordReachability() {
+string Statistics::Reachability() {
   int phys_reachable = ComputePhysReachable();
   int virt_reachable = ComputeVirtReachable();
 
-  reachability_log_ << scheduler_.cur_time() << "," <<
-      virt_reachable << "/" << phys_reachable << "\n";
+  return to_string(virt_reachable) + "/" + to_string(phys_reachable);
 
-  LOG(WARNING) << "reachability=" << scheduler_.cur_time() << "," <<
-      virt_reachable << "/" << phys_reachable << "\n";
+  // LOG(WARNING) << "reachability @ " << scheduler_.cur_time() << " is " <<
+  //     virt_reachable << "/" << phys_reachable;
 }
 
 // throw away function for finding the diameter of input graph
@@ -186,4 +183,18 @@ int Statistics::ComputeVirtReachable() {
   }
 
   return reachable;
+}
+
+void Statistics::RecordSend(Event* e) {
+  Time put_on_link = e->time_ + Scheduler::kComputationDelay;
+
+  if (! (window_left_ <= put_on_link && put_on_link < window_right_)) {
+    LOG(WARNING) << "bw in [" << window_left_ << "," << window_right_
+                 << ") is " << cur_window_count_ << " bytes";
+    cur_window_count_ = 0;
+    window_left_ = floor(put_on_link / WINDOW_SIZE) * WINDOW_SIZE;
+    window_right_ = window_left_ + WINDOW_SIZE;
+  }
+
+  cur_window_count_ += e->size();
 }

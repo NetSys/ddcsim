@@ -50,6 +50,8 @@ string Event::Description() const {
 
 string Event::Name() const { return "Event"; }
 
+unsigned int Event::size() const { return 0; }
+
 Up::Up(Time t, Entity* e) : Event(t, e) {}
 
 unsigned int Up::count_ = 0;
@@ -117,6 +119,8 @@ string Broadcast::Description() const {
 
 string Broadcast::Name() const { return "Broadcast"; }
 
+unsigned int Broadcast::size() const { return 20; }
+
 LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, Entity* src,
                                  SequenceNum sn, Time expiration,
                                  array<Id, 13> up_links, Id src_id)
@@ -139,6 +143,10 @@ string LinkStateUpdate::Description() const {
 }
 
 string LinkStateUpdate::Name() const { return "Link State Update"; }
+
+unsigned int LinkStateUpdate::size() const {
+  return Broadcast::size() + 4 + 6 + 13 * 6 + 8;
+}
 
 InitiateLinkState::InitiateLinkState(Time t, Entity* e) : Event(t, e) {}
 
@@ -186,6 +194,11 @@ string RoutingUpdate::Description() const {
 
 string RoutingUpdate::Name() const { return "Routing Update"; }
 
+unsigned int RoutingUpdate::size() const {
+  //  return Broadcast::size() + 4 + 6 +  2000*6 + 6;
+  return Broadcast::size() + 4 + 6 +  2*6 + 6;
+}
+
 LinkStateRequest::LinkStateRequest(Time t, Entity* e, Port in, Entity* src,
                                    SequenceNum sn, Id id) :
     Broadcast(t, e, in), src_(src), sn_(sn), src_id_(id) {}
@@ -204,3 +217,5 @@ string LinkStateRequest::Description() const {
 }
 
 string LinkStateRequest::Name() const { return "Link State Request"; }
+
+unsigned int LinkStateRequest::size() const { return Broadcast::size() + 4 + 6; }
