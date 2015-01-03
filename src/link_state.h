@@ -17,9 +17,11 @@ class LinkState {
   LinkState(Scheduler&);
   std::string Description() const;
   bool IsStaleUpdate(LinkStateUpdate*) const;
+  bool HaveNewUpdate(LinkStateUpdate*) const;
   bool Update(LinkStateUpdate*);
   void Refresh(Time);
   SequenceNum NextSeqNum();
+  LinkStateUpdate* CurrentLinkState(Entity*, Id);
 
  protected:
   typedef struct { SequenceNum sn; Time exp; } pair;

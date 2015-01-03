@@ -233,8 +233,13 @@ void Switch::Handle(LinkStateUpdate* lsu) {
   ls_.Refresh(scheduler_.cur_time());
 
   if(ls_.IsStaleUpdate(lsu)) {
-    // TODO forward newer entry
     DLOG(INFO) << "Link state update is stale";
+    if(ls_.HaveNewUpdate(lsu)) {
+      scheduler_.Forward(this,
+                         lsu,
+                         ls_.CurrentLinkState(lsu->src_, lsu->src_id_),
+                         lsu->in_port_);
+    }
     return;
   }
 
@@ -439,30 +444,30 @@ void Controller::Handle(LinkStateUpdate* lsu) {
   ls_.ComputePartitions();
 
   //TODO should cache lowest controller?
-  if(id_ == ls_.LowestController(id_)) {
-    DLOG(INFO) << "I have the lowest id out of all controllers in my partition";
-    auto switches = ls_.SwitchesInParition(id_);
-    for(auto it = switches.begin(); it != switches.end(); ++it) {
-      Id cur = *it;
-      auto table = ls_.ComputeRoutingTable(cur);
-      SequenceNum sn = switch_to_next_sn_[cur];
-      RoutingUpdate* ru;
-      for(Port p = 0; p < links_.PortCount(); ++p) {
-        if(scheduler_.IsSwitch(links_.GetEndpointId(p))) {
-          ru = new RoutingUpdate(START_TIME,
-                                 NULL,
-                                 PORT_NOT_FOUND,
-                                 this,
-                                 sn,
-                                 table,
-                                 cur,
-                                 id_);
-          scheduler_.Forward(this, lsu, ru, p);
-        }
-      }
+  if(id_ != ls_.LowestController(id_)) return;
 
-      switch_to_next_sn_[cur]++;
+  DLOG(INFO) << "I have the lowest id out of all controllers in my partition";
+  auto switches = ls_.SwitchesInParition(id_);
+  for(auto it = switches.begin(); it != switches.end(); ++it) {
+    Id cur = *it;
+    auto table = ls_.ComputeRoutingTable(cur);
+    SequenceNum sn = switch_to_next_sn_[cur];
+    RoutingUpdate* ru;
+    for(Port p = 0; p < links_.PortCount(); ++p) {
+      if(scheduler_.IsSwitch(links_.GetEndpointId(p))) {
+        ru = new RoutingUpdate(START_TIME,
+                               NULL,
+                               PORT_NOT_FOUND,
+                               this,
+                               sn,
+                               table,
+                               cur,
+                               id_);
+        scheduler_.Forward(this, lsu, ru, p);
+      }
     }
+
+    switch_to_next_sn_[cur]++;
   }
 
   if(was_partitioned && lsu->time_ > 75 * Scheduler::Delay()) {

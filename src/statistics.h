@@ -43,7 +43,8 @@ class Statistics {
   size_t beyond_host_;
   Time window_left_;
   Time window_right_;
-  unsigned int cur_window_count_;
+  //  unsigned int cur_window_count_;
+  unsigned int cur_window_count_[3];
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };
 

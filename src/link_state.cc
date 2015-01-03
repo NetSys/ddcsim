@@ -50,6 +50,35 @@ bool LinkState::IsStaleUpdate(LinkStateUpdate* ls) const {
   return id_to_last_[ls->src_id_].sn >= ls->sn_;
 }
 
+bool LinkState::HaveNewUpdate(LinkStateUpdate* ls) const {
+  return id_to_last_[ls->src_id_].sn > ls->sn_;
+}
+
+LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
+  array<Id, 13> up;
+  int i = 0;
+
+  Vertex vsrc = vertex(src_id, topology_);
+  OutEdgeIter ei, ei_end;
+  for(tie(ei, ei_end) = out_edges(vsrc, topology_); ei != ei_end; ++ei) {
+    up[i] = target(*ei, topology_);
+    ++i;
+  }
+
+  for(; i < 13; ++i)
+    up[i] = NONE_ID;
+
+  auto p = id_to_last_[src_id];
+  return new LinkStateUpdate(START_TIME,
+                             NULL,
+                             PORT_NOT_FOUND,
+                             src,
+                             p.sn,
+                             p.exp,
+                             up,
+                             src_id);
+}
+
 bool LinkStateControl::Update(LinkStateUpdate* ls) {
   Id id = ls->src_id_;
   Vertex src = vertex(id, topology_);

@@ -50,7 +50,9 @@ string Event::Description() const {
 
 string Event::Name() const { return "Event"; }
 
-unsigned int Event::size() const { return 0; }
+//unsigned int Event::size() const { return 0; }
+
+unsigned int Event::size() const { return -1; }
 
 Up::Up(Time t, Entity* e) : Event(t, e) {}
 
@@ -119,7 +121,9 @@ string Broadcast::Description() const {
 
 string Broadcast::Name() const { return "Broadcast"; }
 
-unsigned int Broadcast::size() const { return 20; }
+//unsigned int Broadcast::size() const { return 20; }
+
+unsigned int Broadcast::size() const { return -1; }
 
 LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, Entity* src,
                                  SequenceNum sn, Time expiration,
@@ -144,9 +148,11 @@ string LinkStateUpdate::Description() const {
 
 string LinkStateUpdate::Name() const { return "Link State Update"; }
 
-unsigned int LinkStateUpdate::size() const {
-  return Broadcast::size() + 4 + 6 + 13 * 6 + 8;
-}
+// unsigned int LinkStateUpdate::size() const {
+//   return Broadcast::size() + 4 + 6 + 13 * 6 + 8;
+// }
+
+unsigned int LinkStateUpdate::size() const { return 0; }
 
 InitiateLinkState::InitiateLinkState(Time t, Entity* e) : Event(t, e) {}
 
@@ -194,10 +200,12 @@ string RoutingUpdate::Description() const {
 
 string RoutingUpdate::Name() const { return "Routing Update"; }
 
-unsigned int RoutingUpdate::size() const {
-  //  return Broadcast::size() + 4 + 6 +  2000*6 + 6;
-  return Broadcast::size() + 4 + 6 +  2*6 + 6;
-}
+// unsigned int RoutingUpdate::size() const {
+//   //return Broadcast::size() + 4 + 6 +  2000*6 + 6;
+//   return Broadcast::size() + 4 + 6 +  2*6 + 6;
+// }
+
+unsigned int RoutingUpdate::size() const { return 1; }
 
 LinkStateRequest::LinkStateRequest(Time t, Entity* e, Port in, Entity* src,
                                    SequenceNum sn, Id id) :
@@ -218,4 +226,6 @@ string LinkStateRequest::Description() const {
 
 string LinkStateRequest::Name() const { return "Link State Request"; }
 
-unsigned int LinkStateRequest::size() const { return Broadcast::size() + 4 + 6; }
+//unsigned int LinkStateRequest::size() const { return Broadcast::size() + 4 + 6; }
+
+unsigned int LinkStateRequest::size() const { return 2; }
