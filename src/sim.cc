@@ -166,13 +166,6 @@ int main(int ac, char* av[]) {
                                  switches, controllers, hosts, phys,
                                  stats.id_to_entity());
 
-  // for(auto s : switches)
-  //   LOG(INFO) << to_string(s->id()) + ":" + to_string(reinterpret_cast<long>(s)) + "+" + to_string(sizeof(*s));
-  // for(auto c : controllers)
-  //   LOG(INFO) << to_string(c->id()) + ":" + to_string(reinterpret_cast<long>(c)) + "+" + to_string(sizeof(*c));
-  // for(auto h : hosts)
-  //   LOG(INFO) << to_string(h->id()) + ":" + to_string(reinterpret_cast<long>(h)) + "+" + to_string(sizeof(*h));
-
   if (!valid_world) return -1;
 
   stats.Init(phys);
