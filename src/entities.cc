@@ -4,10 +4,12 @@
 #include "statistics.h"
 
 #include <array>
+#include <limits>
 
 using std::array;
 using std::default_random_engine;
 using std::discrete_distribution;
+using std::numeric_limits;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -88,6 +90,8 @@ Switch::Switch(Scheduler& sc, Id id, Statistics& st) :
     Entity(sc, id, st), ls_(sc), ru_history_(),
     lsr_history_(sc.kControllerCount, NONE_SEQNUM),
     dst_to_neighbor_(nullptr) {}
+
+const Time Switch::kLSExpireDelta = numeric_limits<Time>::max();
 
 string Switch::Description() const {
   string rtn = Entity::Description() + " ls_=" + ls_.Description() +
@@ -230,7 +234,7 @@ void Switch::Handle(LinkStateUpdate* lsu) {
     return;
   }
 
-  ls_.Refresh(scheduler_.cur_time());
+  //  ls_.Refresh(scheduler_.cur_time());
 
   if(ls_.IsStaleUpdate(lsu)) {
     DLOG(INFO) << "Link state update is stale";
@@ -371,7 +375,8 @@ void Switch::Handle(LinkStateRequest* lsr_in) {
 
   LinkStateRequest* lsr_out;
   for(Port out_port = 0; out_port < links_.PortCount(); ++out_port) {
-    if(scheduler_.IsSwitch(links_.GetEndpointId(out_port))) {
+    if(out_port != lsr_in->in_port_ &&
+       scheduler_.IsSwitch(links_.GetEndpointId(out_port))) {
       lsr_out = new LinkStateRequest(START_TIME,
                                      NULL,
                                      PORT_NOT_FOUND,
@@ -420,7 +425,7 @@ void Controller::Handle(LinkStateUpdate* lsu) {
     return;
   }
 
-  ls_.Refresh(scheduler_.cur_time());
+  //  ls_.Refresh(scheduler_.cur_time());
 
   if(ls_.IsStaleUpdate(lsu)) {
     DLOG(INFO) << "Link state update is stale";
@@ -428,18 +433,13 @@ void Controller::Handle(LinkStateUpdate* lsu) {
   }
 
   // TODO ensure this is in the right place
-  bool was_partitioned = ls_.ArePartitioned(id_, lsu->src_id_);
+  //  bool heals_partitioned = ls_.ArePartitioned(id_, lsu->src_id_);
+  bool heals_partition = ls_.HealsPartition(id_, lsu);
 
   bool changed = ls_.Update(lsu);
 
   if(!changed)
     return;
-
-  // TODO only send out link state updates if topology visibly changed
-  // if(!has_changed) {
-  //   DLOG(INFO) << "Disregarding link state update as it does not change the topology";
-  //   return;
-  // }
 
   ls_.ComputePartitions();
 
@@ -470,7 +470,7 @@ void Controller::Handle(LinkStateUpdate* lsu) {
     switch_to_next_sn_[cur]++;
   }
 
-  if(was_partitioned && lsu->time_ > 75 * Scheduler::Delay()) {
+  if(heals_partition && lsu->time_ > 75 * Scheduler::Delay()) {
     DLOG(INFO) << "Switch was partitioned";
     LinkStateRequest* lsr;
     SequenceNum sn = next_lsr_;

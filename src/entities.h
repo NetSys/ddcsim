@@ -103,7 +103,8 @@ class Switch : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
-  static constexpr Time kLSExpireDelta = 10;
+  //  static const Time kLSExpireDelta = 10;
+  static const Time kLSExpireDelta;
   // TODO make private again
   std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
 

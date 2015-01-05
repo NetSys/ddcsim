@@ -112,10 +112,9 @@ bool LinkState::Update(LinkStateUpdate* ls) {
   Vertex src = vertex(id, topology_);
 
   clear_vertex(src, topology_);
-  for(auto it = ls->up_links_.begin(); it != ls->up_links_.end() &&
-          *it != NONE_ID; ++it) {
-    add_edge(src, vertex(*it, topology_), topology_);
-  }
+  for(auto it = ls->up_links_.begin(); it != ls->up_links_.end(); ++it)
+    if(*it != NONE_ID)
+      add_edge(src, vertex(*it, topology_), topology_);
 
   id_to_last_[id] = {ls->sn_, ls->expiration_};
 
@@ -124,6 +123,14 @@ bool LinkState::Update(LinkStateUpdate* ls) {
 
 bool LinkStateControl::ArePartitioned(Id id1, Id id2) const {
   return id_to_component_[id1] != id_to_component_[id2];
+}
+
+bool LinkStateControl::HealsPartition(Id self, LinkStateUpdate* lsu) const {
+  for(auto it = lsu->up_links_.begin(); it != lsu->up_links_.end(); ++it)
+    if(*it != NONE_ID && ArePartitioned(self, *it))
+      return true;
+
+  return false;
 }
 
 // TODO make computation more lazy, don't remove all edges until you have to operate on graph

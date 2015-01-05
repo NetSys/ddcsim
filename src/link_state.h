@@ -37,6 +37,7 @@ class LinkStateControl : public LinkState {
   LinkStateControl(Scheduler&);
   void ComputePartitions();
   bool ArePartitioned(Id, Id) const;
+  bool HealsPartition(Id, LinkStateUpdate*) const;
   Id LowestController(Id) const;
   std::shared_ptr<std::vector<Id> > ComputeRoutingTable(Id);
   std::vector<Id> SwitchesInParition(Id);
