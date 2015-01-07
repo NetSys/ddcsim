@@ -5,11 +5,13 @@
 
 #include "boost/tuple/tuple.hpp"
 #include "boost/graph/breadth_first_search.hpp"
-#include "boost/graph/connected_components.hpp"
+
+#include <algorithm>
 #include <limits>
-#include <unordered_set>
+#include <set>
 
 using std::array;
+using std::set_difference;
 using std::min;
 using std::string;
 using std::shared_ptr;
@@ -17,12 +19,12 @@ using std::to_string;
 using std::vector;
 using std::make_shared;
 using std::numeric_limits;
-using std::unordered_set;
+using std::set;
 
 using boost::target;
 using boost::add_edge;
+using boost::adjacent_vertices;
 using boost::breadth_first_search;
-using boost::connected_components;
 using boost::edge;
 using boost::edges;
 using boost::graph_traits;
@@ -59,6 +61,7 @@ LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
   int i = 0;
 
   Vertex vsrc = vertex(src_id, topology_);
+  // TODO replace with adjacent iter
   OutEdgeIter ei, ei_end;
   for(tie(ei, ei_end) = out_edges(vsrc, topology_); ei != ei_end; ++ei) {
     up[i] = target(*ei, topology_);
@@ -79,30 +82,57 @@ LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
                              src_id);
 }
 
+// TODO simplify
 bool LinkStateControl::Update(LinkStateUpdate* ls) {
-  Id id = ls->src_id_;
-  Vertex src = vertex(id, topology_);
+  Vertex src = vertex(ls->src_id_, topology_);
 
-  unordered_set<Id> new_links(ls->up_links_.begin(), ls->up_links_.end());
-  unordered_set<Id> old_links;
+  graph_traits <Topology>::adjacency_iterator vi, vi_end;
+  tie(vi, vi_end) = adjacent_vertices(src, topology_);
+  set<Id> old_links(vi, vi_end);
 
-  OutEdgeIter ei, ei_end;
-  for(tie(ei, ei_end) = out_edges(src, topology_); ei != ei_end; ++ei)
-    old_links.insert(target(*ei, topology_));
+  array<Id, 13>::iterator ai;
+  for(ai = ls->up_links_.begin();
+      ai != ls->up_links_.end() && *ai != NONE_ID; ++ai) ;
+  set<Id> new_links(ls->up_links_.begin(), ai);
 
-  if(new_links == old_links) {
-    id_to_last_[id] = {ls->sn_, ls->expiration_};
+  vector<Id> to_be_removed(old_links.size());
+  auto it = set_difference(old_links.begin(),
+                           old_links.end(),
+                           new_links.begin(),
+                           new_links.end(),
+                           to_be_removed.begin());
+  to_be_removed.resize(it - to_be_removed.begin());
+
+  vector<Id> to_be_added(new_links.size());
+  auto jt = set_difference(new_links.begin(),
+                           new_links.end(),
+                           old_links.begin(),
+                           old_links.end(),
+                           to_be_added.begin());
+  to_be_added.resize(jt - to_be_added.begin());
+
+  if(to_be_removed.empty() && to_be_added.empty()) {
+    id_to_last_[ls->src_id_] = {ls->sn_, ls->expiration_};
     return false;
   }
 
-  clear_vertex(src, topology_);
-
-  for(auto it = ls->up_links_.begin(); it != ls->up_links_.end() &&
-          *it != NONE_ID; ++it) {
-    add_edge(src, vertex(*it, topology_), topology_);
+  if(!to_be_removed.empty()) {
+    for(auto id : to_be_removed)
+      remove_edge(src, vertex(id, topology_), topology_);
+    did_remove_ = true;
   }
 
-  id_to_last_[id] = {ls->sn_, ls->expiration_};
+  if(did_remove_) {
+    for(auto id : to_be_added)
+      add_edge(src, vertex(id, topology_), topology_);
+  } else {
+    for(auto id : to_be_added) {
+      add_edge(src, vertex(id, topology_), topology_);
+      ds_.union_set(ls->src_id_, id);
+    }
+  }
+
+  id_to_last_[ls->src_id_] = {ls->sn_, ls->expiration_};
 
   return true;
 }
@@ -121,11 +151,13 @@ bool LinkState::Update(LinkStateUpdate* ls) {
   return true;
 }
 
-bool LinkStateControl::ArePartitioned(Id id1, Id id2) const {
-  return id_to_component_[id1] != id_to_component_[id2];
+bool LinkStateControl::ArePartitioned(Id id1, Id id2) {
+  return !same_component(vertex(id1, topology_),
+                         vertex(id2, topology_),
+                         ds_);
 }
 
-bool LinkStateControl::HealsPartition(Id self, LinkStateUpdate* lsu) const {
+bool LinkStateControl::HealsPartition(Id self, LinkStateUpdate* lsu) {
   for(auto it = lsu->up_links_.begin(); it != lsu->up_links_.end(); ++it)
     if(*it != NONE_ID && ArePartitioned(self, *it))
       return true;
@@ -143,23 +175,23 @@ void LinkState::Refresh(Time cur_time) {
   }
 }
 
-void LinkStateControl::InitComponents() {
-  for(int i = 0; i < id_to_component_.size(); ++i)
-    id_to_component_[i] = i;
-}
-
 void LinkStateControl::ComputePartitions() {
-  InitComponents();
-  connected_components(topology_, &id_to_component_[0]);
+  if(did_remove_) {
+    initialize_incremental_components(topology_, ds_);
+    incremental_components(topology_, ds_);
+    did_remove_ = false;
+  }
 }
 
-Id LinkStateControl::LowestController(Id src) const {
-  int my_component = id_to_component_[src];
+Id LinkStateControl::LowestController(Id src) {
+  Vertex v = vertex(src, topology_);
   Id min_controller = numeric_limits<Id>::max();
 
-  for(Id i = 0; i < id_to_component_.size(); ++i)
-    if(id_to_component_[i] == my_component && scheduler_.IsController(i))
-      min_controller = min(min_controller, i);
+  for(Id c = scheduler_.kSwitchCount;
+      c < scheduler_.kSwitchCount + scheduler_.kControllerCount; ++c) {
+    if(same_component(v, vertex(c, topology_), ds_))
+      min_controller = min(min_controller, c);
+  }
 
   return min_controller;
 }
@@ -196,11 +228,14 @@ Id LinkStateControl::NextHop(Id src, Id dst, vector<Vertex>& pred) {
   return pred[cur] == cur ? NONE_ID : cur;
 }
 
-// TODO save on stack allocation
 shared_ptr<vector<Id> > LinkStateControl::ComputeRoutingTable(Id src) {
+  // TODO fix inlined size
+  static vector<Vertex> pred_(11020);
+
   shared_ptr<vector<Id> > dst_to_neighbor = make_shared<vector<Id> >
       (scheduler_.kHostCount, DROP);
 
+  // TODO will pred by initialized by bfs?
   for(int i = 0; i < pred_.size(); ++i)
     pred_[i] = i;
 
@@ -222,23 +257,20 @@ shared_ptr<vector<Id> > LinkStateControl::ComputeRoutingTable(Id src) {
 // TODO pass back iterators?
 vector<Id> LinkStateControl::SwitchesInParition(Id src) {
   vector<Id> switches;
+  Vertex v = vertex(src, topology_);
 
-  int my_component = id_to_component_[src];
-
-  for(Id i = 0; i < id_to_component_.size(); ++i)
-    if(id_to_component_[i] == my_component && scheduler_.IsSwitch(i))
-      switches.push_back(i);
+  for(Id s = 0; s < scheduler_.kSwitchCount; ++s)
+    if(same_component(v, vertex(s, topology_), ds_))
+      switches.push_back(s);
 
   return switches;
 }
 
-// TODO fix hack
-vector<Vertex> LinkStateControl::pred_ = vector<Vertex>(11020);
-vector<int> LinkStateControl::id_to_component_ = vector<int>(11020);
-
 LinkStateControl::LinkStateControl(Scheduler& s)
-    : LinkState(s) {
-      //      id_to_component_(s.kSwitchCount + s.kControllerCount +  s.kHostCount),
-      //      pred_(s.kSwitchCount + s.kControllerCount + s.kHostCount) {
-  InitComponents();
+    : LinkState(s),
+      rank_(num_vertices(topology_)),
+      parent_(num_vertices(topology_)),
+      ds_(&rank_[0], &parent_[0]),
+      did_remove_(true) {
+  initialize_incremental_components(topology_, ds_);
 }

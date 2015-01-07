@@ -39,5 +39,6 @@ typedef boost::adjacency_list< boost::vecS,
 
 typedef boost::graph_traits<Topology>::edge_descriptor Edge;
 typedef boost::graph_traits<Topology>::vertex_descriptor Vertex;
+typedef boost::graph_traits<Topology>::vertices_size_type VertexIndex;
 
 #endif

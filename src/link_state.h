@@ -7,6 +7,9 @@
 #include <vector>
 #include <unordered_map>
 
+#include <boost/pending/disjoint_sets.hpp>
+#include <boost/graph/incremental_components.hpp>
+
 #include "common.h"
 
 class LinkStateUpdate;
@@ -18,7 +21,7 @@ class LinkState {
   std::string Description() const;
   bool IsStaleUpdate(LinkStateUpdate*) const;
   bool HaveNewUpdate(LinkStateUpdate*) const;
-  bool Update(LinkStateUpdate*);
+  virtual bool Update(LinkStateUpdate*);
   void Refresh(Time);
   SequenceNum NextSeqNum();
   LinkStateUpdate* CurrentLinkState(Entity*, Id);
@@ -36,18 +39,19 @@ class LinkStateControl : public LinkState {
  public:
   LinkStateControl(Scheduler&);
   void ComputePartitions();
-  bool ArePartitioned(Id, Id) const;
-  bool HealsPartition(Id, LinkStateUpdate*) const;
-  Id LowestController(Id) const;
+  bool ArePartitioned(Id, Id);
+  bool HealsPartition(Id, LinkStateUpdate*);
+  Id LowestController(Id);
   std::shared_ptr<std::vector<Id> > ComputeRoutingTable(Id);
   std::vector<Id> SwitchesInParition(Id);
-  bool Update(LinkStateUpdate*);
+  virtual bool Update(LinkStateUpdate*);
 
  private:
-  void InitComponents();
   Id NextHop(Id, Id, std::vector<boost::graph_traits<Topology>::vertex_descriptor>&);
-  static std::vector<int> id_to_component_;
-  static std::vector<Vertex> pred_;
+  std::vector<VertexIndex> rank_;
+  std::vector<Vertex> parent_;
+  boost::disjoint_sets<VertexIndex*, Vertex*> ds_;
+  bool did_remove_;
   DISALLOW_COPY_AND_ASSIGN(LinkStateControl);
 };
 
