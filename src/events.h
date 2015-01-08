@@ -28,7 +28,7 @@ class Event {
   std::vector<Entity*> affected_entities_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(Event);
+  //DISALLOW_COPY_AND_ASSIGN(Event);
 };
 
 class Up : public Event {
@@ -42,7 +42,7 @@ class Up : public Event {
 
  private:
   // TODO need disallow in derived classes?
-  DISALLOW_COPY_AND_ASSIGN(Up);
+  //DISALLOW_COPY_AND_ASSIGN(Up);
 };
 
 class Down : public Event {
@@ -54,7 +54,7 @@ class Down : public Event {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(Down);
+  //DISALLOW_COPY_AND_ASSIGN(Down);
 };
 
 class LinkUp : public Event {
@@ -67,7 +67,7 @@ class LinkUp : public Event {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(LinkUp);
+  //DISALLOW_COPY_AND_ASSIGN(LinkUp);
 };
 
 class LinkDown : public Event {
@@ -80,7 +80,7 @@ class LinkDown : public Event {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(LinkDown);
+  //DISALLOW_COPY_AND_ASSIGN(LinkDown);
 };
 
 class Broadcast : public Event {
@@ -93,7 +93,7 @@ class Broadcast : public Event {
   Port in_port_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(Broadcast);
+  //DISALLOW_COPY_AND_ASSIGN(Broadcast);
 };
 
 class LinkStateUpdate : public Broadcast {
@@ -112,7 +112,7 @@ class LinkStateUpdate : public Broadcast {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);
+  //DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);
 };
 
 class InitiateLinkState : public Event {
@@ -124,7 +124,7 @@ class InitiateLinkState : public Event {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(InitiateLinkState);
+  //DISALLOW_COPY_AND_ASSIGN(InitiateLinkState);
 };
 
 class RoutingUpdate : public Broadcast {
@@ -144,7 +144,7 @@ class RoutingUpdate : public Broadcast {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(RoutingUpdate);
+  //DISALLOW_COPY_AND_ASSIGN(RoutingUpdate);
 };
 
 class LinkStateRequest : public Broadcast {
@@ -160,7 +160,7 @@ class LinkStateRequest : public Broadcast {
   static unsigned int count_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(LinkStateRequest);
+  //DISALLOW_COPY_AND_ASSIGN(LinkStateRequest);
 };
 
 #endif

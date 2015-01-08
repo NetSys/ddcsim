@@ -65,7 +65,7 @@ class Links {
   Id GetEndpointId(Port) const;
 
   template<class E, class In, class Out>
-  friend void Scheduler::Forward(E*, In*, Out*, Port);
+  friend void Scheduler::Forward(E*, In*, Out, Port);
   friend bool Reader::ParseEvents();
 
  private:

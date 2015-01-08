@@ -15,8 +15,8 @@ class Scheduler {
  public:
   Scheduler(Time, size_t, size_t, size_t);
   void Init(Statistics*);
-  void AddEvent(Time, Event*);
-  template<class E, class In, class Out> void Forward(E*, In*, Out*, Port);
+  template<class E> void AddEvent(Time t, E e) { event_queue_.Push(t, e); }
+  template<class E, class In, class Out> void Forward(E*, In*, Out, Port);
   void SchedulePeriodicEvents(std::vector<Switch*>, Time, Time);
   void StartSimulation(Statistics&);
   Time cur_time();

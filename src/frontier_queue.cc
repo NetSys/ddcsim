@@ -1,10 +1,8 @@
 #include "frontier_queue.h"
-#include "events.h"
 #include "entities.h"
 
 #define INVALID_FRONTIER -1
 
-//#include <algorithm>
 #include <limits>
 
 using std::find;
@@ -13,37 +11,98 @@ using std::vector;
 using std::to_string;
 using std::string;
 using std::numeric_limits;
-using std::min;
+
+FrontierQueue::Frontier::Events::Events() :
+    lsrs_(), rus_(), ils_(), lsus_(), us_(), ds_(), lus_(), lds_(),
+    lsrs_next_(-1), rus_next_(-1), ils_next_(-1), lsus_next_(-1),
+    us_next_(-1), ds_next_(-1), lus_next_(-1), lds_next_(-1) {}
+
+void FrontierQueue::Frontier::Events::Push(LinkStateRequest e) {
+  lsrs_.push_back(e);
+  ++lsrs_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(RoutingUpdate e) {
+  rus_.push_back(e);
+  ++rus_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(InitiateLinkState e) {
+  ils_.push_back(e);
+  ++ils_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(LinkStateUpdate e) {
+  lsus_.push_back(e);
+  ++lsus_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(Up e) {
+  us_.push_back(e);
+  ++us_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(Down e) {
+  ds_.push_back(e);
+  ++ds_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(LinkUp e) {
+  lus_.push_back(e);
+  ++lus_next_;
+}
+
+void FrontierQueue::Frontier::Events::Push(LinkDown e) {
+  lds_.push_back(e);
+  ++lds_next_;
+}
+
+Event* FrontierQueue::Frontier::Events::Pop() {
+  if(lsrs_next_ != -1) {
+    return &lsrs_[lsrs_next_--];
+  }
+  if(rus_next_ != -1) {
+    return &rus_[rus_next_--];
+  }
+  if(ils_next_ != -1) {
+    return &ils_[ils_next_--];
+  }
+  if(lsus_next_ != -1) {
+    return &lsus_[lsus_next_--];
+  }
+  if(us_next_ != -1) {
+    return &us_[us_next_--];
+  }
+  if(ds_next_ != -1) {
+    return &ds_[ds_next_--];
+  }
+  if(lus_next_ != -1) {
+    return &lus_[lus_next_--];
+  }
+  if(lds_next_ != -1) {
+    return &lds_[lds_next_--];
+  }
+  CHECK(false);
+}
+
+bool FrontierQueue::Frontier::Events::Empty() {
+  return lsrs_next_ == -1 && rus_next_ == -1 && ils_next_ == -1 && lsus_next_ == -1 &&
+      us_next_ == -1 && ds_next_ == -1 && lus_next_ == -1 && lds_next_ == -1;
+}
 
 FrontierQueue::Frontier::Frontier(Time t, size_t entity_count) :
     time_(t), id_to_events_(entity_count), cur_(numeric_limits<Id>::max()) {}
 
-#ifndef NDEBUG
-FrontierQueue::Frontier::~Frontier() {
-  //  for(auto e : events_)
-  //    delete e;
-}
-#endif
-
-void FrontierQueue::Frontier::Push(Event* e) {
-  CHECK_EQ(e->time_, time_);
-  CHECK(e->affected_entities_.size() == 1);
-  Id id = e->affected_entities_[0]->id();
-  id_to_events_[id].push_back(e);
-  cur_ = min(cur_, id);
-}
-
 void FrontierQueue::Frontier::Update() {
   for( ; cur_ < id_to_events_.size(); ++cur_)
-    if(! id_to_events_[cur_].empty())
+    if(! id_to_events_[cur_].Empty())
       break;
 }
 
 Event* FrontierQueue::Frontier::Pop() {
-  vector<Event*>& cur_events = id_to_events_[cur_];
+  Events& cur_events = id_to_events_[cur_];
 
-  auto rtn = cur_events.back();
-  cur_events.pop_back();
+  auto rtn = cur_events.Pop();
 
   Update();
 
@@ -62,31 +121,24 @@ string FrontierQueue::Frontier::Description() const {
 Time FrontierQueue::Frontier::time() const { return time_; }
 
 FrontierQueue::FrontierQueue(size_t entity_count) :
-    frontiers_(), event_queue_(), entity_count_(entity_count) {}
+    frontiers_(), event_queue_(), entity_count_(entity_count),
+    to_be_deleted_(nullptr) {}
 
 #ifndef NDEBUG
 FrontierQueue::~FrontierQueue() {
   for(auto p : frontiers_)
     delete p.second;
+  delete to_be_deleted_;
 }
 #endif
 
-void FrontierQueue::Push(Time t, Event* e) {
-  if(frontiers_.count(t) == 1) {
-    frontiers_[t]->Push(e);
-    return;
-  }
-
-  Frontier* f = new Frontier(t, entity_count_);
-
-  frontiers_.insert({t, f});
-  event_queue_.push(f);
-
-  f->Push(e);
-}
-
 Event* FrontierQueue::Pop() {
   CHECK(!Empty());
+
+  if(to_be_deleted_) {
+    delete to_be_deleted_;
+    to_be_deleted_ = nullptr;
+  }
 
   Frontier* cur = event_queue_.top();
 
@@ -96,7 +148,7 @@ Event* FrontierQueue::Pop() {
     Time t = cur->time();
     frontiers_.erase(t);
     event_queue_.pop();
-    delete cur;
+    to_be_deleted_ = cur;
   }
 
   return rtn;

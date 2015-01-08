@@ -17,8 +17,6 @@ using std::vector;
 Entity::Entity(Scheduler& sc, Id id, Statistics& st) : links_(), scheduler_(sc),
                                                        is_up_(true), id_(id),
                                                        stats_(st) {
-                                                       // entropy_src_(),
-                                                       // dist_{1, 999} {
   CHECK_GE(kMinTimes, 1);
 }
 
@@ -116,31 +114,26 @@ void Switch::Handle(Event* e) {
 void Switch::Handle(Up* u) {
   Entity::Handle(u);
 
-  LinkStateUpdate* lsu;
   SequenceNum cur_sn = ls_.NextSeqNum();
   array<Id, 13> up_links = links_.UpNeighbors();
   Time exp = u->time_ + kLSExpireDelta;
-  bool update_self = true;
+  LinkStateUpdate lsu(START_TIME,
+                      NULL,
+                      PORT_NOT_FOUND,
+                      this,
+                      cur_sn,
+                      exp,
+                      up_links,
+                      id_);
 
   for(Port out_port = 0; out_port < links_.PortCount(); ++out_port) {
     CHECK_EQ(u->time_, scheduler_.cur_time());
     if(! scheduler_.IsHost(links_.GetEndpointId(out_port))) {
-      lsu = new LinkStateUpdate(START_TIME,
-                                NULL,
-                                PORT_NOT_FOUND,
-                                this,
-                                cur_sn,
-                                exp,
-                                up_links,
-                                id_);
-      if(update_self) {
-          ls_.Update(lsu);
-          update_self = false;
-      }
-
       scheduler_.Forward(this, u, lsu, out_port);
     }
   }
+
+  ls_.Update(&lsu);
 }
 
 void Switch::Handle(Down* d) { Entity::Handle(d); }
@@ -157,33 +150,27 @@ void Switch::Handle(LinkUp* lu) {
     return;
   }
 
-  LinkStateUpdate* lsu;
   SequenceNum cur_sn = ls_.NextSeqNum();
   array<Id, 13> up_links = links_.UpNeighbors();
   Time exp = lu->time_ + kLSExpireDelta + Scheduler::kDefaultHelloDelay;
-  bool update_self = true;
+  LinkStateUpdate lsu(START_TIME,
+                      NULL,
+                      PORT_NOT_FOUND,
+                      this,
+                      cur_sn,
+                      exp,
+                      up_links,
+                      id_);
 
   for(Port p = 0; p < links_.PortCount(); ++p) {
     // TODO should be taking kComputationDelay into account with expiration...
     CHECK_EQ(lu->time_, scheduler_.cur_time());
     if(! scheduler_.IsHost(links_.GetEndpointId(p))) {
-      lsu = new LinkStateUpdate(START_TIME,
-                                NULL,
-                                PORT_NOT_FOUND,
-                                this,
-                                cur_sn,
-                                exp,
-                                up_links,
-                                id_);
-
-      if(update_self) {
-        ls_.Update(lsu);
-        update_self = false;
-      }
-
       scheduler_.Forward(this, lu, lsu, p);
     }
   }
+
+  ls_.Update(&lsu);
 }
 
 void Switch::Handle(LinkDown* ld) {
@@ -194,33 +181,27 @@ void Switch::Handle(LinkDown* ld) {
     return;
   }
 
-  LinkStateUpdate* lsu;
   SequenceNum cur_sn = ls_.NextSeqNum();
   array<Id, 13> up_links = links_.UpNeighbors();
   Time exp = ld->time_ + kLSExpireDelta + Scheduler::kDefaultHelloDelay;
-  bool update_self = true;
+  LinkStateUpdate lsu(START_TIME,
+                      NULL,
+                      PORT_NOT_FOUND,
+                      this,
+                      cur_sn,
+                      exp,
+                      up_links,
+                      id_);
 
   for(Port p = 0; p < links_.PortCount(); ++p) {
     // TODO should be taking kComputationDelay into account with expiration...
     CHECK_EQ(ld->time_, scheduler_.cur_time());
     if(! scheduler_.IsHost(links_.GetEndpointId(p))) {
-      lsu = new LinkStateUpdate(START_TIME,
-                                NULL,
-                                PORT_NOT_FOUND,
-                                this,
-                                cur_sn,
-                                exp,
-                                up_links,
-                                id_);
-
-      if(update_self) {
-        ls_.Update(lsu);
-        update_self = false;
-      }
-
       scheduler_.Forward(this, ld, lsu, p);
     }
   }
+
+  ls_.Update(&lsu);
 }
 
 void Switch::Handle(LinkStateUpdate* lsu) {
@@ -249,20 +230,11 @@ void Switch::Handle(LinkStateUpdate* lsu) {
 
   ls_.Update(lsu);
 
-  LinkStateUpdate* out_lsu;
-  Time t = lsu->time_ + Scheduler::Delay();
+  LinkStateUpdate out_lsu(*lsu);
 
   for (Port p = 0, in = lsu->in_port_; p < links_.PortCount(); ++p) {
     if (in != p && ! scheduler_.IsHost(links_.GetEndpointId(p))) {
-        out_lsu = new LinkStateUpdate(START_TIME,
-                                      NULL,
-                                      PORT_NOT_FOUND,
-                                      lsu->src_,
-                                      lsu->sn_,
-                                      lsu->expiration_,
-                                      lsu->up_links_,
-                                      lsu->src_id_);
-        scheduler_.Forward(this, lsu, out_lsu, p);
+      scheduler_.Forward(this, lsu, out_lsu, p);
     }
   }
 }
@@ -273,31 +245,26 @@ void Switch::Handle(InitiateLinkState* init) {
     return;
   }
 
-  LinkStateUpdate* lsu;
   SequenceNum cur_sn = ls_.NextSeqNum();
   array<Id, 13> up_links = links_.UpNeighbors();
   Time exp = init->time_ + kLSExpireDelta;
-  bool update_self = true;
+
+  LinkStateUpdate lsu(START_TIME,
+                      NULL,
+                      PORT_NOT_FOUND,
+                      this,
+                      cur_sn,
+                      exp,
+                      up_links,
+                      id_);
 
   for(Port out_port = 0; out_port < links_.PortCount(); ++out_port) {
     if(! scheduler_.IsHost(links_.GetEndpointId(out_port))) {
-      lsu = new LinkStateUpdate(START_TIME,
-                                NULL,
-                                PORT_NOT_FOUND,
-                                this,
-                                cur_sn,
-                                exp,
-                                up_links,
-                                id_);
-
-      if(update_self) {
-        ls_.Update(lsu);
-        update_self = false;
-      }
-
       scheduler_.Forward(this, init, lsu, out_port);
     }
   }
+
+  ls_.Update(&lsu);
 }
 
 void Switch::Handle(RoutingUpdate* ru) {
@@ -317,17 +284,10 @@ void Switch::Handle(RoutingUpdate* ru) {
     DLOG(INFO) << "Routing update was directed at me";
     dst_to_neighbor_ = ru->dst_to_neighbor_;
   } else {
-    RoutingUpdate* ru_out;
+    RoutingUpdate ru_out(*ru);
+
     for(Port p = 0, in = ru->in_port_; p < links_.PortCount(); ++p) {
       if(p != in && scheduler_.IsSwitch(links_.GetEndpointId(p))) {
-        ru_out = new RoutingUpdate(START_TIME,
-                                   NULL,
-                                   PORT_NOT_FOUND,
-                                   ru->src_,
-                                   ru->sn_,
-                                   ru->dst_to_neighbor_,
-                                   ru->dst_,
-                                   ru->src_id_);
         scheduler_.Forward(this, ru, ru_out, p);
       }
     }
@@ -347,42 +307,32 @@ void Switch::Handle(LinkStateRequest* lsr_in) {
 
   lsr_history_[lsr_in->src_id_ - scheduler_.kSwitchCount] = lsr_in->sn_;
 
-  LinkStateUpdate* lsu;
   SequenceNum cur_sn = ls_.NextSeqNum();
   array<Id, 13> up_links = links_.UpNeighbors();
   Time exp = lsr_in->time_ + kLSExpireDelta;
-  bool update_self = true;
+
+  LinkStateUpdate lsu(START_TIME,
+                      NULL,
+                      PORT_NOT_FOUND,
+                      this,
+                      cur_sn,
+                      exp,
+                      up_links,
+                      id_);
 
   for(Port out_port = 0; out_port < links_.PortCount(); ++out_port) {
     if(! scheduler_.IsHost(links_.GetEndpointId(out_port))) {
-      lsu = new LinkStateUpdate(START_TIME,
-                                NULL,
-                                PORT_NOT_FOUND,
-                                this,
-                                cur_sn,
-                                exp,
-                                up_links,
-                                id_);
-
-      if(update_self) {
-        ls_.Update(lsu);
-        update_self = false;
-      }
-
       scheduler_.Forward(this, lsr_in, lsu, out_port);
     }
   }
 
-  LinkStateRequest* lsr_out;
+  ls_.Update(&lsu);
+
+  LinkStateRequest lsr_out(*lsr_in);
+
   for(Port out_port = 0; out_port < links_.PortCount(); ++out_port) {
     if(out_port != lsr_in->in_port_ &&
        scheduler_.IsSwitch(links_.GetEndpointId(out_port))) {
-      lsr_out = new LinkStateRequest(START_TIME,
-                                     NULL,
-                                     PORT_NOT_FOUND,
-                                     lsr_in->src_,
-                                     lsr_in->sn_,
-                                     lsr_in->src_id_);
       scheduler_.Forward(this, lsr_in, lsr_out, out_port);
     }
   }
@@ -433,7 +383,6 @@ void Controller::Handle(LinkStateUpdate* lsu) {
   }
 
   // TODO ensure this is in the right place
-  //  bool heals_partitioned = ls_.ArePartitioned(id_, lsu->src_id_);
   bool heals_partition = ls_.HealsPartition(id_, lsu);
 
   bool changed = ls_.Update(lsu);
@@ -452,17 +401,17 @@ void Controller::Handle(LinkStateUpdate* lsu) {
     Id cur = *it;
     auto table = ls_.ComputeRoutingTable(cur);
     SequenceNum sn = switch_to_next_sn_[cur];
-    RoutingUpdate* ru;
+    RoutingUpdate ru(START_TIME,
+                     NULL,
+                     PORT_NOT_FOUND,
+                     this,
+                     sn,
+                     table,
+                     cur,
+                     id_);
+
     for(Port p = 0; p < links_.PortCount(); ++p) {
       if(scheduler_.IsSwitch(links_.GetEndpointId(p))) {
-        ru = new RoutingUpdate(START_TIME,
-                               NULL,
-                               PORT_NOT_FOUND,
-                               this,
-                               sn,
-                               table,
-                               cur,
-                               id_);
         scheduler_.Forward(this, lsu, ru, p);
       }
     }
@@ -472,16 +421,15 @@ void Controller::Handle(LinkStateUpdate* lsu) {
 
   if(heals_partition && lsu->time_ > 75 * Scheduler::Delay()) {
     DLOG(INFO) << "Switch was partitioned";
-    LinkStateRequest* lsr;
     SequenceNum sn = next_lsr_;
+    LinkStateRequest lsr(START_TIME,
+                         NULL,
+                         PORT_NOT_FOUND,
+                         this,
+                         sn,
+                         id_);
 
     for(Port p = 0; p < links_.PortCount(); ++p) {
-      lsr = new LinkStateRequest(START_TIME,
-                                 NULL,
-                                 PORT_NOT_FOUND,
-                                 this,
-                                 sn,
-                                 id_);
       scheduler_.Forward(this, lsu, lsr, p);
     }
 

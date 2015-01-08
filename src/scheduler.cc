@@ -17,106 +17,106 @@ using std::vector;
  */
 template<class E, class In, class Out> class Schedule {
  public:
-  void operator()(E* sender, In* msg_in, Out* msg_out, Entity* reciever, Port in) {};
+  void operator()(E* sender, In* msg_in, Out& msg_out, Entity* reciever, Port in) {};
 };
 
 template<> class Schedule<Switch, Up, LinkStateUpdate> {
  public:
-  void operator()(Switch* sender, Up* u, LinkStateUpdate* lsu, Entity* receiver,
+  void operator()(Switch* sender, Up* u, LinkStateUpdate& lsu, Entity* receiver,
                   Port in) {
-    lsu->time_ = u->time_ + Scheduler::Delay();
-    lsu->affected_entities_ = {receiver};
-    lsu->in_port_ = in;
+    lsu.time_ = u->time_ + Scheduler::Delay();
+    lsu.affected_entities_ = {receiver};
+    lsu.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, LinkUp, LinkStateUpdate> {
  public:
-  void operator()(Switch* sender, LinkUp* lu, LinkStateUpdate* lsu,
+  void operator()(Switch* sender, LinkUp* lu, LinkStateUpdate& lsu,
                   Entity* receiver, Port in) {
-    lsu->time_ = lu->time_ + Scheduler::Delay() + Scheduler::kDefaultHelloDelay;
-    lsu->affected_entities_ = {receiver};
-    lsu->in_port_ = in;
+    lsu.time_ = lu->time_ + Scheduler::Delay() + Scheduler::kDefaultHelloDelay;
+    lsu.affected_entities_ = {receiver};
+    lsu.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, LinkDown, LinkStateUpdate> {
  public:
-  void operator()(Switch* sender, LinkDown* ld, LinkStateUpdate* lsu,
+  void operator()(Switch* sender, LinkDown* ld, LinkStateUpdate& lsu,
                   Entity* receiver, Port in) {
-    lsu->time_ = ld->time_ + Scheduler::Delay() + Scheduler::kDefaultHelloDelay;
-    lsu->affected_entities_ = {receiver};
-    lsu->in_port_ = in;
+    lsu.time_ = ld->time_ + Scheduler::Delay() + Scheduler::kDefaultHelloDelay;
+    lsu.affected_entities_ = {receiver};
+    lsu.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, LinkStateUpdate, LinkStateUpdate> {
  public:
-  void operator()(Switch* sender, LinkStateUpdate* lsu_in, LinkStateUpdate* lsu_out,
+  void operator()(Switch* sender, LinkStateUpdate* lsu_in, LinkStateUpdate& lsu_out,
                   Entity* receiver, Port in) {
-    lsu_out->time_ = lsu_in->time_ + Scheduler::Delay();
-    lsu_out->affected_entities_ = {receiver};
-    lsu_out->in_port_ = in;
+    lsu_out.time_ = lsu_in->time_ + Scheduler::Delay();
+    lsu_out.affected_entities_ = {receiver};
+    lsu_out.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, InitiateLinkState, LinkStateUpdate> {
  public:
-  void operator()(Switch* sender, InitiateLinkState* init, LinkStateUpdate* lsu,
+  void operator()(Switch* sender, InitiateLinkState* init, LinkStateUpdate& lsu,
                   Entity* receiver, Port in) {
-    lsu->time_ = init->time_ + Scheduler::Delay();
-    lsu->affected_entities_ = {receiver};
-    lsu->in_port_ = in;
+    lsu.time_ = init->time_ + Scheduler::Delay();
+    lsu.affected_entities_ = {receiver};
+    lsu.in_port_ = in;
   }
 };
 
 template<> class Schedule<Controller, LinkStateUpdate, RoutingUpdate> {
  public:
-  void operator()(Controller* sender, LinkStateUpdate* lsu, RoutingUpdate* ru,
+  void operator()(Controller* sender, LinkStateUpdate* lsu, RoutingUpdate& ru,
                   Entity* receiver, Port in) {
-    ru->time_ = lsu->time_ + Scheduler::Delay();
-    ru->affected_entities_ = {receiver};
-    ru->in_port_ = in;
+    ru.time_ = lsu->time_ + Scheduler::Delay();
+    ru.affected_entities_ = {receiver};
+    ru.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, RoutingUpdate, RoutingUpdate> {
  public:
-  void operator()(Switch* sender, RoutingUpdate* ru_in, RoutingUpdate* ru_out,
+  void operator()(Switch* sender, RoutingUpdate* ru_in, RoutingUpdate& ru_out,
                   Entity* receiver, Port in) {
-    ru_out->time_ = ru_in->time_ + Scheduler::Delay();
-    ru_out->affected_entities_ = {receiver};
-    ru_out->in_port_ = in;
+    ru_out.time_ = ru_in->time_ + Scheduler::Delay();
+    ru_out.affected_entities_ = {receiver};
+    ru_out.in_port_ = in;
   }
 };
 
 template<> class Schedule<Controller, LinkStateUpdate, LinkStateRequest> {
  public:
   void operator()(Controller* sender, LinkStateUpdate* lsu_in,
-                  LinkStateRequest* lsr_out, Entity* receiver, Port in) {
-    lsr_out->time_ = lsu_in->time_ + Scheduler::Delay();
-    lsr_out->affected_entities_ = {receiver};
-    lsr_out->in_port_ = in;
+                  LinkStateRequest& lsr_out, Entity* receiver, Port in) {
+    lsr_out.time_ = lsu_in->time_ + Scheduler::Delay();
+    lsr_out.affected_entities_ = {receiver};
+    lsr_out.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, LinkStateRequest, LinkStateRequest> {
  public:
   void operator()(Switch* sender, LinkStateRequest* lsr_in,
-                  LinkStateRequest* lsr_out, Entity* receiver, Port in) {
-    lsr_out->time_ = lsr_in->time_ + Scheduler::Delay();
-    lsr_out->affected_entities_ = {receiver};
-    lsr_out->in_port_ = in;
+                  LinkStateRequest& lsr_out, Entity* receiver, Port in) {
+    lsr_out.time_ = lsr_in->time_ + Scheduler::Delay();
+    lsr_out.affected_entities_ = {receiver};
+    lsr_out.in_port_ = in;
   }
 };
 
 template<> class Schedule<Switch, LinkStateRequest, LinkStateUpdate> {
  public:
   void operator()(Switch* sender, LinkStateRequest* lsr_in,
-                  LinkStateUpdate* lsu_out, Entity* receiver, Port in) {
-    lsu_out->time_ = lsr_in->time_ + Scheduler::Delay();
-    lsu_out->affected_entities_ = {receiver};
-    lsu_out->in_port_ = in;
+                  LinkStateUpdate& lsu_out, Entity* receiver, Port in) {
+    lsu_out.time_ = lsr_in->time_ + Scheduler::Delay();
+    lsu_out.affected_entities_ = {receiver};
+    lsu_out.in_port_ = in;
   }
 };
 
@@ -138,7 +138,7 @@ Scheduler::Scheduler(Time end_time, size_t switch_count,
 
 void Scheduler::Init(Statistics* s) { statistics_ = s; }
 
-void Scheduler::AddEvent(Time t, Event* e) { event_queue_.Push(t, e); }
+//void Scheduler::AddEvent(Time t, Event* e) { event_queue_.Push(t, e); }
 
 bool Scheduler::HasNextEvent() { return ! event_queue_.Empty(); }
 
@@ -146,11 +146,10 @@ Event* Scheduler::NextEvent() { return event_queue_.Pop(); }
 
 // TODO why isn't partial specialization of methods allowed?
 template<class E, class In, class Out>
-void Scheduler::Forward(E* sender, In* msg_in, Out* msg_out, Port out) {
+void Scheduler::Forward(E* sender, In* msg_in, Out msg_out, Port out) {
   Links& l = sender->links();
 
   if(! l.IsLinkUp(out)) {
-    delete msg_out;
     return;
   }
 
@@ -163,11 +162,9 @@ void Scheduler::Forward(E* sender, In* msg_in, Out* msg_out, Port out) {
   Schedule<E, In, Out> s;
   s(sender, msg_in, msg_out, receiver, in_port);
 
-  if(msg_out->time_ <= end_time_) {
+  if(msg_out.time_ <= end_time_) {
     statistics_->RecordSend(msg_out);
-    AddEvent(msg_out->time_, msg_out);
-  }  else {
-    delete msg_out;
+    AddEvent(msg_out.time_, msg_out);
   }
 }
 
@@ -205,7 +202,7 @@ void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
   //     AddEvent(new InitiateLinkState(t, it.second));
 
   for(Switch* s : switches)
-    AddEvent(START_TIME, new InitiateLinkState(START_TIME, s));
+    AddEvent(START_TIME, InitiateLinkState(START_TIME, s));
 }
 
 void Scheduler::StartSimulation(Statistics& statistics) {
@@ -245,8 +242,6 @@ void Scheduler::StartSimulation(Statistics& statistics) {
       ev->Handle(e);
       DLOG(INFO) << e->Description();
     }
-
-    delete ev;
   }
 }
 
@@ -277,50 +272,50 @@ bool Scheduler::IsSwitch(Id id) { return 0 <= id && id < kSwitchCount; }
 template void
 Scheduler::Forward<Switch, Up, LinkStateUpdate>(Switch*,
                                                 Up*,
-                                                LinkStateUpdate*,
+                                                LinkStateUpdate,
                                                 Port);
 template void
 Scheduler::Forward<Switch, LinkUp, LinkStateUpdate>(Switch*,
                                                     LinkUp*,
-                                                    LinkStateUpdate*,
+                                                    LinkStateUpdate,
                                                     Port);
 template void
 Scheduler::Forward<Switch, LinkDown, LinkStateUpdate>(Switch*,
                                                       LinkDown*,
-                                                      LinkStateUpdate*,
+                                                      LinkStateUpdate,
                                                       Port);
 template void
 Scheduler::Forward<Switch, LinkStateUpdate, LinkStateUpdate>(Switch*,
                                                              LinkStateUpdate*,
-                                                             LinkStateUpdate*,
+                                                             LinkStateUpdate,
                                                              Port);
 template void
 Scheduler::Forward<Switch, InitiateLinkState, LinkStateUpdate>(Switch*,
                                                                InitiateLinkState*,
-                                                               LinkStateUpdate*,
+                                                               LinkStateUpdate,
                                                                Port);
 template void
 Scheduler::Forward<Controller, LinkStateUpdate, RoutingUpdate>(Controller*,
                                                                LinkStateUpdate*,
-                                                               RoutingUpdate*,
+                                                               RoutingUpdate,
                                                                Port);
 template void
 Scheduler::Forward<Switch, RoutingUpdate, RoutingUpdate>(Switch*,
                                                          RoutingUpdate*,
-                                                         RoutingUpdate*,
+                                                         RoutingUpdate,
                                                          Port);
 template void
 Scheduler::Forward<Controller, LinkStateUpdate, LinkStateRequest>(Controller*,
                                                                   LinkStateUpdate*,
-                                                                  LinkStateRequest*,
+                                                                  LinkStateRequest,
                                                                   Port);
 template void
 Scheduler::Forward<Switch, LinkStateRequest, LinkStateRequest>(Switch*,
                                                                LinkStateRequest*,
-                                                               LinkStateRequest*,
+                                                               LinkStateRequest,
                                                                Port);
 template void
 Scheduler::Forward<Switch, LinkStateRequest, LinkStateUpdate>(Switch*,
                                                               LinkStateRequest*,
-                                                              LinkStateUpdate*,
+                                                              LinkStateUpdate,
                                                               Port);

@@ -187,8 +187,8 @@ int Statistics::ComputeVirtReachable() {
   return reachable;
 }
 
-void Statistics::RecordSend(Event* e) {
-  Time put_on_link = e->time_ + Scheduler::kComputationDelay;
+void Statistics::RecordSend(Event& e) {
+  Time put_on_link = e.time_ + Scheduler::kComputationDelay;
 
   if (! (window_left_ <= put_on_link && put_on_link < window_right_)) {
     // LOG(WARNING) << "bw in [" << window_left_ << "," << window_right_
@@ -204,5 +204,5 @@ void Statistics::RecordSend(Event* e) {
   }
 
   //  cur_window_count_ += e->size();
-  cur_window_count_[e->size()]++;
+  cur_window_count_[e.size()]++;
 }

@@ -187,24 +187,24 @@ bool Reader::ParseEvents() {
 
     if(IsUp(ev)) {
       affected_id = it->second["id"].as<Id>();
-      scheduler_.AddEvent(t, new Up(t, id_to_entity_[affected_id]));
+      scheduler_.AddEvent(t, Up(t, id_to_entity_[affected_id]));
     } else if(IsDown(ev)) {
       affected_id = it->second["id"].as<Id>();
-      scheduler_.AddEvent(t, new Down(t, id_to_entity_[affected_id]));
+      scheduler_.AddEvent(t, Down(t, id_to_entity_[affected_id]));
     } else if(IsLinkUp(ev)) {
       affected_id = it->second["src_id"].as<Id>();
       Entity* src = id_to_entity_[affected_id];
       Entity* dst = id_to_entity_[it->second["dst_id"].as<Id>()];
       Port p = src->links().GetPortTo(dst);
       CHECK_NE(p, PORT_NOT_FOUND);
-      scheduler_.AddEvent(t, new LinkUp(t, src, p));
+      scheduler_.AddEvent(t, LinkUp(t, src, p));
     } else if(IsLinkDown(ev)) {
       affected_id = it->second["src_id"].as<Id>();
       Entity* src = id_to_entity_[affected_id];
       Entity* dst = id_to_entity_[it->second["dst_id"].as<Id>()];
       Port p = src->links().GetPortTo(dst);
       CHECK_NE(p, PORT_NOT_FOUND);
-      scheduler_.AddEvent(t, new LinkDown(t, src, p));
+      scheduler_.AddEvent(t, LinkDown(t, src, p));
     } else if(IsGenericEvent(ev)) {
       LOG(ERROR) << "Construction of generic events is disallowed";
       return false;

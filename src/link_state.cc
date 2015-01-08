@@ -56,7 +56,7 @@ bool LinkState::HaveNewUpdate(LinkStateUpdate* ls) const {
   return id_to_last_[ls->src_id_].sn > ls->sn_;
 }
 
-LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
+LinkStateUpdate LinkState::CurrentLinkState(Entity* src, Id src_id) {
   array<Id, 13> up;
   int i = 0;
 
@@ -72,14 +72,14 @@ LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
     up[i] = NONE_ID;
 
   auto p = id_to_last_[src_id];
-  return new LinkStateUpdate(START_TIME,
-                             NULL,
-                             PORT_NOT_FOUND,
-                             src,
-                             p.sn,
-                             p.exp,
-                             up,
-                             src_id);
+  return LinkStateUpdate(START_TIME,
+                         NULL,
+                         PORT_NOT_FOUND,
+                         src,
+                         p.sn,
+                         p.exp,
+                         up,
+                         src_id);
 }
 
 // TODO simplify

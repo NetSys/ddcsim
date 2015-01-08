@@ -22,7 +22,7 @@ class Statistics {
   std::string Reachability();
   std::vector<Entity*>& id_to_entity();
   void RecordEventCounts();
-  void RecordSend(Event*);
+  void RecordSend(Event&);
   //int MaxPathLength();
   static const std::string SEPARATOR;
   static const Time WINDOW_SIZE;

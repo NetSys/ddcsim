@@ -24,7 +24,7 @@ class LinkState {
   virtual bool Update(LinkStateUpdate*);
   void Refresh(Time);
   SequenceNum NextSeqNum();
-  LinkStateUpdate* CurrentLinkState(Entity*, Id);
+  LinkStateUpdate CurrentLinkState(Entity*, Id);
 
  protected:
   typedef struct { SequenceNum sn; Time exp; } pair;
