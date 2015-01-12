@@ -4,11 +4,13 @@
 #include "statistics.h"
 
 // #include <random>
+#include <string>
 
 // using std::default_random_engine;
 // using std::discrete_distribution;
 // using std::uniform_real_distribution;
 using std::vector;
+using std::to_string;
 
 /* The type-specific parts of Scheduler::Forward are deferred to this class.
  * This functionality is implemented as a class rather than as a generic
@@ -226,7 +228,8 @@ void Scheduler::StartSimulation(Statistics& statistics) {
     CHECK_GE(cur_time_, last_time);
 
     if (cur_time_ > cur_bucket_time) {
-      LOG(WARNING) << cur_bucket_time << " had " << cur_bucket_size << " events";
+      LOG(WARNING) << to_string(cur_bucket_time) << " had " <<
+          cur_bucket_size << " events";
       cur_bucket_time = cur_time_;
       cur_bucket_size = 1;
       statistics.RecordEventCounts();
@@ -235,8 +238,8 @@ void Scheduler::StartSimulation(Statistics& statistics) {
     }
 
     if(cur_time_ > next_reach) {
-       LOG(WARNING) << "reachability @ " << next_reach << " is " <<
-           statistics.Reachability();
+      LOG(WARNING) << "reachability @ " << to_string(next_reach) << " is " <<
+          statistics.Reachability();
        next_reach = cur_time_ + reach_granularity;
     }
 

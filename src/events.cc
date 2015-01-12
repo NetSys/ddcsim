@@ -127,9 +127,10 @@ unsigned int Broadcast::size() const { return -1; }
 
 LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, Entity* src,
                                  SequenceNum sn, Time expiration,
-                                 array<Id, 13> up_links, Id src_id)
+                                 array<Id, 13> up_links, Id src_id,
+                                 bool is_from_lsr)
     : Broadcast(t, e, i), src_(src), sn_(sn), expiration_(expiration),
-      up_links_(up_links), src_id_(src_id) {}
+      up_links_(up_links), src_id_(src_id), is_from_lsr_(is_from_lsr) {}
 
 unsigned int LinkStateUpdate::count_ = 0;
 

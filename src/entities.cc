@@ -261,7 +261,8 @@ void Switch::Handle(LinkStateUpdate* lsu) {
                                       lsu->sn_,
                                       lsu->expiration_,
                                       lsu->up_links_,
-                                      lsu->src_id_);
+                                      lsu->src_id_,
+                                      lsu->is_from_lsr_);
         scheduler_.Forward(this, lsu, out_lsu, p);
     }
   }
@@ -362,7 +363,8 @@ void Switch::Handle(LinkStateRequest* lsr_in) {
                                 cur_sn,
                                 exp,
                                 up_links,
-                                id_);
+                                id_,
+                                true);
 
       if(update_self) {
         ls_.Update(lsu);

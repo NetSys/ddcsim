@@ -99,7 +99,7 @@ class Broadcast : public Event {
 class LinkStateUpdate : public Broadcast {
  public:
   LinkStateUpdate(Time, Entity*, Port, Entity*, SequenceNum, Time,
-                  std::array<Id, 13>, Id);
+                  std::array<Id, 13>, Id, bool = false);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
@@ -110,6 +110,7 @@ class LinkStateUpdate : public Broadcast {
   Time expiration_;
   Id src_id_;
   static unsigned int count_;
+  bool is_from_lsr_;
 
  private:
   DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);

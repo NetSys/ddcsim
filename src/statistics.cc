@@ -33,9 +33,10 @@ Statistics::Statistics(string out_prefix, Scheduler& s) :
     beyond_host_(s.kSwitchCount + s.kControllerCount + s.kHostCount),
     host_to_edge_switch_(s.kHostCount),
     window_left_(START_TIME),
-    window_right_(WINDOW_SIZE) {
+    window_right_(WINDOW_SIZE),
+    num_lsu_from_lsr_(0) {
   cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] = 0;
-    }
+}
 
 
 vector<Entity*>& Statistics::id_to_entity() { return id_to_entity_; }
@@ -191,18 +192,22 @@ void Statistics::RecordSend(Event* e) {
   Time put_on_link = e->time_ + Scheduler::kComputationDelay;
 
   if (! (window_left_ <= put_on_link && put_on_link < window_right_)) {
-    // LOG(WARNING) << "bw in [" << window_left_ << "," << window_right_
-    //              << ") is " << cur_window_count_ << " bytes";
-    //    cur_window_count_ = 0;
-    LOG(WARNING) << "bw in [" << window_left_ << "," << window_right_
+    LOG(WARNING) << "bw in [" << to_string(window_left_) << "," << to_string(window_right_)
                  << ") is " << "[" << cur_window_count_[0] << ","
                  << cur_window_count_[1] << ","
-                 << cur_window_count_[2] << "]";
+                 << cur_window_count_[2] << ","
+                 << num_lsu_from_lsr_ << "]";
     cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] = 0;
+    num_lsu_from_lsr_ = 0;
     window_left_ = floor(put_on_link / WINDOW_SIZE) * WINDOW_SIZE;
     window_right_ = window_left_ + WINDOW_SIZE;
   }
 
-  //  cur_window_count_ += e->size();
-  cur_window_count_[e->size()]++;
+  // TODO fix these hacks
+  int index = e->size();
+
+  cur_window_count_[index]++;
+
+  if(index == 0 && static_cast<LinkStateUpdate*>(e)->is_from_lsr_)
+    ++num_lsu_from_lsr_;
 }
