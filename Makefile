@@ -17,6 +17,14 @@ SYSTEMLIB=/home/sam/Documents/netsys/pilo/boost_1_56_0/stage/lib/libboost_system
 BOOSTHEADERS=/home/sam/Documents/netsys/pilo/boost_1_56_0
 # END
 
+# USER SETTINGS ON AWS
+#PROGOPTSLIB=/usr/local/lib/libboost_program_options.a
+#SYSTEMLIB=/usr/local/lib/libboost_system.a
+#FLAGLIB=/usr/lib/x86_64-linux-gnu/libgflags.a
+#BOOSTHEADERS=/usr/include/boost/
+#STATICLIBS= $(GLOGLIB) $(PROGOPTSLIB) $(SYSTEMLIB) $(FLAGLIB)
+# END
+
 CXX=g++
 LDLIBS=-lpthread
 STATICLIBS= $(GLOGLIB) $(PROGOPTSLIB) $(SYSTEMLIB)
