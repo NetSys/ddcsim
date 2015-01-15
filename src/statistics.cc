@@ -35,7 +35,10 @@ Statistics::Statistics(string out_prefix, Scheduler& s) :
     window_left_(START_TIME),
     window_right_(WINDOW_SIZE),
     num_lsu_from_lsr_(0) {
-  cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] = 0;
+  cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] =
+      cur_window_count_[3] = 0;
+
+
 }
 
 
@@ -196,8 +199,10 @@ void Statistics::RecordSend(Event* e) {
                  << ") is " << "[" << cur_window_count_[0] << ","
                  << cur_window_count_[1] << ","
                  << cur_window_count_[2] << ","
+                 << cur_window_count_[3] << ","
                  << num_lsu_from_lsr_ << "]";
-    cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] = 0;
+    cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] =
+        cur_window_count_[3] = 0;
     num_lsu_from_lsr_ = 0;
     window_left_ = floor(put_on_link / WINDOW_SIZE) * WINDOW_SIZE;
     window_right_ = window_left_ + WINDOW_SIZE;

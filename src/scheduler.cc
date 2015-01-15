@@ -122,6 +122,16 @@ template<> class Schedule<Switch, LinkStateRequest, LinkStateUpdate> {
   }
 };
 
+template<> class Schedule<Switch, ControllerView, ControllerView> {
+ public:
+  void operator()(Switch* sender, ControllerView* cv_in,
+                  ControllerView* cv_out, Entity* receiver, Port in) {
+    cv_out->time_ = cv_in->time_ + Scheduler::Delay();
+    cv_out->affected_entities_ = {receiver};
+    cv_out->in_port_ = in;
+  }
+};
+
 const Time Scheduler::kComputationDelay = 0.00001; /* 10 micros */
 const Time Scheduler::kTransDelay = 0.001;         /* 1 ms */
 const Time Scheduler::kPropDelay = 0.01;           /* 10 ms */
@@ -327,3 +337,8 @@ Scheduler::Forward<Switch, LinkStateRequest, LinkStateUpdate>(Switch*,
                                                               LinkStateRequest*,
                                                               LinkStateUpdate*,
                                                               Port);
+template void
+Scheduler::Forward<Switch, ControllerView, ControllerView>(Switch*,
+                                                           ControllerView*,
+                                                           ControllerView*,
+                                                           Port);

@@ -44,7 +44,7 @@ class Statistics {
   Time window_left_;
   Time window_right_;
   //  unsigned int cur_window_count_;
-  unsigned int cur_window_count_[3];
+  unsigned int cur_window_count_[4];
   unsigned int num_lsu_from_lsr_;
   DISALLOW_COPY_AND_ASSIGN(Statistics);
 };

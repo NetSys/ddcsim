@@ -27,11 +27,10 @@ class LinkState {
   LinkStateUpdate* CurrentLinkState(Entity*, Id);
 
  protected:
-  typedef struct { SequenceNum sn; Time exp; } pair;
-  Topology topology_;
+  std::shared_ptr<Topology> topology_;
   Scheduler& scheduler_;
   SequenceNum next_;
-  std::vector<pair> id_to_last_;
+  std::shared_ptr<std::vector<seen> > id_to_last_;
   DISALLOW_COPY_AND_ASSIGN(LinkState);
 };
 
@@ -45,6 +44,9 @@ class LinkStateControl : public LinkState {
   std::shared_ptr<std::vector<Id> > ComputeRoutingTable(Id);
   std::vector<Id> SwitchesInParition(Id);
   virtual bool Update(LinkStateUpdate*);
+  void Update(ControllerView*);
+  std::shared_ptr<Topology> topology();
+  std::shared_ptr<std::vector<pair> > id_to_last();
 
  private:
   Id NextHop(Id, Id, std::vector<boost::graph_traits<Topology>::vertex_descriptor>&);

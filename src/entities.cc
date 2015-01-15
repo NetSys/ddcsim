@@ -390,9 +390,41 @@ void Switch::Handle(LinkStateRequest* lsr_in) {
   }
 }
 
+void Switch::Handle(ControllerView* cv) {
+  if(!is_up_) {
+    DLOG(INFO) << "Switch is down";
+    return;
+  }
+
+  if(lsr_history_[lsr_in->src_id_ - scheduler_.kSwitchCount] >= lsr_in->sn_) {
+    DLOG(INFO) << "LinkStateRequest has already been seen";
+    return;
+  }
+
+  lsr_history_[lsr_in->src_id_ - scheduler_kSwitchCount] = lsr_in->sn_;
+
+  for(Port p = 0; p < links_.PortCount(); ++p) {
+    if(p != cv->in_port_ && !IsHost(links_.GetEndpointId(out_port))) {
+      scheduler.Forward(this,
+                        cv,
+                        new ControllerView(START_TIME,
+                                           NULL,
+                                           PORT_NOT_FOUND,
+                                           cv->src_,
+                                           cv->sn_,
+                                           cv->src_id_,
+                                           ls_.topology(),
+                                           ls_.id_to_last()),
+                        p);
+    }
+  }
+}
+
 Controller::Controller(Scheduler& sc, Id id, Statistics& st)
     : Entity(sc, id, st), ls_(sc), switch_to_next_sn_(sc.kSwitchCount, 0),
-      next_lsr_(0) {}
+      next_lsr_(0), cont_to_next_sn_(sc.kControllerCount, 0) {
+  cont_to_next_sn_[id_ - sc.kSwitchCount] = 0;
+}
 
 string Controller::Description() const {
   return Entity::Description() + " " + ls_.Description();
@@ -427,15 +459,11 @@ void Controller::Handle(LinkStateUpdate* lsu) {
     return;
   }
 
-  //  ls_.Refresh(scheduler_.cur_time());
-
   if(ls_.IsStaleUpdate(lsu)) {
     DLOG(INFO) << "Link state update is stale";
     return;
   }
 
-  // TODO ensure this is in the right place
-  //  bool heals_partitioned = ls_.ArePartitioned(id_, lsu->src_id_);
   bool heals_partition = ls_.HealsPartition(id_, lsu);
 
   bool changed = ls_.Update(lsu);
@@ -443,12 +471,26 @@ void Controller::Handle(LinkStateUpdate* lsu) {
   if(!changed)
     return;
 
-  ls_.ComputePartitions();
+  SequenceNum& sn = con_to_nex_sn_[id_ - sc.kSwitchCount];
 
-  //TODO should cache lowest controller?
-  if(id_ != ls_.LowestController(id_)) return;
+  // TODO disable this during convergence, dampen it throughout?
+  for(Port p = 0; p < links_.PortCount(); ++p) {
+    scheduler_.Forward(this,
+                       lsu,
+                       new ControllerView(START_TIME,
+                                          NULL,
+                                          PORT_NOT_FOUND,
+                                          this,
+                                          sn,
+                                          id_),
+                       p);
+  }
 
-  DLOG(INFO) << "I have the lowest id out of all controllers in my partition";
+  ++sn;
+
+  // This is necesasry for SwitchesInPartition to work correctly
+  ls_.ComputeParitions();
+
   auto switches = ls_.SwitchesInParition(id_);
   for(auto it = switches.begin(); it != switches.end(); ++it) {
     Id cur = *it;
@@ -503,6 +545,22 @@ void Controller::Handle(LinkStateRequest* ru) {
   LOG(FATAL) << "Controller received LinkStateRequest";
 }
 
+void Controller::Handle(ControllerView* cv) {
+  if(!is_up_) {
+    DLOG(INFO) << "Controller is down";
+    return;
+  }
+
+  if(cont_to_next_sn_[cv->src_id_ - sc.kSwitchCount] >= cv->sn_) {
+    DLOG(INFO) << "ControllerView is stale";
+    return;
+  }
+
+  cont_to_next_sn_[cv->src_id_ - sc.kSwitchCount] = cv->sn_;
+
+  ls_.Update(cv);
+}
+
 Host::Host(Scheduler& sched, Id id, Statistics& stats) : Entity(sched, id, stats) {}
 
 string Host::Description() const { return "..."; }
@@ -539,6 +597,10 @@ void Host::Handle(RoutingUpdate* ru) {
 
 void Host::Handle(LinkStateRequest* lsr) {
   LOG(FATAL) << "Host received link state request";
+}
+
+void Host::Handle(ControllerView*) {
+  LOG(FATAL) << "Host received controller view";
 }
 
 Id Host::EdgeSwitch() {

@@ -164,4 +164,25 @@ class LinkStateRequest : public Broadcast {
   DISALLOW_COPY_AND_ASSIGN(LinkStateRequest);
 };
 
+class ControllerView : public Broadcast {
+ public:
+  ControllerView(Time, Entity*, Port, Entity*, SequenceNum, Id,
+                 std::shared_ptr<Topology>,
+                 std::shared_ptr<std::vector<seen> >);
+  virtual void Handle(Entity*);
+  virtual std::string Description() const;
+  virtual std::string Name() const;
+  virtual unsigned int size() const;
+  ~ControllerView();
+  SequenceNum sn_;
+  Entity* src_;
+  Id src_id_;
+  std::shared_ptr<Topology> topology_;
+  std::shared_ptr<std::vector<seen> > id_to_last_;
+  static unsigned int count_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(ControllerView);
+};
+
 #endif

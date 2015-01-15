@@ -230,3 +230,23 @@ string LinkStateRequest::Name() const { return "Link State Request"; }
 //unsigned int LinkStateRequest::size() const { return Broadcast::size() + 4 + 6; }
 
 unsigned int LinkStateRequest::size() const { return 2; }
+
+ControllerView::ControllerView(Time t, Entity* e, Port p, Entity* src,
+                               SequenceNum sn, Id src_id,
+                               std::shared_ptr<Topology> topology,
+                               std::shared_ptr<std::vector<seen> > id_to_last)
+    : Broadcast(t, e, p), src_(src), sn_(sn), src_id_(src_id),
+      topology_(topology), id_to_last_(id_to_last) {}
+
+void ControllerView::Handle(Entity* e) { e->Handle(this); }
+
+string ControllerView::Description() const { return "TODO"; }
+
+string ControllerView::Name() const { return "Controller View"; }
+
+unsigned int ControllerView::size() const { return 3; }
+
+ControllerView::~ControllerView() {
+  topology_ = nullptr;
+  id_to_last_ = nullptr;
+}

@@ -40,6 +40,7 @@ class Entity {
   virtual void Handle(LinkStateUpdate*) = 0;
   virtual void Handle(RoutingUpdate*) = 0;
   virtual void Handle(LinkStateRequest*) = 0;
+  void Handle(ControllerView*);
   Links& links();
   Id id() const;
   //  void UpdateLinkCapacities(Time);
@@ -103,6 +104,7 @@ class Switch : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
+  void Handle(ControllerView*);
   //  static const Time kLSExpireDelta = 10;
   static const Time kLSExpireDelta;
   // TODO make private again
@@ -130,10 +132,12 @@ class Controller : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
+  void Handle(ControllerView*);
 
  private:
   LinkStateControl ls_;
   std::vector<SequenceNum> switch_to_next_sn_;
+  std::vector<SequenceNum> cont_to_next_sn_;
   SequenceNum next_lsr_;
   DISALLOW_COPY_AND_ASSIGN(Controller);
 };
@@ -153,6 +157,7 @@ class Host : public Entity {
   void Handle(InitiateLinkState*);
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
+  void Handle(ControllerView*);
   Id EdgeSwitch();
 
  private:
