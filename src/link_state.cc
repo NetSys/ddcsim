@@ -38,7 +38,7 @@ using boost::vertex_index_t;
 using boost::vertex_index;
 
 typedef graph_traits<Topology>::vertex_iterator VertexIter;
-typedef graph_traits<Topology>::edge_iterator EdgeIter;
+//typedef graph_traits<Topology>::edge_iterator EdgeIter;
 typedef graph_traits<Topology>::out_edge_iterator OutEdgeIter;
 
 LinkState::LinkState(Scheduler& s) : scheduler_(s),
@@ -52,11 +52,11 @@ LinkState::LinkState(Scheduler& s) : scheduler_(s),
                                          s.kSwitchCount, {NONE_SEQNUM, -1})) {}
 
 bool LinkState::IsStaleUpdate(LinkStateUpdate* ls) const {
-  return *id_to_last_[ls->src_id_].sn >= ls->sn_;
+  return (*id_to_last_)[ls->src_id_].sn >= ls->sn_;
 }
 
 bool LinkState::HaveNewUpdate(LinkStateUpdate* ls) const {
-  return *id_to_last_[ls->src_id_].sn > ls->sn_;
+  return (*id_to_last_)[ls->src_id_].sn > ls->sn_;
 }
 
 LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
@@ -74,7 +74,7 @@ LinkStateUpdate* LinkState::CurrentLinkState(Entity* src, Id src_id) {
   for(; i < 13; ++i)
     up[i] = NONE_ID;
 
-  auto p = *id_to_last_[src_id];
+  auto p = (*id_to_last_)[src_id];
   return new LinkStateUpdate(START_TIME,
                              NULL,
                              PORT_NOT_FOUND,
@@ -121,7 +121,7 @@ bool LinkStateControl::Update(LinkStateUpdate* ls) {
   to_be_added.resize(jt - to_be_added.begin());
 
   if(to_be_removed.empty() && to_be_added.empty()) {
-    *id_to_last_[ls->src_id_] = {ls->sn_, ls->expiration_};
+    (*id_to_last_)[ls->src_id_] = {ls->sn_, ls->expiration_};
     return false;
   }
 
@@ -141,7 +141,7 @@ bool LinkStateControl::Update(LinkStateUpdate* ls) {
     }
   }
 
-  *id_to_last_[ls->src_id_] = {ls->sn_, ls->expiration_};
+  (*id_to_last_)[ls->src_id_] = {ls->sn_, ls->expiration_};
 
   return true;
 }
@@ -155,7 +155,7 @@ bool LinkState::Update(LinkStateUpdate* ls) {
     if(*it != NONE_ID)
       add_edge(src, vertex(*it, *topology_), *topology_);
 
-  *id_to_last_[id] = {ls->sn_, ls->expiration_};
+  (*id_to_last_)[id] = {ls->sn_, ls->expiration_};
 
   return true;
 }
@@ -176,9 +176,9 @@ bool LinkStateControl::HealsPartition(Id self, LinkStateUpdate* lsu) {
 
 // TODO make computation more lazy, don't remove all edges until you have to operate on graph
 void LinkState::Refresh(Time cur_time) {
-  for(int i = 0; i < *id_to_last_.size(); ++i) {
-    if(*id_to_last_[i].sn != NONE_SEQNUM && cur_time > *id_to_last_[i].exp) {
-      *id_to_last_[i].sn = NONE_SEQNUM;
+  for(int i = 0; i < (*id_to_last_).size(); ++i) {
+    if((*id_to_last_)[i].sn != NONE_SEQNUM && cur_time > (*id_to_last_)[i].exp) {
+      (*id_to_last_)[i].sn = NONE_SEQNUM;
       clear_vertex(vertex(i, *topology_), *topology_);
     }
   }
@@ -284,13 +284,18 @@ LinkStateControl::LinkStateControl(Scheduler& s)
   initialize_incremental_components(*topology_, ds_);
 }
 
-void LinkStateControler::Update(ControllerView* cv) {
+void LinkStateControl::Update(ControllerView* cv) {
   vector<seen>& vs = *(cv->id_to_last_);
+  Topology& topo = *(cv->topology_);
 
   for(Id s = 0; s < scheduler_.kSwitchCount; ++s) {
-    if(vs[s].sn > id_to_last[s].sn) {
+    if(vs[s].sn > (*id_to_last_)[s].sn) {
       clear_vertex(vertex(s, *topology_), *topology_);
-      for(
+
+      OutEdgeIter it, beyond;
+      for(tie(it, beyond) = out_edges(vertex(s, topo), topo); it != beyond; ++it)
+        add_edge(source(*it, topo), target(*it, topo), *topology_);
+
       (*id_to_last_)[s] = vs[s];
     }
   }

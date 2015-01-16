@@ -40,7 +40,7 @@ class Entity {
   virtual void Handle(LinkStateUpdate*) = 0;
   virtual void Handle(RoutingUpdate*) = 0;
   virtual void Handle(LinkStateRequest*) = 0;
-  void Handle(ControllerView*);
+  virtual void Handle(ControllerView*) = 0;
   Links& links();
   Id id() const;
   //  void UpdateLinkCapacities(Time);
@@ -114,6 +114,7 @@ class Switch : public Entity {
   LinkState ls_;
   RoutingUpdateHistory ru_history_;
   std::vector<SequenceNum> lsr_history_;
+  std::vector<SequenceNum> cv_history_;
   DISALLOW_COPY_AND_ASSIGN(Switch);
 };
 
@@ -137,7 +138,7 @@ class Controller : public Entity {
  private:
   LinkStateControl ls_;
   std::vector<SequenceNum> switch_to_next_sn_;
-  std::vector<SequenceNum> cont_to_next_sn_;
+  std::vector<SequenceNum> cv_history_;
   SequenceNum next_lsr_;
   DISALLOW_COPY_AND_ASSIGN(Controller);
 };

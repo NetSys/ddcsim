@@ -12,6 +12,7 @@
 
 #include "common.h"
 
+class ControllerView;
 class LinkStateUpdate;
 class Scheduler;
 
@@ -46,7 +47,7 @@ class LinkStateControl : public LinkState {
   virtual bool Update(LinkStateUpdate*);
   void Update(ControllerView*);
   std::shared_ptr<Topology> topology();
-  std::shared_ptr<std::vector<pair> > id_to_last();
+  std::shared_ptr<std::vector<seen> > id_to_last();
 
  private:
   Id NextHop(Id, Id, std::vector<boost::graph_traits<Topology>::vertex_descriptor>&);

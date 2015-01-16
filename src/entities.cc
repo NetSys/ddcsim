@@ -89,6 +89,7 @@ SequenceNum RoutingUpdateHistory::NextSeqNum(Id dst) {
 Switch::Switch(Scheduler& sc, Id id, Statistics& st) :
     Entity(sc, id, st), ls_(sc), ru_history_(),
     lsr_history_(sc.kControllerCount, NONE_SEQNUM),
+    cv_history_(sc.kControllerCount, NONE_SEQNUM),
     dst_to_neighbor_(nullptr) {}
 
 const Time Switch::kLSExpireDelta = numeric_limits<Time>::max();
@@ -396,34 +397,34 @@ void Switch::Handle(ControllerView* cv) {
     return;
   }
 
-  if(lsr_history_[lsr_in->src_id_ - scheduler_.kSwitchCount] >= lsr_in->sn_) {
-    DLOG(INFO) << "LinkStateRequest has already been seen";
+  if(cv_history_[cv->src_id_ - scheduler_.kSwitchCount] >= cv->sn_) {
+    DLOG(INFO) << "ControllerView has already been seen";
     return;
   }
 
-  lsr_history_[lsr_in->src_id_ - scheduler_kSwitchCount] = lsr_in->sn_;
+  cv_history_[cv->src_id_ - scheduler_.kSwitchCount] = cv->sn_;
 
   for(Port p = 0; p < links_.PortCount(); ++p) {
-    if(p != cv->in_port_ && !IsHost(links_.GetEndpointId(out_port))) {
-      scheduler.Forward(this,
-                        cv,
-                        new ControllerView(START_TIME,
-                                           NULL,
-                                           PORT_NOT_FOUND,
-                                           cv->src_,
-                                           cv->sn_,
-                                           cv->src_id_,
-                                           ls_.topology(),
-                                           ls_.id_to_last()),
-                        p);
+    if(p != cv->in_port_ && !scheduler_.IsHost(links_.GetEndpointId(p))) {
+      scheduler_.Forward(this,
+                         cv,
+                         new ControllerView(START_TIME,
+                                            NULL,
+                                            PORT_NOT_FOUND,
+                                            cv->src_,
+                                            cv->sn_,
+                                            cv->src_id_,
+                                            cv->topology_,
+                                            cv->id_to_last_),
+                         p);
     }
   }
 }
 
 Controller::Controller(Scheduler& sc, Id id, Statistics& st)
     : Entity(sc, id, st), ls_(sc), switch_to_next_sn_(sc.kSwitchCount, 0),
-      next_lsr_(0), cont_to_next_sn_(sc.kControllerCount, 0) {
-  cont_to_next_sn_[id_ - sc.kSwitchCount] = 0;
+      next_lsr_(0), cv_history_(sc.kControllerCount, 0) {
+  cv_history_[id_ - sc.kSwitchCount] = 0;
 }
 
 string Controller::Description() const {
@@ -471,7 +472,7 @@ void Controller::Handle(LinkStateUpdate* lsu) {
   if(!changed)
     return;
 
-  SequenceNum& sn = con_to_nex_sn_[id_ - sc.kSwitchCount];
+  SequenceNum& sn = cv_history_[id_ - scheduler_.kSwitchCount];
 
   // TODO disable this during convergence, dampen it throughout?
   for(Port p = 0; p < links_.PortCount(); ++p) {
@@ -482,14 +483,16 @@ void Controller::Handle(LinkStateUpdate* lsu) {
                                           PORT_NOT_FOUND,
                                           this,
                                           sn,
-                                          id_),
+                                          id_,
+                                          ls_.topology(),
+                                          ls_.id_to_last()),
                        p);
   }
 
   ++sn;
 
   // This is necesasry for SwitchesInPartition to work correctly
-  ls_.ComputeParitions();
+  ls_.ComputePartitions();
 
   auto switches = ls_.SwitchesInParition(id_);
   for(auto it = switches.begin(); it != switches.end(); ++it) {
@@ -551,12 +554,12 @@ void Controller::Handle(ControllerView* cv) {
     return;
   }
 
-  if(cont_to_next_sn_[cv->src_id_ - sc.kSwitchCount] >= cv->sn_) {
+  if(cv_history_[cv->src_id_ - scheduler_.kSwitchCount] >= cv->sn_) {
     DLOG(INFO) << "ControllerView is stale";
     return;
   }
 
-  cont_to_next_sn_[cv->src_id_ - sc.kSwitchCount] = cv->sn_;
+  cv_history_[cv->src_id_ - scheduler_.kSwitchCount] = cv->sn_;
 
   ls_.Update(cv);
 }
