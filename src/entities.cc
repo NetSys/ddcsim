@@ -474,24 +474,26 @@ void Controller::Handle(LinkStateUpdate* lsu) {
 
   SequenceNum& sn = cv_history_[id_ - scheduler_.kSwitchCount];
 
-  // TODO disable this during convergence, dampen it throughout?
-  for(Port p = 0; p < links_.PortCount(); ++p) {
-    scheduler_.Forward(this,
-                       lsu,
-                       new ControllerView(START_TIME,
-                                          NULL,
-                                          PORT_NOT_FOUND,
-                                          this,
-                                          sn,
-                                          id_,
-                                          ls_.topology(),
-                                          ls_.id_to_last()),
-                       p);
+  // TODO dampen it after convergence
+  if(lsu->time_ > 75 * Scheduler::Delay()) {
+    for(Port p = 0; p < links_.PortCount(); ++p) {
+      scheduler_.Forward(this,
+                         lsu,
+                         new ControllerView(START_TIME,
+                                            NULL,
+                                            PORT_NOT_FOUND,
+                                            this,
+                                            sn,
+                                            id_,
+                                            ls_.topology(),
+                                            ls_.id_to_last()),
+                         p);
+    }
   }
 
   ++sn;
 
-  // This is necesasry for SwitchesInPartition to work correctly
+  // This is necessary for SwitchesInPartition to work correctly
   ls_.ComputePartitions();
 
   auto switches = ls_.SwitchesInParition(id_);
