@@ -116,10 +116,12 @@ void Statistics::RecordEventCounts() {
   LOG(WARNING) << "LinkStateUpdate=" << LinkStateUpdate::count_;
   LOG(WARNING) << "InitiateLinkState=" << InitiateLinkState::count_;
   LOG(WARNING) << "RoutingUpdate=" << RoutingUpdate::count_;
+  LOG(WARNING) << "ControllerView=" << ControllerView::count_;
 
   Up::count_ = Down::count_ = LinkUp::count_ = LinkDown::count_ =
       LinkStateRequest::count_ = LinkStateUpdate::count_ =
-      InitiateLinkState::count_ = RoutingUpdate::count_ = 0;
+      InitiateLinkState::count_ = RoutingUpdate::count_ =
+      ControllerView::count_ = 0;
 }
 
 void Statistics::InitComponents() {

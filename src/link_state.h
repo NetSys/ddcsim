@@ -16,6 +16,8 @@ class ControllerView;
 class LinkStateUpdate;
 class Scheduler;
 
+typedef boost::graph_traits<Topology>::vertices_size_type VertexIndex;
+
 class LinkState {
  public:
   LinkState(Scheduler&);
@@ -28,10 +30,10 @@ class LinkState {
   LinkStateUpdate* CurrentLinkState(Entity*, Id);
 
  protected:
-  std::shared_ptr<Topology> topology_;
+  Topology topology_;
   Scheduler& scheduler_;
   SequenceNum next_;
-  std::shared_ptr<std::vector<seen> > id_to_last_;
+  std::vector<seen> id_to_last_;
   DISALLOW_COPY_AND_ASSIGN(LinkState);
 };
 

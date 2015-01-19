@@ -423,7 +423,7 @@ void Switch::Handle(ControllerView* cv) {
 
 Controller::Controller(Scheduler& sc, Id id, Statistics& st)
     : Entity(sc, id, st), ls_(sc), switch_to_next_sn_(sc.kSwitchCount, 0),
-      next_lsr_(0), cv_history_(sc.kControllerCount, 0) {
+      next_lsr_(0), cv_history_(sc.kControllerCount, NONE_SEQNUM) {
   cv_history_[id_ - sc.kSwitchCount] = 0;
 }
 

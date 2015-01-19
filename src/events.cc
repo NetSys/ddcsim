@@ -2,6 +2,7 @@
 #include "events.h"
 
 #include <glog/logging.h>
+#include "boost/tuple/tuple.hpp"
 
 #define UNINITIALIZED_TIME -1
 
@@ -10,6 +11,15 @@ using std::string;
 using std::to_string;
 using std::shared_ptr;
 using std::vector;
+
+using boost::property_map;
+using boost::vertex_index_t;
+using boost::get;
+using boost::vertex_index;
+using boost::tie;
+
+typedef boost::graph_traits<Topology>::out_edge_iterator OutEdgeIter;
+typedef boost::graph_traits<Topology>::vertex_iterator VertexIter;
 
 namespace std {
 string to_string(const vector<int>& ints) {
@@ -143,8 +153,8 @@ string LinkStateUpdate::Description() const {
    return Broadcast::Description()  +
        " sn_=" + to_string(sn_) +
        " src_id=" + to_string(src_id_) +
-       " up_links_=" + to_string(up_links_) +
-       " expiration_=" + to_string(expiration_);
+       " up_links_=" + to_string(up_links_);
+       //       " expiration_=" + to_string(expiration_);
 }
 
 string LinkStateUpdate::Name() const { return "Link State Update"; }
@@ -238,9 +248,41 @@ ControllerView::ControllerView(Time t, Entity* e, Port p, Entity* src,
     : Broadcast(t, e, p), src_(src), sn_(sn), src_id_(src_id),
       topology_(topology), id_to_last_(id_to_last) {}
 
-void ControllerView::Handle(Entity* e) { e->Handle(this); }
+unsigned int ControllerView::count_ = 0;
 
-string ControllerView::Description() const { return "TODO"; }
+void ControllerView::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
+
+string ControllerView::Description() const {
+  string id_to_last = "";
+  for(auto p : *id_to_last_)
+    id_to_last += to_string(p.sn);
+
+  string topology = "";
+  auto topo = *topology_;
+  VertexIter ui,ui_end;
+  OutEdgeIter ei, ei_end;
+  property_map<Topology, vertex_index_t>::type v_index = get(vertex_index, topo);
+
+  for (tie(ui,ui_end) = vertices(topo); ui != ui_end; ++ui) {
+    tie(ei,ei_end) = out_edges(*ui, topo);
+    if(ei != ei_end) {
+      topology += to_string(v_index[*ui]) + " <--> ";
+      for(; ei != ei_end; ++ei)
+        topology += to_string(v_index[target(*ei, topo)]) + " ";
+      if(ui + 1 != ui_end)
+        topology += ",";
+    }
+  }
+
+  return Broadcast::Description() +
+      " sn_=" + to_string(sn_) +
+      " src_id_=" + to_string(src_id_) +
+      " topology_=" + topology +
+      " id_to_last_=" + id_to_last;
+}
 
 string ControllerView::Name() const { return "Controller View"; }
 
