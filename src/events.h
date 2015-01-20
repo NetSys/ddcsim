@@ -12,6 +12,7 @@ class Entity;
 
 class Event {
  public:
+  Event();
   Event(Time, Entity*);
   Event(Time, Entity*, Entity*);
   virtual ~Event();
@@ -26,78 +27,65 @@ class Event {
   virtual unsigned int size() const;
   Time time_;
   std::vector<Entity*> affected_entities_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(Event);
 };
 
 class Up : public Event {
  public:
+  Up();
   Up(Time, Entity*);
   virtual void Handle(Entity*);
   // TODO is virtual here redundant?
   virtual std::string Description() const;
   virtual std::string Name() const;
   static unsigned int count_;
-
- private:
-  // TODO need disallow in derived classes?
-  //DISALLOW_COPY_AND_ASSIGN(Up);
 };
 
 class Down : public Event {
  public:
+  Down();
   Down(Time, Entity*);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(Down);
 };
 
 class LinkUp : public Event {
  public:
+  LinkUp();
   LinkUp(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
-  const Port out_;
+  Port out_;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(LinkUp);
 };
 
 class LinkDown : public Event {
  public:
+  LinkDown();
   LinkDown(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
-  const Port out_;
+  Port out_;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(LinkDown);
 };
 
 class Broadcast : public Event {
  public:
+  Broadcast();
   Broadcast(Time, Entity*, Port);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
   virtual unsigned int size() const;
   Port in_port_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(Broadcast);
 };
 
 class LinkStateUpdate : public Broadcast {
  public:
+  LinkStateUpdate();
   LinkStateUpdate(Time, Entity*, Port, Entity*, SequenceNum, Time,
                   std::array<Id, 13>, Id);
   virtual void Handle(Entity*);
@@ -110,25 +98,21 @@ class LinkStateUpdate : public Broadcast {
   Time expiration_;
   Id src_id_;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(LinkStateUpdate);
 };
 
 class InitiateLinkState : public Event {
  public:
+  InitiateLinkState();
   InitiateLinkState(Time, Entity*);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
   virtual std::string Name() const;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(InitiateLinkState);
 };
 
 class RoutingUpdate : public Broadcast {
  public:
+  RoutingUpdate();
   RoutingUpdate(Time, Entity*, Port, Entity*, SequenceNum,
                 std::shared_ptr<std::vector<Id> >, Id, Id);
   ~RoutingUpdate();
@@ -136,19 +120,17 @@ class RoutingUpdate : public Broadcast {
   virtual std::string Description() const;
   virtual std::string Name() const;
   virtual unsigned int size() const;
-  const SequenceNum sn_;
+  SequenceNum sn_;
   Entity* src_;
   std::shared_ptr<std::vector<Id> > dst_to_neighbor_;
-  const Id dst_;
-  const Id src_id_;
+  Id dst_;
+  Id src_id_;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(RoutingUpdate);
 };
 
 class LinkStateRequest : public Broadcast {
  public:
+  LinkStateRequest();
   LinkStateRequest(Time, Entity*, Port, Entity*, SequenceNum, Id);
   virtual void Handle(Entity*);
   virtual std::string Description() const;
@@ -158,9 +140,6 @@ class LinkStateRequest : public Broadcast {
   Entity* src_;
   Id src_id_;
   static unsigned int count_;
-
- private:
-  //DISALLOW_COPY_AND_ASSIGN(LinkStateRequest);
 };
 
 #endif

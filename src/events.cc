@@ -30,6 +30,8 @@ string to_string(const array<Id, 13>& ints) {
 }
 };
 
+Event::Event() : time_(INVALID_TIME), affected_entities_() {}
+
 Event::Event(Time t, Entity* e) : time_(t), affected_entities_({e}) {}
 
 Event::Event(Time t, Entity* e1, Entity* e2) : time_(t),
@@ -54,6 +56,8 @@ string Event::Name() const { return "Event"; }
 
 unsigned int Event::size() const { return -1; }
 
+Up::Up() : Event() {}
+
 Up::Up(Time t, Entity* e) : Event(t, e) {}
 
 unsigned int Up::count_ = 0;
@@ -67,6 +71,8 @@ string Up::Description() const { return Event::Description(); }
 
 string Up::Name() const { return "Up"; }
 
+Down::Down() : Event() {}
+
 Down::Down(Time t, Entity* e) : Event(t, e) {}
 
 unsigned int Down::count_ = 0;
@@ -79,6 +85,8 @@ void Down::Handle(Entity* e) {
 string Down::Description() const { return Event::Description(); }
 
 string Down::Name() const { return "Down"; }
+
+LinkUp::LinkUp() : Event(), out_(PORT_NOT_FOUND) {}
 
 LinkUp::LinkUp(Time t, Entity* e, Port p) : Event(t, e), out_(p) {}
 
@@ -95,6 +103,8 @@ string LinkUp::Description() const {
 
 string LinkUp::Name() const { return "Link Up"; }
 
+LinkDown::LinkDown() : Event(), out_(PORT_NOT_FOUND) {}
+
 LinkDown::LinkDown(Time t, Entity* e, Port p) : Event(t, e), out_(p) {}
 
 unsigned int LinkDown::count_ = 0;
@@ -110,6 +120,8 @@ string LinkDown::Description() const {
 
 string LinkDown::Name() const { return "Link Down"; }
 
+Broadcast::Broadcast() : Event(), in_port_(PORT_NOT_FOUND) {}
+
 Broadcast::Broadcast(Time t, Entity* affected_entity, Port in) :
     Event(t, affected_entity), in_port_(in) {}
 
@@ -124,6 +136,9 @@ string Broadcast::Name() const { return "Broadcast"; }
 //unsigned int Broadcast::size() const { return 20; }
 
 unsigned int Broadcast::size() const { return -1; }
+
+LinkStateUpdate::LinkStateUpdate() : Broadcast(), src_(nullptr), sn_(NONE_SEQNUM),
+                                     expiration_(INVALID_TIME), up_links_(), src_id_(NONE_ID) {}
 
 LinkStateUpdate::LinkStateUpdate(Time t, Entity* e, Port i, Entity* src,
                                  SequenceNum sn, Time expiration,
@@ -154,6 +169,8 @@ string LinkStateUpdate::Name() const { return "Link State Update"; }
 
 unsigned int LinkStateUpdate::size() const { return 0; }
 
+InitiateLinkState::InitiateLinkState() : Event() {}
+
 InitiateLinkState::InitiateLinkState(Time t, Entity* e) : Event(t, e) {}
 
 unsigned int InitiateLinkState::count_ = 0;
@@ -166,6 +183,10 @@ void InitiateLinkState::Handle(Entity* e) {
 string InitiateLinkState::Description() const { return Event::Description(); }
 
 string InitiateLinkState::Name() const { return "Initiate Link State Update"; }
+
+RoutingUpdate::RoutingUpdate() : Broadcast(), sn_(NONE_SEQNUM), src_(nullptr),
+                                 dst_to_neighbor_(nullptr), dst_(NONE_ID),
+                                 src_id_(NONE_ID) {}
 
 RoutingUpdate::RoutingUpdate(Time t, Entity* e, Port in, Entity* src,
                              SequenceNum sn,
@@ -206,6 +227,9 @@ string RoutingUpdate::Name() const { return "Routing Update"; }
 // }
 
 unsigned int RoutingUpdate::size() const { return 1; }
+
+LinkStateRequest::LinkStateRequest() : Broadcast(), src_(nullptr), sn_(NONE_ID),
+                                       src_id_(NONE_ID) {}
 
 LinkStateRequest::LinkStateRequest(Time t, Entity* e, Port in, Entity* src,
                                    SequenceNum sn, Id id) :

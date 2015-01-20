@@ -9,12 +9,41 @@
 #include <vector>
 #include <string>
 
+typedef struct event_pool {
+  std::vector<LinkStateUpdate>* lsus;
+  std::vector<RoutingUpdate>* rus;
+  std::vector<LinkStateRequest>* lsrs;
+} EventPool;
+
+class EventMemPool {
+ public:
+  EventMemPool();
+#ifndef NDEBUG
+  ~EventMemPool();
+#endif
+  bool IsEmpty();
+  EventPool Retrieve();
+  void Free(EventPool);
+
+ private:
+  std::vector<EventPool> event_pool_;
+  // TODO find these out
+  static const size_t max_lsu_hint_ = 1000;
+  static const size_t max_lsr_hint_ = 1000;
+  static const size_t max_ru_hint_ = 1000;
+  static const unsigned int palloc_mul_ = 2;
+  DISALLOW_COPY_AND_ASSIGN(EventMemPool);
+};
+
 class FrontierQueue {
   // TODO can you only forward declare?
   class Frontier {
     class Events {
      public:
       Events();
+#ifndef NDEBUG
+      ~Events();
+#endif
       void Push(LinkStateRequest);
       void Push(RoutingUpdate);
       void Push(InitiateLinkState);
@@ -27,21 +56,22 @@ class FrontierQueue {
       bool Empty();
 
      private:
-      std::vector<LinkStateRequest> lsrs_;
+      static EventMemPool pool_;
+      std::vector<LinkStateRequest>* lsrs_;
       int lsrs_next_;
-      std::vector<RoutingUpdate> rus_;
+      std::vector<RoutingUpdate>* rus_;
       int rus_next_;
-      std::vector<InitiateLinkState> ils_;
+      std::vector<InitiateLinkState>* ils_;
       int ils_next_;
-      std::vector<LinkStateUpdate> lsus_;
+      std::vector<LinkStateUpdate>* lsus_;
       int lsus_next_;
-      std::vector<Up> us_;
+      std::vector<Up>* us_;
       int us_next_;
-      std::vector<Down> ds_;
+      std::vector<Down>* ds_;
       int ds_next_;
-      std::vector<LinkUp> lus_;
+      std::vector<LinkUp>* lus_;
       int lus_next_;
-      std::vector<LinkDown> lds_;
+      std::vector<LinkDown>* lds_;
       int lds_next_;
     };
 
@@ -64,7 +94,6 @@ class FrontierQueue {
     Time time_;
     Id cur_;
     std::vector<Events> id_to_events_;
-    static const size_t kEventCapacity = 1000000;
   };
 
   class Comparator {

@@ -12,82 +12,177 @@ using std::to_string;
 using std::string;
 using std::numeric_limits;
 
+EventMemPool::EventMemPool() : event_pool_() {
+  for(int i = 0; i < palloc_mul_; ++i) {
+    EventPool cur = {new vector<LinkStateUpdate>(max_lsu_hint_),
+                     new vector<RoutingUpdate>(max_ru_hint_),
+                     new vector<LinkStateRequest>(max_lsr_hint_)};
+    event_pool_.push_back(cur);
+  }
+}
+
+#ifndef NDEBUG
+EventMemPool::~EventMemPool() {
+  for(auto ep : event_pool_) {
+    delete ep.lsus;
+    delete ep.rus;
+    delete ep.lsrs;
+  }
+}
+#endif
+
+bool EventMemPool::IsEmpty() { return event_pool_.empty(); }
+
+EventPool EventMemPool::Retrieve() {
+  auto rtn = event_pool_.back();
+  event_pool_.pop_back();
+  return rtn;
+}
+
+void EventMemPool::Free(EventPool ep) {
+  event_pool_.push_back(ep);
+}
+
 FrontierQueue::Frontier::Events::Events() :
-    lsrs_(), rus_(), ils_(), lsus_(), us_(), ds_(), lus_(), lds_(),
-    lsrs_next_(-1), rus_next_(-1), ils_next_(-1), lsus_next_(-1),
-    us_next_(-1), ds_next_(-1), lus_next_(-1), lds_next_(-1) {}
+    lsrs_(nullptr),
+    rus_(nullptr),
+    ils_(new vector<InitiateLinkState>()),
+    lsus_(nullptr),
+    us_(new vector<Up>()),
+    ds_(new vector<Down>()),
+    lus_(new vector<LinkUp>()),
+    lds_(new vector<LinkDown>()),
+    lsrs_next_(0), rus_next_(0), ils_next_(0), lsus_next_(0),
+    us_next_(0), ds_next_(0), lus_next_(0), lds_next_(0) {
+  if(pool_.IsEmpty()) {
+    rus_ = new vector<RoutingUpdate>();
+    lsus_ = new vector<LinkStateUpdate>();
+    lsrs_ = new vector<LinkStateRequest>();
+  } else {
+    auto ep = pool_.Retrieve();
+    rus_ = ep.rus;
+    lsus_ = ep.lsus;
+    lsrs_ = ep.lsrs;
+  }
+}
+
+EventMemPool FrontierQueue::Frontier::Events::pool_;
+
+#ifndef NDEBUG
+FrontierQueue::Frontier::Events::~Events() {
+  delete ils_;
+  delete us_;
+  delete ds_;
+  delete lus_;
+  delete lds_;
+  EventPool ep = {lsus_, rus_, lsrs_};
+  pool_.Free(ep);
+}
+#endif
 
 void FrontierQueue::Frontier::Events::Push(LinkStateRequest e) {
-  lsrs_.push_back(e);
-  ++lsrs_next_;
+  if(lsrs_next_ >= lsrs_->size()) {
+    lsrs_->push_back(e);
+    ++lsrs_next_;
+  } else {
+    (*lsrs_)[lsrs_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(RoutingUpdate e) {
-  rus_.push_back(e);
-  ++rus_next_;
+  if(rus_next_ >= rus_->size()) {
+    rus_->push_back(e);
+    ++rus_next_;
+  } else {
+    (*rus_)[rus_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(InitiateLinkState e) {
-  ils_.push_back(e);
-  ++ils_next_;
+  if(ils_next_ >= ils_->size()) {
+    ils_->push_back(e);
+    ++ils_next_;
+  } else {
+    (*ils_)[ils_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(LinkStateUpdate e) {
-  lsus_.push_back(e);
-  ++lsus_next_;
+  if(lsus_next_ >= lsus_->size()) {
+    lsus_->push_back(e);
+    ++lsus_next_;
+  } else {
+    (*lsus_)[lsus_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(Up e) {
-  us_.push_back(e);
-  ++us_next_;
+  if(us_next_ >= us_->size()) {
+    us_->push_back(e);
+    ++us_next_;
+  } else {
+    (*us_)[us_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(Down e) {
-  ds_.push_back(e);
-  ++ds_next_;
+  if(ds_next_ >= ds_->size()) {
+    ds_->push_back(e);
+    ++ds_next_;
+  } else {
+    (*ds_)[ds_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(LinkUp e) {
-  lus_.push_back(e);
-  ++lus_next_;
+  if(lus_next_ >= lus_->size()) {
+    lus_->push_back(e);
+    ++lus_next_;
+  } else {
+    (*lus_)[lus_next_++] = e;
+  }
 }
 
 void FrontierQueue::Frontier::Events::Push(LinkDown e) {
-  lds_.push_back(e);
-  ++lds_next_;
+  if(lds_next_ >= lds_->size()) {
+    lds_->push_back(e);
+    ++lds_next_;
+  } else {
+    (*lds_)[lds_next_++] = e;
+  }
 }
 
 Event* FrontierQueue::Frontier::Events::Pop() {
-  if(lsrs_next_ != -1) {
-    return &lsrs_[lsrs_next_--];
+  if(lsrs_next_ != 0) {
+    return &((*lsrs_)[--lsrs_next_]);
   }
-  if(rus_next_ != -1) {
-    return &rus_[rus_next_--];
+  if(rus_next_ != 0) {
+    return &((*rus_)[--rus_next_]);
   }
-  if(ils_next_ != -1) {
-    return &ils_[ils_next_--];
+  if(ils_next_ != 0) {
+    return &((*ils_)[--ils_next_]);
   }
-  if(lsus_next_ != -1) {
-    return &lsus_[lsus_next_--];
+  if(lsus_next_ != 0) {
+    return &((*lsus_)[--lsus_next_]);
   }
-  if(us_next_ != -1) {
-    return &us_[us_next_--];
+  if(us_next_ != 0) {
+    return &((*us_)[--us_next_]);
   }
-  if(ds_next_ != -1) {
-    return &ds_[ds_next_--];
+  if(ds_next_ != 0) {
+    return &((*ds_)[--ds_next_]);
   }
-  if(lus_next_ != -1) {
-    return &lus_[lus_next_--];
+  if(lus_next_ != 0) {
+    return &((*lus_)[--lus_next_]);
   }
-  if(lds_next_ != -1) {
-    return &lds_[lds_next_--];
+  if(lds_next_ != 0) {
+    return &((*lds_)[--lds_next_]);
   }
   CHECK(false);
 }
 
 bool FrontierQueue::Frontier::Events::Empty() {
-  return lsrs_next_ == -1 && rus_next_ == -1 && ils_next_ == -1 && lsus_next_ == -1 &&
-      us_next_ == -1 && ds_next_ == -1 && lus_next_ == -1 && lds_next_ == -1;
+  return lsrs_next_ == 0 && rus_next_ == 0 && ils_next_ == 0 && lsus_next_ == 0 &&
+      us_next_ == 0 && ds_next_ == 0 && lus_next_ == 0 && lds_next_ == 0;
 }
 
 FrontierQueue::Frontier::Frontier(Time t, size_t entity_count) :
