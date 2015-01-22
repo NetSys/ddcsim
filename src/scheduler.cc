@@ -5,12 +5,14 @@
 
 // #include <random>
 #include <string>
+#include <limits>
 
 // using std::default_random_engine;
 // using std::discrete_distribution;
 // using std::uniform_real_distribution;
 using std::vector;
 using std::to_string;
+using std::numeric_limits;
 
 /* The type-specific parts of Scheduler::Forward are deferred to this class.
  * This functionality is implemented as a class rather than as a generic
@@ -156,7 +158,9 @@ Scheduler::Scheduler(Time end_time, size_t switch_count,
     : event_queue_(switch_count + controller_count + host_count),
       end_time_(end_time), kSwitchCount(switch_count),
       kControllerCount(controller_count), kHostCount(host_count),
-      statistics_(nullptr) {}
+      statistics_(nullptr) {
+  CHECK_LE(switch_count + controller_count + host_count, numeric_limits<Id>::max());
+}
 
 void Scheduler::Init(Statistics* s) { statistics_ = s; }
 

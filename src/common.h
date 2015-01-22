@@ -8,7 +8,7 @@
 typedef double Time; /* Time has units of seconds */
 typedef int SequenceNum;
 typedef int Port;
-typedef int Id;
+typedef short Id;
 typedef double Size; /* Size has units of bytes */
 typedef double Rate; /* Rate has units of bytes per sec*/
 

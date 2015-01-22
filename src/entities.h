@@ -73,6 +73,12 @@ template<> struct hash<pair<int, int>> {
         hash<unsigned int>()(p.second);
   }
 };
+template<> struct hash<pair<short, short>> {
+  size_t operator()(const pair<short, short>& p) const {
+    return hash<unsigned short>()(p.first) ^
+        hash<unsigned short>()(p.second);
+  }
+};
 };
 
 class RoutingUpdateHistory {

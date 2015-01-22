@@ -206,6 +206,13 @@ string RoutingUpdate::Description() const {
     rtn += "null";
   }
 
+  if(dst_to_neighbor_) {
+    Id* ids = dst_to_neighbor_->data();
+    vector<Id>::size_type cap = dst_to_neighbor_->capacity();
+    for(int i = 0; i < cap; ++i)
+      LOG(INFO) << i;
+  }
+
   return rtn;
 }
 
