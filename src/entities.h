@@ -19,6 +19,7 @@ class LinkStateRequest;
 class LinkStateUpdate;
 class InitiateLinkState;
 class RoutingUpdate;
+class InitiateRoutingUpdate;
 class Statistics;
 
 class Entity {
@@ -41,6 +42,7 @@ class Entity {
   virtual void Handle(RoutingUpdate*) = 0;
   virtual void Handle(LinkStateRequest*) = 0;
   virtual void Handle(ControllerView*) = 0;
+  virtual void Handle(InitiateRoutingUpdate*) = 0;
   Links& links();
   Id id() const;
   //  void UpdateLinkCapacities(Time);
@@ -111,6 +113,7 @@ class Switch : public Entity {
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
   void Handle(ControllerView*);
+  void Handle(InitiateRoutingUpdate*);
   //  static const Time kLSExpireDelta = 10;
   static const Time kLSExpireDelta;
   // TODO make private again
@@ -140,6 +143,7 @@ class Controller : public Entity {
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
   void Handle(ControllerView*);
+  void Handle(InitiateRoutingUpdate*);
 
  private:
   LinkStateControl ls_;
@@ -165,6 +169,7 @@ class Host : public Entity {
   void Handle(RoutingUpdate*);
   void Handle(LinkStateRequest*);
   void Handle(ControllerView*);
+  void Handle(InitiateRoutingUpdate*);
   Id EdgeSwitch();
 
  private:

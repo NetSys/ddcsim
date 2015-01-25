@@ -185,4 +185,16 @@ class ControllerView : public Broadcast {
   DISALLOW_COPY_AND_ASSIGN(ControllerView);
 };
 
+class InitiateRoutingUpdate : public Event {
+ public:
+  InitiateRoutingUpdate(Time, Entity*);
+  virtual void Handle(Entity*);
+  virtual std::string Description() const;
+  virtual std::string Name() const;
+  static unsigned int count_;
+
+ private:
+  DISALLOW_COPY_AND_ASSIGN(InitiateRoutingUpdate);
+};
+
 #endif

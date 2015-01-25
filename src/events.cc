@@ -299,3 +299,16 @@ ControllerView::~ControllerView() {
   topology_ = nullptr;
   id_to_last_ = nullptr;
 }
+
+InitiateRoutingUpdate::InitiateRoutingUpdate(Time t, Entity* e) : Event(t, e) {}
+
+unsigned int InitiateRoutingUpdate::count_ = 0;
+
+void InitiateRoutingUpdate::Handle(Entity* e) {
+  ++count_;
+  e->Handle(this);
+}
+
+string InitiateRoutingUpdate::Description() const { return "TODO"; }
+
+string InitiateRoutingUpdate::Name() const { return "Initiate Routing Update"; }

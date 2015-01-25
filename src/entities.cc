@@ -151,6 +151,7 @@ void Switch::Handle(Broadcast* b) {
 }
 
 void Switch::Handle(LinkUp* lu) {
+  CHECK(dst_to_neighbor_);
   Entity::Handle(lu);
 
   if(!is_up_) {
@@ -188,6 +189,7 @@ void Switch::Handle(LinkUp* lu) {
 }
 
 void Switch::Handle(LinkDown* ld) {
+  CHECK(dst_to_neighbor_);
   Entity::Handle(ld);
 
   if(!is_up_) {
@@ -421,6 +423,10 @@ void Switch::Handle(ControllerView* cv) {
   }
 }
 
+void Switch::Handle(InitiateRoutingUpdate* iru) {
+  LOG(FATAL) << "Switch received initiate routing update";
+}
+
 Controller::Controller(Scheduler& sc, Id id, Statistics& st)
     : Entity(sc, id, st), ls_(sc), switch_to_next_sn_(sc.kSwitchCount, 0),
       next_lsr_(0), cv_history_(sc.kControllerCount, NONE_SEQNUM) {
@@ -474,8 +480,7 @@ void Controller::Handle(LinkStateUpdate* lsu) {
 
   SequenceNum& sn = cv_history_[id_ - scheduler_.kSwitchCount];
 
-  // TODO dampen it after convergence
-  if(lsu->time_ > 75 * Scheduler::Delay()) {
+  if(lsu->time_ > stats_.topo_diameter() * Scheduler::Delay()) {
     for(Port p = 0; p < links_.PortCount(); ++p) {
       scheduler_.Forward(this,
                          lsu,
@@ -489,47 +494,46 @@ void Controller::Handle(LinkStateUpdate* lsu) {
                                             ls_.id_to_last()),
                          p);
     }
+    ++sn;
   }
 
-  ++sn;
-
-  // This is necessary for SwitchesInPartition to work correctly
-  ls_.ComputePartitions();
-
-  auto switches = ls_.SwitchesInParition(id_);
-  for(auto it = switches.begin(); it != switches.end(); ++it) {
-    Id cur = *it;
-    auto table = ls_.ComputeRoutingTable(cur);
-    SequenceNum sn = switch_to_next_sn_[cur];
-    RoutingUpdate* ru;
-    for(Port p = 0; p < links_.PortCount(); ++p) {
-      if(scheduler_.IsSwitch(links_.GetEndpointId(p))) {
-        ru = new RoutingUpdate(START_TIME,
-                               NULL,
-                               PORT_NOT_FOUND,
-                               this,
-                               sn,
-                               table,
-                               cur,
-                               id_);
-        scheduler_.Forward(this, lsu, ru, p);
+  if(lsu->time_ > stats_.topo_diameter() * Scheduler::Delay()) {
+    ls_.ComputePartitions();
+    auto switches = ls_.SwitchesInParition(id_);
+    for(auto it = switches.begin(); it != switches.end(); ++it) {
+      Id cur = *it;
+      auto table = ls_.ComputeRoutingTable(cur);
+      SequenceNum sn = switch_to_next_sn_[cur];
+      RoutingUpdate* ru;
+      for(Port p = 0; p < links_.PortCount(); ++p) {
+        if(scheduler_.IsSwitch(links_.GetEndpointId(p))) {
+          ru = new RoutingUpdate(START_TIME,
+                                 NULL,
+                                 PORT_NOT_FOUND,
+                                 this,
+                                 sn,
+                                 table,
+                                 cur,
+                                 id_);
+          scheduler_.Forward(this, lsu, ru, p);
+        }
       }
-    }
 
-    switch_to_next_sn_[cur]++;
+      switch_to_next_sn_[cur]++;
+    }
   }
 
-  if(heals_partition && lsu->time_ > 75 * Scheduler::Delay()) {
+  if(heals_partition && lsu->time_ >
+     stats_.topo_diameter() * Scheduler::Delay()) {
     DLOG(INFO) << "Switch was partitioned";
-    LinkStateRequest* lsr;
-    SequenceNum sn = next_lsr_;
 
+    LinkStateRequest* lsr;
     for(Port p = 0; p < links_.PortCount(); ++p) {
       lsr = new LinkStateRequest(START_TIME,
                                  NULL,
                                  PORT_NOT_FOUND,
                                  this,
-                                 sn,
+                                 next_lsr_,
                                  id_);
       scheduler_.Forward(this, lsu, lsr, p);
     }
@@ -564,6 +568,33 @@ void Controller::Handle(ControllerView* cv) {
   cv_history_[cv->src_id_ - scheduler_.kSwitchCount] = cv->sn_;
 
   ls_.Update(cv);
+}
+
+void Controller::Handle(InitiateRoutingUpdate* iru) {
+  ls_.ComputePartitions();
+
+  auto switches = ls_.SwitchesInParition(id_);
+  for(auto it = switches.begin(); it != switches.end(); ++it) {
+    Id cur = *it;
+    auto table = ls_.ComputeRoutingTable(cur);
+    SequenceNum sn = switch_to_next_sn_[cur];
+    RoutingUpdate* ru;
+    for(Port p = 0; p < links_.PortCount(); ++p) {
+      if(scheduler_.IsSwitch(links_.GetEndpointId(p))) {
+        ru = new RoutingUpdate(START_TIME,
+                               NULL,
+                               PORT_NOT_FOUND,
+                               this,
+                               sn,
+                               table,
+                               cur,
+                               id_);
+        scheduler_.Forward(this, iru, ru, p);
+      }
+    }
+
+    switch_to_next_sn_[cur]++;
+  }
 }
 
 Host::Host(Scheduler& sched, Id id, Statistics& stats) : Entity(sched, id, stats) {}
@@ -606,6 +637,10 @@ void Host::Handle(LinkStateRequest* lsr) {
 
 void Host::Handle(ControllerView*) {
   LOG(FATAL) << "Host received controller view";
+}
+
+void Host::Handle(InitiateRoutingUpdate* iru) {
+  LOG(FATAL) << "Host received initiate routing update";
 }
 
 Id Host::EdgeSwitch() {

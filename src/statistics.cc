@@ -4,9 +4,11 @@
 #include "entities.h"
 #include "events.h"
 
+#include "boost/graph/breadth_first_search.hpp"
 #include "boost/graph/connected_components.hpp"
 #include "boost/tuple/tuple.hpp"
 
+#include <algorithm>
 #include <bitset>
 
 using std::bitset;
@@ -19,6 +21,13 @@ using boost::add_edge;
 using boost::edge;
 using boost::remove_edge;
 using boost::vertex;
+
+using std::fill_n;
+using boost::breadth_first_search;
+using boost::record_distances;
+using boost::visitor;
+using boost::make_bfs_visitor;
+using boost::on_tree_edge;
 
 const string Statistics::SEPARATOR = ",";
 const Time Statistics::WINDOW_SIZE = 0.05; /* 50 ms */
@@ -34,13 +43,11 @@ Statistics::Statistics(string out_prefix, Scheduler& s) :
     host_to_edge_switch_(s.kHostCount),
     window_left_(START_TIME),
     window_right_(WINDOW_SIZE),
-    num_lsu_from_lsr_(0) {
+    num_lsu_from_lsr_(0),
+  topo_diameter_(0) {
   cur_window_count_[0] = cur_window_count_[1] = cur_window_count_[2] =
       cur_window_count_[3] = 0;
-
-
 }
-
 
 vector<Entity*>& Statistics::id_to_entity() { return id_to_entity_; }
 
@@ -53,6 +60,8 @@ void Statistics::Init(Topology physical) {
                                           scheduler_.kSwitchCount +
                                           scheduler_.kControllerCount]))->EdgeSwitch();
 
+  topo_diameter_ = MaxPathLength(physical_);
+  CHECK_GT(topo_diameter_, 0);
 }
 
 void Statistics::EntityUp(Id entity) {
@@ -85,27 +94,23 @@ string Statistics::Reachability() {
   //     virt_reachable << "/" << phys_reachable;
 }
 
-// throw away function for finding the diameter of input graph
-// int Statistics::MaxPathLength() {
-//   int max = -1;
+unsigned int Statistics::MaxPathLength(Topology& phys) {
+  int max = 0;
+  VertexIndex d[num_vertices(phys)];
 
-//   typedef boost::graph_traits<Topology>::vertex_descriptor Vertex;
+  for(Vertex i = 0; i < num_vertices(phys); ++i) {
+    fill_n(d, num_vertices(phys), 0);
 
-//   boost::graph_traits<Topology>::vertices_size_type d[num_vertices(physical_)];
+    breadth_first_search(phys, i, visitor(
+        make_bfs_visitor(record_distances(d, on_tree_edge()))));
 
-//   for(Vertex i = 0; i < num_vertices(physical_); ++i) {
-//     std::fill_n(d, num_vertices(physical_), 0);
+    for(int dist : d)
+      if(dist > max)
+        max = dist;
+  }
 
-//     boost::breadth_first_search(physical_, i,
-//                                 boost::visitor(boost::make_bfs_visitor(
-//                                     boost::record_distances(d, boost::on_tree_edge()))));
-//     for(int dist : d)
-//       if(dist > max)
-//         max = dist;
-//   }
-
-//   return max;
-// }
+  return max;
+}
 
 void Statistics::RecordEventCounts() {
   LOG(WARNING) << "Up=" << Up::count_;
@@ -117,11 +122,12 @@ void Statistics::RecordEventCounts() {
   LOG(WARNING) << "InitiateLinkState=" << InitiateLinkState::count_;
   LOG(WARNING) << "RoutingUpdate=" << RoutingUpdate::count_;
   LOG(WARNING) << "ControllerView=" << ControllerView::count_;
+  LOG(WARNING) << "InitiateRoutingUpdate=" << InitiateRoutingUpdate::count_;
 
   Up::count_ = Down::count_ = LinkUp::count_ = LinkDown::count_ =
       LinkStateRequest::count_ = LinkStateUpdate::count_ =
       InitiateLinkState::count_ = RoutingUpdate::count_ =
-      ControllerView::count_ = 0;
+      ControllerView::count_ = InitiateRoutingUpdate::count_ = 0;
 }
 
 void Statistics::InitComponents() {
@@ -218,3 +224,5 @@ void Statistics::RecordSend(Event* e) {
   if(index == 0 && static_cast<LinkStateUpdate*>(e)->is_from_lsr_)
     ++num_lsu_from_lsr_;
 }
+
+unsigned Statistics::topo_diameter() { return topo_diameter_; }

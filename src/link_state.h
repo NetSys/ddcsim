@@ -16,8 +16,6 @@ class ControllerView;
 class LinkStateUpdate;
 class Scheduler;
 
-typedef boost::graph_traits<Topology>::vertices_size_type VertexIndex;
-
 class LinkState {
  public:
   LinkState(Scheduler&);

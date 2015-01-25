@@ -23,16 +23,18 @@ class Statistics {
   std::vector<Entity*>& id_to_entity();
   void RecordEventCounts();
   void RecordSend(Event*);
-  //int MaxPathLength();
+  unsigned topo_diameter();
   static const std::string SEPARATOR;
   static const Time WINDOW_SIZE;
   const int NO_PATH = 0;
 
  private:
+  static unsigned int MaxPathLength(Topology&);
   void InitComponents();
   int ComputePhysReachable();
   int ComputeVirtReachable();
   Topology physical_;
+  unsigned int topo_diameter_;
   std::string out_prefix_;
   std::vector<int> id_to_component_;
   Scheduler& scheduler_;

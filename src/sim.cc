@@ -172,9 +172,8 @@ int main(int ac, char* av[]) {
 
   sched.Init(&stats);
 
-  //std::cout << stats.MaxPathLength() << std::endl;
-
-  sched.SchedulePeriodicEvents(switches, heartbeat_period, ls_update_period);
+  sched.SchedulePeriodicEvents(switches, controllers,
+                               heartbeat_period, ls_update_period);
 
   sched.StartSimulation(stats);
 

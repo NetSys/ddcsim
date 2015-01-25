@@ -144,6 +144,16 @@ template<> class Schedule<Controller, LinkStateUpdate, ControllerView> {
   }
 };
 
+template<> class Schedule<Controller, InitiateRoutingUpdate, RoutingUpdate> {
+ public:
+  void operator()(Controller* sender, InitiateRoutingUpdate* iru,
+                  RoutingUpdate* ru, Entity* receiver, Port in) {
+    ru->time_ = iru->time_ + Scheduler::Delay();
+    ru->affected_entities_ = {receiver};
+    ru->in_port_ = in;
+  }
+};
+
 const Time Scheduler::kComputationDelay = 0.00001; /* 10 micros */
 const Time Scheduler::kTransDelay = 0.001;         /* 1 ms */
 const Time Scheduler::kPropDelay = 0.01;           /* 10 ms */
@@ -199,7 +209,8 @@ void Scheduler::Forward(E* sender, In* msg_in, Out* msg_out, Port out) {
 
 // TODO generalize
 // TODO feed default_random_engine a seed to make it deterministic
-void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
+void Scheduler::SchedulePeriodicEvents(vector<Switch*>& switches,
+                                       vector<Controller*>& controllers,
                                        Time heartbeat_period,
                                        Time ls_update_period) {
   // default_random_engine entropy_src;
@@ -232,6 +243,9 @@ void Scheduler::SchedulePeriodicEvents(vector<Switch*> switches,
 
   for(Switch* s : switches)
     AddEvent(START_TIME, new InitiateLinkState(START_TIME, s));
+
+  for(Controller* c : controllers)
+    AddEvent(0.05, new InitiateRoutingUpdate(0.05, c));
 }
 
 void Scheduler::StartSimulation(Statistics& statistics) {
@@ -361,3 +375,8 @@ Scheduler::Forward<Controller, LinkStateUpdate, ControllerView>(Controller*,
                                                                 LinkStateUpdate*,
                                                                 ControllerView*,
                                                                 Port);
+template void
+Scheduler::Forward<Controller, InitiateRoutingUpdate, RoutingUpdate>(Controller*,
+                                                                     InitiateRoutingUpdate*,
+                                                                     RoutingUpdate*,
+                                                                     Port);
