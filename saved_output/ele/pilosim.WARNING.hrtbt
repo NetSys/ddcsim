@@ -1,0 +1,1671 @@
+Log file created at: 2015/01/14 23:36:57
+Running on machine: c31
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+W0114 23:36:57.521375 62513 scheduler.cc:234] -1.000000 had 0 events
+W0114 23:36:57.521714 62513 statistics.cc:108] Up=0
+W0114 23:36:57.521729 62513 statistics.cc:109] Down=0
+W0114 23:36:57.521742 62513 statistics.cc:110] LinkUp=0
+W0114 23:36:57.521754 62513 statistics.cc:111] LinkDown=0
+W0114 23:36:57.521765 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:36:57.521781 62513 statistics.cc:113] LinkStateUpdate=0
+W0114 23:36:57.521793 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:36:57.521805 62513 statistics.cc:115] RoutingUpdate=0
+W0114 23:36:57.557448 62513 scheduler.cc:234] 0.000000 had 10000 events
+W0114 23:36:57.557503 62513 statistics.cc:108] Up=0
+W0114 23:36:57.557518 62513 statistics.cc:109] Down=0
+W0114 23:36:57.557529 62513 statistics.cc:110] LinkUp=0
+W0114 23:36:57.557541 62513 statistics.cc:111] LinkDown=0
+W0114 23:36:57.557554 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:36:57.557566 62513 statistics.cc:113] LinkStateUpdate=0
+W0114 23:36:57.557579 62513 statistics.cc:114] InitiateLinkState=10000
+W0114 23:36:57.557590 62513 statistics.cc:115] RoutingUpdate=0
+W0114 23:36:57.646215 62513 scheduler.cc:234] 0.011010 had 30572 events
+W0114 23:36:57.646276 62513 statistics.cc:108] Up=0
+W0114 23:36:57.646291 62513 statistics.cc:109] Down=0
+W0114 23:36:57.646302 62513 statistics.cc:110] LinkUp=0
+W0114 23:36:57.646316 62513 statistics.cc:111] LinkDown=0
+W0114 23:36:57.646327 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:36:57.646339 62513 statistics.cc:113] LinkStateUpdate=30572
+W0114 23:36:57.646353 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:36:57.646364 62513 statistics.cc:115] RoutingUpdate=0
+W0114 23:36:57.891607 62513 scheduler.cc:234] 0.022020 had 93368 events
+W0114 23:36:57.891667 62513 statistics.cc:108] Up=0
+W0114 23:36:57.891682 62513 statistics.cc:109] Down=0
+W0114 23:36:57.891695 62513 statistics.cc:110] LinkUp=0
+W0114 23:36:57.891707 62513 statistics.cc:111] LinkDown=0
+W0114 23:36:57.891721 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:36:57.891734 62513 statistics.cc:113] LinkStateUpdate=93283
+W0114 23:36:57.891747 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:36:57.891758 62513 statistics.cc:115] RoutingUpdate=85
+W0114 23:36:58.586002 62513 scheduler.cc:234] 0.033030 had 239220 events
+W0114 23:36:58.586062 62513 statistics.cc:108] Up=0
+W0114 23:36:58.586076 62513 statistics.cc:109] Down=0
+W0114 23:36:58.586089 62513 statistics.cc:110] LinkUp=0
+W0114 23:36:58.586102 62513 statistics.cc:111] LinkDown=0
+W0114 23:36:58.586115 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:36:58.586128 62513 statistics.cc:113] LinkStateUpdate=238231
+W0114 23:36:58.586143 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:36:58.586153 62513 statistics.cc:115] RoutingUpdate=989
+W0114 23:36:58.586174 62513 statistics.cc:195] bw in [0.000000,0.050000) is [798306,6968,0,0]
+W0114 23:37:00.173554 62513 scheduler.cc:234] 0.044040 had 442114 events
+W0114 23:37:00.173620 62513 statistics.cc:108] Up=0
+W0114 23:37:00.173635 62513 statistics.cc:109] Down=0
+W0114 23:37:00.173647 62513 statistics.cc:110] LinkUp=0
+W0114 23:37:00.173660 62513 statistics.cc:111] LinkDown=0
+W0114 23:37:00.173673 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:37:00.173686 62513 statistics.cc:113] LinkStateUpdate=436220
+W0114 23:37:00.173699 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:37:00.173712 62513 statistics.cc:115] RoutingUpdate=5894
+W0114 23:37:00.242522 62513 scheduler.cc:244] reachability @ 0.050000 is 0/999000
+W0114 23:37:02.870148 62513 scheduler.cc:234] 0.055050 had 560391 events
+W0114 23:37:02.870206 62513 statistics.cc:108] Up=0
+W0114 23:37:02.870220 62513 statistics.cc:109] Down=0
+W0114 23:37:02.870234 62513 statistics.cc:110] LinkUp=0
+W0114 23:37:02.870246 62513 statistics.cc:111] LinkDown=0
+W0114 23:37:02.870260 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:37:02.870273 62513 statistics.cc:113] LinkStateUpdate=539404
+W0114 23:37:02.870285 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:37:02.870450 62513 statistics.cc:115] RoutingUpdate=20987
+W0114 23:37:07.324538 62513 scheduler.cc:234] 0.066060 had 560901 events
+W0114 23:37:07.324667 62513 statistics.cc:108] Up=0
+W0114 23:37:07.324687 62513 statistics.cc:109] Down=0
+W0114 23:37:07.324697 62513 statistics.cc:110] LinkUp=0
+W0114 23:37:07.324704 62513 statistics.cc:111] LinkDown=0
+W0114 23:37:07.324712 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:37:07.324718 62513 statistics.cc:113] LinkStateUpdate=513420
+W0114 23:37:07.324725 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:37:07.324733 62513 statistics.cc:115] RoutingUpdate=47481
+W0114 23:37:14.750700 62513 scheduler.cc:234] 0.077070 had 592832 events
+W0114 23:37:14.750843 62513 statistics.cc:108] Up=0
+W0114 23:37:14.750855 62513 statistics.cc:109] Down=0
+W0114 23:37:14.750864 62513 statistics.cc:110] LinkUp=0
+W0114 23:37:14.750874 62513 statistics.cc:111] LinkDown=0
+W0114 23:37:14.750885 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:37:14.750892 62513 statistics.cc:113] LinkStateUpdate=491773
+W0114 23:37:14.750900 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:37:14.750908 62513 statistics.cc:115] RoutingUpdate=101059
+W0114 23:37:27.693547 62513 scheduler.cc:234] 0.088080 had 750280 events
+W0114 23:37:27.693686 62513 statistics.cc:108] Up=0
+W0114 23:37:27.693698 62513 statistics.cc:109] Down=0
+W0114 23:37:27.693706 62513 statistics.cc:110] LinkUp=0
+W0114 23:37:27.693714 62513 statistics.cc:111] LinkDown=0
+W0114 23:37:27.693722 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:37:27.693728 62513 statistics.cc:113] LinkStateUpdate=563265
+W0114 23:37:27.693737 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:37:27.693743 62513 statistics.cc:115] RoutingUpdate=187015
+W0114 23:37:27.693759 62513 statistics.cc:195] bw in [0.050000,0.100000) is [2814623,680184,0,0]
+W0114 23:37:47.272352 62513 scheduler.cc:234] 0.099090 had 1030403 events
+W0114 23:37:47.272488 62513 statistics.cc:108] Up=0
+W0114 23:37:47.272501 62513 statistics.cc:109] Down=0
+W0114 23:37:47.272511 62513 statistics.cc:110] LinkUp=0
+W0114 23:37:47.272521 62513 statistics.cc:111] LinkDown=0
+W0114 23:37:47.272528 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:37:47.272536 62513 statistics.cc:113] LinkStateUpdate=706761
+W0114 23:37:47.272542 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:37:47.272549 62513 statistics.cc:115] RoutingUpdate=323642
+W0114 23:37:47.341917 62513 scheduler.cc:244] reachability @ 0.105050 is 440/999000
+W0114 23:38:19.460901 62513 scheduler.cc:234] 0.110100 had 1359092 events
+W0114 23:38:19.461041 62513 statistics.cc:108] Up=0
+W0114 23:38:19.461052 62513 statistics.cc:109] Down=0
+W0114 23:38:19.461061 62513 statistics.cc:110] LinkUp=0
+W0114 23:38:19.461068 62513 statistics.cc:111] LinkDown=0
+W0114 23:38:19.461076 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:38:19.461082 62513 statistics.cc:113] LinkStateUpdate=857969
+W0114 23:38:19.461091 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:38:19.461097 62513 statistics.cc:115] RoutingUpdate=501123
+W0114 23:39:10.817520 62513 scheduler.cc:234] 0.121110 had 1754560 events
+W0114 23:39:10.817718 62513 statistics.cc:108] Up=0
+W0114 23:39:10.817729 62513 statistics.cc:109] Down=0
+W0114 23:39:10.817739 62513 statistics.cc:110] LinkUp=0
+W0114 23:39:10.817745 62513 statistics.cc:111] LinkDown=0
+W0114 23:39:10.817754 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:39:10.817764 62513 statistics.cc:113] LinkStateUpdate=983884
+W0114 23:39:10.817770 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:39:10.817780 62513 statistics.cc:115] RoutingUpdate=770676
+W0114 23:39:38.280048 62513 scheduler.cc:234] 0.132120 had 2243291 events
+W0114 23:39:38.280210 62513 statistics.cc:108] Up=0
+W0114 23:39:38.280252 62513 statistics.cc:109] Down=0
+W0114 23:39:38.280261 62513 statistics.cc:110] LinkUp=0
+W0114 23:39:38.280268 62513 statistics.cc:111] LinkDown=0
+W0114 23:39:38.280275 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:39:38.280282 62513 statistics.cc:113] LinkStateUpdate=1100204
+W0114 23:39:38.280297 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:39:38.280305 62513 statistics.cc:115] RoutingUpdate=1143087
+W0114 23:39:38.280340 62513 statistics.cc:195] bw in [0.100000,0.150000) is [4189781,3716457,0,0]
+W0114 23:40:13.149404 62513 scheduler.cc:234] 0.143130 had 2549295 events
+W0114 23:40:13.149571 62513 statistics.cc:108] Up=0
+W0114 23:40:13.149582 62513 statistics.cc:109] Down=0
+W0114 23:40:13.149592 62513 statistics.cc:110] LinkUp=0
+W0114 23:40:13.149601 62513 statistics.cc:111] LinkDown=0
+W0114 23:40:13.149610 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:40:13.149619 62513 statistics.cc:113] LinkStateUpdate=1247724
+W0114 23:40:13.149629 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:40:13.149646 62513 statistics.cc:115] RoutingUpdate=1301571
+W0114 23:40:49.879508 62513 scheduler.cc:234] 0.154140 had 3265768 events
+W0114 23:40:49.879665 62513 statistics.cc:108] Up=0
+W0114 23:40:49.879678 62513 statistics.cc:109] Down=0
+W0114 23:40:49.879685 62513 statistics.cc:110] LinkUp=0
+W0114 23:40:49.879694 62513 statistics.cc:111] LinkDown=0
+W0114 23:40:49.879703 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:40:49.879710 62513 statistics.cc:113] LinkStateUpdate=1461396
+W0114 23:40:49.879719 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:40:49.879734 62513 statistics.cc:115] RoutingUpdate=1804372
+W0114 23:40:49.949600 62513 scheduler.cc:244] reachability @ 0.160100 is 2223/999000
+W0114 23:41:06.261575 62513 scheduler.cc:234] 0.165150 had 4105885 events
+W0114 23:41:06.261713 62513 statistics.cc:108] Up=0
+W0114 23:41:06.261725 62513 statistics.cc:109] Down=0
+W0114 23:41:06.261734 62513 statistics.cc:110] LinkUp=0
+W0114 23:41:06.261742 62513 statistics.cc:111] LinkDown=0
+W0114 23:41:06.261751 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:41:06.261760 62513 statistics.cc:113] LinkStateUpdate=1726537
+W0114 23:41:06.261770 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:41:06.261777 62513 statistics.cc:115] RoutingUpdate=2379348
+W0114 23:41:29.623638 62513 scheduler.cc:234] 0.176160 had 4897459 events
+W0114 23:41:29.623781 62513 statistics.cc:108] Up=0
+W0114 23:41:29.623793 62513 statistics.cc:109] Down=0
+W0114 23:41:29.623802 62513 statistics.cc:110] LinkUp=0
+W0114 23:41:29.623810 62513 statistics.cc:111] LinkDown=0
+W0114 23:41:29.623817 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:41:29.623826 62513 statistics.cc:113] LinkStateUpdate=2005678
+W0114 23:41:29.623833 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:41:29.623842 62513 statistics.cc:115] RoutingUpdate=2891781
+W0114 23:42:11.287947 62513 scheduler.cc:234] 0.187170 had 5967383 events
+W0114 23:42:11.288094 62513 statistics.cc:108] Up=0
+W0114 23:42:11.288107 62513 statistics.cc:109] Down=0
+W0114 23:42:11.288116 62513 statistics.cc:110] LinkUp=0
+W0114 23:42:11.288125 62513 statistics.cc:111] LinkDown=0
+W0114 23:42:11.288135 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:42:11.288142 62513 statistics.cc:113] LinkStateUpdate=2274235
+W0114 23:42:11.288152 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:42:11.288161 62513 statistics.cc:115] RoutingUpdate=3693148
+W0114 23:42:11.288182 62513 statistics.cc:195] bw in [0.150000,0.200000) is [10006858,15455122,0,0]
+W0114 23:43:21.358907 62513 scheduler.cc:234] 0.198180 had 7225485 events
+W0114 23:43:21.359058 62513 statistics.cc:108] Up=0
+W0114 23:43:21.359069 62513 statistics.cc:109] Down=0
+W0114 23:43:21.359077 62513 statistics.cc:110] LinkUp=0
+W0114 23:43:21.359086 62513 statistics.cc:111] LinkDown=0
+W0114 23:43:21.359093 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:43:21.359102 62513 statistics.cc:113] LinkStateUpdate=2539012
+W0114 23:43:21.359112 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:43:21.359119 62513 statistics.cc:115] RoutingUpdate=4686473
+W0114 23:44:45.971410 62513 scheduler.cc:234] 0.209190 had 8751538 events
+W0114 23:44:45.971614 62513 statistics.cc:108] Up=0
+W0114 23:44:45.971624 62513 statistics.cc:109] Down=0
+W0114 23:44:45.971632 62513 statistics.cc:110] LinkUp=0
+W0114 23:44:45.971639 62513 statistics.cc:111] LinkDown=0
+W0114 23:44:45.971662 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:44:45.971670 62513 statistics.cc:113] LinkStateUpdate=2826935
+W0114 23:44:45.971679 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:44:45.971688 62513 statistics.cc:115] RoutingUpdate=5924603
+W0114 23:44:46.044838 62513 scheduler.cc:244] reachability @ 0.215150 is 3046/999000
+W0114 23:46:23.910827 62513 scheduler.cc:234] 0.220200 had 10484294 events
+W0114 23:46:23.910998 62513 statistics.cc:108] Up=0
+W0114 23:46:23.911011 62513 statistics.cc:109] Down=0
+W0114 23:46:23.911020 62513 statistics.cc:110] LinkUp=0
+W0114 23:46:23.911031 62513 statistics.cc:111] LinkDown=0
+W0114 23:46:23.911041 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:46:23.911051 62513 statistics.cc:113] LinkStateUpdate=3174578
+W0114 23:46:23.911061 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:46:23.911069 62513 statistics.cc:115] RoutingUpdate=7309716
+W0114 23:48:07.986614 62513 scheduler.cc:234] 0.231210 had 12393075 events
+W0114 23:48:07.986824 62513 statistics.cc:108] Up=0
+W0114 23:48:07.986835 62513 statistics.cc:109] Down=0
+W0114 23:48:07.986845 62513 statistics.cc:110] LinkUp=0
+W0114 23:48:07.986855 62513 statistics.cc:111] LinkDown=0
+W0114 23:48:07.986865 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:48:07.986872 62513 statistics.cc:113] LinkStateUpdate=3584008
+W0114 23:48:07.986881 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:48:07.986891 62513 statistics.cc:115] RoutingUpdate=8809067
+W0114 23:48:07.986920 62513 statistics.cc:195] bw in [0.200000,0.250000) is [13619395,32462021,0,0]
+W0114 23:50:41.660886 62513 scheduler.cc:234] 0.242220 had 14452509 events
+W0114 23:50:41.661097 62513 statistics.cc:108] Up=0
+W0114 23:50:41.661108 62513 statistics.cc:109] Down=0
+W0114 23:50:41.661118 62513 statistics.cc:110] LinkUp=0
+W0114 23:50:41.661128 62513 statistics.cc:111] LinkDown=0
+W0114 23:50:41.661137 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:50:41.661145 62513 statistics.cc:113] LinkStateUpdate=4033874
+W0114 23:50:41.661154 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:50:41.661164 62513 statistics.cc:115] RoutingUpdate=10418635
+W0114 23:55:01.362926 62513 scheduler.cc:234] 0.253230 had 16869171 events
+W0114 23:55:01.363097 62513 statistics.cc:108] Up=0
+W0114 23:55:01.363109 62513 statistics.cc:109] Down=0
+W0114 23:55:01.363117 62513 statistics.cc:110] LinkUp=0
+W0114 23:55:01.363126 62513 statistics.cc:111] LinkDown=0
+W0114 23:55:01.363133 62513 statistics.cc:112] LinkStateRequest=0
+W0114 23:55:01.363142 62513 statistics.cc:113] LinkStateUpdate=4473155
+W0114 23:55:01.363150 62513 statistics.cc:114] InitiateLinkState=0
+W0114 23:55:01.363158 62513 statistics.cc:115] RoutingUpdate=12396016
+W0115 00:01:53.006408 62513 scheduler.cc:234] 0.264240 had 19694040 events
+W0115 00:01:53.006577 62513 statistics.cc:108] Up=0
+W0115 00:01:53.006589 62513 statistics.cc:109] Down=0
+W0115 00:01:53.006597 62513 statistics.cc:110] LinkUp=0
+W0115 00:01:53.006606 62513 statistics.cc:111] LinkDown=0
+W0115 00:01:53.006614 62513 statistics.cc:112] LinkStateRequest=0
+W0115 00:01:53.006623 62513 statistics.cc:113] LinkStateUpdate=4865574
+W0115 00:01:53.006631 62513 statistics.cc:114] InitiateLinkState=0
+W0115 00:01:53.006640 62513 statistics.cc:115] RoutingUpdate=14828466
+W0115 00:01:53.079833 62513 scheduler.cc:244] reachability @ 0.270200 is 6179/999000
+W0115 00:11:32.299182 62513 scheduler.cc:234] 0.275250 had 22724709 events
+W0115 00:11:32.299382 62513 statistics.cc:108] Up=0
+W0115 00:11:32.299396 62513 statistics.cc:109] Down=0
+W0115 00:11:32.299404 62513 statistics.cc:110] LinkUp=0
+W0115 00:11:32.299413 62513 statistics.cc:111] LinkDown=0
+W0115 00:11:32.299422 62513 statistics.cc:112] LinkStateRequest=0
+W0115 00:11:32.299432 62513 statistics.cc:113] LinkStateUpdate=5251154
+W0115 00:11:32.299442 62513 statistics.cc:114] InitiateLinkState=0
+W0115 00:11:32.299450 62513 statistics.cc:115] RoutingUpdate=17473555
+W0115 00:23:29.582901 62513 scheduler.cc:234] 0.286260 had 25764070 events
+W0115 00:23:29.583122 62513 statistics.cc:108] Up=0
+W0115 00:23:29.583140 62513 statistics.cc:109] Down=0
+W0115 00:23:29.583149 62513 statistics.cc:110] LinkUp=0
+W0115 00:23:29.583158 62513 statistics.cc:111] LinkDown=0
+W0115 00:23:29.583166 62513 statistics.cc:112] LinkStateRequest=0
+W0115 00:23:29.583174 62513 statistics.cc:113] LinkStateUpdate=5666269
+W0115 00:23:29.583183 62513 statistics.cc:114] InitiateLinkState=0
+W0115 00:23:29.583191 62513 statistics.cc:115] RoutingUpdate=20097801
+W0115 00:23:29.583215 62513 statistics.cc:195] bw in [0.250000,0.300000) is [26338998,87379131,0,0]
+W0115 00:38:39.882422 62513 scheduler.cc:234] 0.297270 had 28666139 events
+W0115 00:38:39.882567 62513 statistics.cc:108] Up=0
+W0115 00:38:39.882580 62513 statistics.cc:109] Down=0
+W0115 00:38:39.882591 62513 statistics.cc:110] LinkUp=0
+W0115 00:38:39.882601 62513 statistics.cc:111] LinkDown=0
+W0115 00:38:39.882611 62513 statistics.cc:112] LinkStateRequest=0
+W0115 00:38:39.882622 62513 statistics.cc:113] LinkStateUpdate=6082846
+W0115 00:38:39.882632 62513 statistics.cc:114] InitiateLinkState=0
+W0115 00:38:39.882642 62513 statistics.cc:115] RoutingUpdate=22583293
+W0115 00:59:54.802232 62513 scheduler.cc:234] 0.308280 had 31602542 events
+W0115 00:59:54.802441 62513 statistics.cc:108] Up=0
+W0115 00:59:54.802453 62513 statistics.cc:109] Down=0
+W0115 00:59:54.802461 62513 statistics.cc:110] LinkUp=0
+W0115 00:59:54.802470 62513 statistics.cc:111] LinkDown=0
+W0115 00:59:54.802479 62513 statistics.cc:112] LinkStateRequest=0
+W0115 00:59:54.802487 62513 statistics.cc:113] LinkStateUpdate=6451866
+W0115 00:59:54.802496 62513 statistics.cc:114] InitiateLinkState=0
+W0115 00:59:54.802505 62513 statistics.cc:115] RoutingUpdate=25150676
+W0115 01:27:39.755501 62513 scheduler.cc:234] 0.319290 had 35086109 events
+W0115 01:27:39.755669 62513 statistics.cc:108] Up=0
+W0115 01:27:39.755681 62513 statistics.cc:109] Down=0
+W0115 01:27:39.755691 62513 statistics.cc:110] LinkUp=0
+W0115 01:27:39.755699 62513 statistics.cc:111] LinkDown=0
+W0115 01:27:39.755708 62513 statistics.cc:112] LinkStateRequest=0
+W0115 01:27:39.755717 62513 statistics.cc:113] LinkStateUpdate=6746690
+W0115 01:27:39.755727 62513 statistics.cc:114] InitiateLinkState=0
+W0115 01:27:39.755735 62513 statistics.cc:115] RoutingUpdate=28339419
+W0115 01:27:39.830636 62513 scheduler.cc:244] reachability @ 0.325250 is 8987/999000
+W0115 01:56:41.110194 62513 scheduler.cc:234] 0.330300 had 38521020 events
+W0115 01:56:41.110369 62513 statistics.cc:108] Up=0
+W0115 01:56:41.110383 62513 statistics.cc:109] Down=0
+W0115 01:56:41.110391 62513 statistics.cc:110] LinkUp=0
+W0115 01:56:41.110401 62513 statistics.cc:111] LinkDown=0
+W0115 01:56:41.110411 62513 statistics.cc:112] LinkStateRequest=0
+W0115 01:56:41.110420 62513 statistics.cc:113] LinkStateUpdate=6971298
+W0115 01:56:41.110430 62513 statistics.cc:114] InitiateLinkState=0
+W0115 01:56:41.110440 62513 statistics.cc:115] RoutingUpdate=31549722
+W0115 01:56:41.110462 62513 statistics.cc:195] bw in [0.300000,0.350000) is [27320986,119051184,0,0]
+W0115 02:21:35.127917 62513 scheduler.cc:234] 0.341310 had 41162499 events
+W0115 02:21:35.128118 62513 statistics.cc:108] Up=0
+W0115 02:21:35.128130 62513 statistics.cc:109] Down=0
+W0115 02:21:35.128139 62513 statistics.cc:110] LinkUp=0
+W0115 02:21:35.128149 62513 statistics.cc:111] LinkDown=0
+W0115 02:21:35.128166 62513 statistics.cc:112] LinkStateRequest=0
+W0115 02:21:35.128175 62513 statistics.cc:113] LinkStateUpdate=7151132
+W0115 02:21:35.128186 62513 statistics.cc:114] InitiateLinkState=0
+W0115 02:21:35.128195 62513 statistics.cc:115] RoutingUpdate=34011367
+W0115 02:43:21.229087 62513 scheduler.cc:234] 0.352320 had 43373529 events
+W0115 02:43:21.229256 62513 statistics.cc:108] Up=0
+W0115 02:43:21.229269 62513 statistics.cc:109] Down=0
+W0115 02:43:21.229279 62513 statistics.cc:110] LinkUp=0
+W0115 02:43:21.229289 62513 statistics.cc:111] LinkDown=0
+W0115 02:43:21.229297 62513 statistics.cc:112] LinkStateRequest=0
+W0115 02:43:21.229306 62513 statistics.cc:113] LinkStateUpdate=7307605
+W0115 02:43:21.229315 62513 statistics.cc:114] InitiateLinkState=0
+W0115 02:43:21.229336 62513 statistics.cc:115] RoutingUpdate=36065924
+W0115 03:06:45.843593 62513 scheduler.cc:234] 0.363330 had 45540268 events
+W0115 03:06:45.843739 62513 statistics.cc:108] Up=0
+W0115 03:06:45.843752 62513 statistics.cc:109] Down=0
+W0115 03:06:45.843761 62513 statistics.cc:110] LinkUp=0
+W0115 03:06:45.843770 62513 statistics.cc:111] LinkDown=0
+W0115 03:06:45.843778 62513 statistics.cc:112] LinkStateRequest=0
+W0115 03:06:45.843787 62513 statistics.cc:113] LinkStateUpdate=7452724
+W0115 03:06:45.843797 62513 statistics.cc:114] InitiateLinkState=0
+W0115 03:06:45.843806 62513 statistics.cc:115] RoutingUpdate=38087544
+W0115 03:34:04.837188 62513 scheduler.cc:234] 0.374340 had 47783334 events
+W0115 03:34:04.837374 62513 statistics.cc:108] Up=0
+W0115 03:34:04.837386 62513 statistics.cc:109] Down=0
+W0115 03:34:04.837395 62513 statistics.cc:110] LinkUp=0
+W0115 03:34:04.837404 62513 statistics.cc:111] LinkDown=0
+W0115 03:34:04.837414 62513 statistics.cc:112] LinkStateRequest=0
+W0115 03:34:04.837422 62513 statistics.cc:113] LinkStateUpdate=7538025
+W0115 03:34:04.837440 62513 statistics.cc:114] InitiateLinkState=0
+W0115 03:34:04.837448 62513 statistics.cc:115] RoutingUpdate=40245309
+W0115 03:34:04.921428 62513 scheduler.cc:244] reachability @ 0.380300 is 21494/999000
+W0115 03:57:49.390255 62513 scheduler.cc:234] 0.385350 had 49826028 events
+W0115 03:57:49.390436 62513 statistics.cc:108] Up=0
+W0115 03:57:49.390450 62513 statistics.cc:109] Down=0
+W0115 03:57:49.390458 62513 statistics.cc:110] LinkUp=0
+W0115 03:57:49.390467 62513 statistics.cc:111] LinkDown=0
+W0115 03:57:49.390476 62513 statistics.cc:112] LinkStateRequest=0
+W0115 03:57:49.390486 62513 statistics.cc:113] LinkStateUpdate=7480873
+W0115 03:57:49.390494 62513 statistics.cc:114] InitiateLinkState=0
+W0115 03:57:49.390509 62513 statistics.cc:115] RoutingUpdate=42345155
+W0115 03:57:49.390530 62513 statistics.cc:195] bw in [0.350000,0.400000) is [37082607,201130121,0,0]
+W0115 04:16:55.450383 62513 scheduler.cc:234] 0.396360 had 51689569 events
+W0115 04:16:55.450564 62513 statistics.cc:108] Up=0
+W0115 04:16:55.450577 62513 statistics.cc:109] Down=0
+W0115 04:16:55.450585 62513 statistics.cc:110] LinkUp=0
+W0115 04:16:55.450593 62513 statistics.cc:111] LinkDown=0
+W0115 04:16:55.450603 62513 statistics.cc:112] LinkStateRequest=0
+W0115 04:16:55.450611 62513 statistics.cc:113] LinkStateUpdate=7303380
+W0115 04:16:55.450620 62513 statistics.cc:114] InitiateLinkState=0
+W0115 04:16:55.450628 62513 statistics.cc:115] RoutingUpdate=44386189
+W0115 04:31:17.676810 62513 scheduler.cc:234] 0.407370 had 53697219 events
+W0115 04:31:17.676995 62513 statistics.cc:108] Up=0
+W0115 04:31:17.677006 62513 statistics.cc:109] Down=0
+W0115 04:31:17.677014 62513 statistics.cc:110] LinkUp=0
+W0115 04:31:17.677023 62513 statistics.cc:111] LinkDown=0
+W0115 04:31:17.677032 62513 statistics.cc:112] LinkStateRequest=0
+W0115 04:31:17.677042 62513 statistics.cc:113] LinkStateUpdate=7116687
+W0115 04:31:17.677050 62513 statistics.cc:114] InitiateLinkState=0
+W0115 04:31:17.677064 62513 statistics.cc:115] RoutingUpdate=46580532
+W0115 04:45:02.308821 62513 scheduler.cc:234] 0.418380 had 55950628 events
+W0115 04:45:02.309027 62513 statistics.cc:108] Up=0
+W0115 04:45:02.309038 62513 statistics.cc:109] Down=0
+W0115 04:45:02.309047 62513 statistics.cc:110] LinkUp=0
+W0115 04:45:02.309056 62513 statistics.cc:111] LinkDown=0
+W0115 04:45:02.309065 62513 statistics.cc:112] LinkStateRequest=0
+W0115 04:45:02.309073 62513 statistics.cc:113] LinkStateUpdate=6950311
+W0115 04:45:02.309092 62513 statistics.cc:114] InitiateLinkState=0
+W0115 04:45:02.309099 62513 statistics.cc:115] RoutingUpdate=49000317
+W0115 04:58:58.827672 62513 scheduler.cc:234] 0.429390 had 58709540 events
+W0115 04:58:58.827877 62513 statistics.cc:108] Up=0
+W0115 04:58:58.827888 62513 statistics.cc:109] Down=0
+W0115 04:58:58.827896 62513 statistics.cc:110] LinkUp=0
+W0115 04:58:58.827905 62513 statistics.cc:111] LinkDown=0
+W0115 04:58:58.827914 62513 statistics.cc:112] LinkStateRequest=0
+W0115 04:58:58.827924 62513 statistics.cc:113] LinkStateUpdate=6745141
+W0115 04:58:58.827939 62513 statistics.cc:114] InitiateLinkState=0
+W0115 04:58:58.827947 62513 statistics.cc:115] RoutingUpdate=51964399
+W0115 04:58:58.933558 62513 scheduler.cc:244] reachability @ 0.435350 is 45172/999000
+W0115 04:58:58.933585 62513 statistics.cc:195] bw in [0.400000,0.450000) is [27239464,202795374,0,0]
+W0115 05:08:58.013983 62513 scheduler.cc:234] 0.440400 had 61677451 events
+W0115 05:08:58.014204 62513 statistics.cc:108] Up=0
+W0115 05:08:58.014215 62513 statistics.cc:109] Down=0
+W0115 05:08:58.014225 62513 statistics.cc:110] LinkUp=0
+W0115 05:08:58.014233 62513 statistics.cc:111] LinkDown=0
+W0115 05:08:58.014242 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:08:58.014250 62513 statistics.cc:113] LinkStateUpdate=6427325
+W0115 05:08:58.014260 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:08:58.014267 62513 statistics.cc:115] RoutingUpdate=55250126
+W0115 05:18:38.365121 62513 scheduler.cc:234] 0.451410 had 64064094 events
+W0115 05:18:38.365339 62513 statistics.cc:108] Up=0
+W0115 05:18:38.365350 62513 statistics.cc:109] Down=0
+W0115 05:18:38.365358 62513 statistics.cc:110] LinkUp=0
+W0115 05:18:38.365368 62513 statistics.cc:111] LinkDown=0
+W0115 05:18:38.365382 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:18:38.365391 62513 statistics.cc:113] LinkStateUpdate=6045138
+W0115 05:18:38.365401 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:18:38.365411 62513 statistics.cc:115] RoutingUpdate=58018956
+W0115 05:26:54.302330 62513 scheduler.cc:234] 0.462420 had 66508813 events
+W0115 05:26:54.302536 62513 statistics.cc:108] Up=0
+W0115 05:26:54.302547 62513 statistics.cc:109] Down=0
+W0115 05:26:54.302556 62513 statistics.cc:110] LinkUp=0
+W0115 05:26:54.302566 62513 statistics.cc:111] LinkDown=0
+W0115 05:26:54.302574 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:26:54.302583 62513 statistics.cc:113] LinkStateUpdate=5670421
+W0115 05:26:54.302592 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:26:54.302602 62513 statistics.cc:115] RoutingUpdate=60838392
+W0115 05:33:32.040990 62513 scheduler.cc:234] 0.473430 had 68513500 events
+W0115 05:33:32.041157 62513 statistics.cc:108] Up=0
+W0115 05:33:32.041169 62513 statistics.cc:109] Down=0
+W0115 05:33:32.041178 62513 statistics.cc:110] LinkUp=0
+W0115 05:33:32.041188 62513 statistics.cc:111] LinkDown=0
+W0115 05:33:32.041196 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:33:32.041205 62513 statistics.cc:113] LinkStateUpdate=5334420
+W0115 05:33:32.041215 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:33:32.041224 62513 statistics.cc:115] RoutingUpdate=63179080
+W0115 05:38:59.481012 62513 scheduler.cc:234] 0.484440 had 70805608 events
+W0115 05:38:59.481154 62513 statistics.cc:108] Up=0
+W0115 05:38:59.481165 62513 statistics.cc:109] Down=0
+W0115 05:38:59.481174 62513 statistics.cc:110] LinkUp=0
+W0115 05:38:59.481184 62513 statistics.cc:111] LinkDown=0
+W0115 05:38:59.481192 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:38:59.481201 62513 statistics.cc:113] LinkStateUpdate=5022343
+W0115 05:38:59.481210 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:38:59.481219 62513 statistics.cc:115] RoutingUpdate=65783265
+W0115 05:38:59.622372 62513 scheduler.cc:244] reachability @ 0.490400 is 71851/999000
+W0115 05:38:59.622401 62513 statistics.cc:195] bw in [0.450000,0.500000) is [26776601,316813319,0,0]
+W0115 05:43:51.391144 62513 scheduler.cc:234] 0.495450 had 73697905 events
+W0115 05:43:51.391295 62513 statistics.cc:108] Up=0
+W0115 05:43:51.391307 62513 statistics.cc:109] Down=0
+W0115 05:43:51.391316 62513 statistics.cc:110] LinkUp=0
+W0115 05:43:51.391326 62513 statistics.cc:111] LinkDown=0
+W0115 05:43:51.391335 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:43:51.391345 62513 statistics.cc:113] LinkStateUpdate=4704279
+W0115 05:43:51.391353 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:43:51.391361 62513 statistics.cc:115] RoutingUpdate=68993626
+W0115 05:47:23.693892 62513 scheduler.cc:234] 0.506460 had 76970955 events
+W0115 05:47:23.694053 62513 statistics.cc:108] Up=0
+W0115 05:47:23.694066 62513 statistics.cc:109] Down=0
+W0115 05:47:23.694080 62513 statistics.cc:110] LinkUp=0
+W0115 05:47:23.694089 62513 statistics.cc:111] LinkDown=0
+W0115 05:47:23.694099 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:47:23.694108 62513 statistics.cc:113] LinkStateUpdate=4324938
+W0115 05:47:23.694118 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:47:23.694126 62513 statistics.cc:115] RoutingUpdate=72646017
+W0115 05:50:59.216538 62513 scheduler.cc:234] 0.517470 had 80490797 events
+W0115 05:50:59.216696 62513 statistics.cc:108] Up=0
+W0115 05:50:59.216709 62513 statistics.cc:109] Down=0
+W0115 05:50:59.216719 62513 statistics.cc:110] LinkUp=0
+W0115 05:50:59.216728 62513 statistics.cc:111] LinkDown=0
+W0115 05:50:59.216738 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:50:59.216748 62513 statistics.cc:113] LinkStateUpdate=3881262
+W0115 05:50:59.216758 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:50:59.216769 62513 statistics.cc:115] RoutingUpdate=76609535
+W0115 05:53:14.877903 62513 scheduler.cc:234] 0.528480 had 84075621 events
+W0115 05:53:14.878059 62513 statistics.cc:108] Up=0
+W0115 05:53:14.878072 62513 statistics.cc:109] Down=0
+W0115 05:53:14.878082 62513 statistics.cc:110] LinkUp=0
+W0115 05:53:14.878092 62513 statistics.cc:111] LinkDown=0
+W0115 05:53:14.878100 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:53:14.878110 62513 statistics.cc:113] LinkStateUpdate=3419039
+W0115 05:53:14.878119 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:53:14.878129 62513 statistics.cc:115] RoutingUpdate=80656582
+W0115 05:53:14.878150 62513 statistics.cc:195] bw in [0.500000,0.550000) is [14623957,314678328,0,0]
+W0115 05:54:55.890537 62513 scheduler.cc:234] 0.539490 had 87764912 events
+W0115 05:54:55.890681 62513 statistics.cc:108] Up=0
+W0115 05:54:55.890691 62513 statistics.cc:109] Down=0
+W0115 05:54:55.890702 62513 statistics.cc:110] LinkUp=0
+W0115 05:54:55.890712 62513 statistics.cc:111] LinkDown=0
+W0115 05:54:55.890722 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:54:55.890733 62513 statistics.cc:113] LinkStateUpdate=2998718
+W0115 05:54:55.890743 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:54:55.890753 62513 statistics.cc:115] RoutingUpdate=84766194
+W0115 05:54:56.109419 62513 scheduler.cc:244] reachability @ 0.545450 is 141498/999000
+W0115 05:56:17.521082 62513 scheduler.cc:234] 0.550500 had 91575022 events
+W0115 05:56:17.521258 62513 statistics.cc:108] Up=0
+W0115 05:56:17.521270 62513 statistics.cc:109] Down=0
+W0115 05:56:17.521281 62513 statistics.cc:110] LinkUp=0
+W0115 05:56:17.521291 62513 statistics.cc:111] LinkDown=0
+W0115 05:56:17.521301 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:56:17.521309 62513 statistics.cc:113] LinkStateUpdate=2650541
+W0115 05:56:17.521318 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:56:17.521337 62513 statistics.cc:115] RoutingUpdate=88924481
+W0115 05:57:43.168141 62513 scheduler.cc:234] 0.561510 had 95918781 events
+W0115 05:57:43.168318 62513 statistics.cc:108] Up=0
+W0115 05:57:43.168333 62513 statistics.cc:109] Down=0
+W0115 05:57:43.168344 62513 statistics.cc:110] LinkUp=0
+W0115 05:57:43.168355 62513 statistics.cc:111] LinkDown=0
+W0115 05:57:43.168366 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:57:43.168376 62513 statistics.cc:113] LinkStateUpdate=2311894
+W0115 05:57:43.168387 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:57:43.168397 62513 statistics.cc:115] RoutingUpdate=93606887
+W0115 05:59:14.138514 62513 scheduler.cc:234] 0.572520 had 101126090 events
+W0115 05:59:14.138685 62513 statistics.cc:108] Up=0
+W0115 05:59:14.138700 62513 statistics.cc:109] Down=0
+W0115 05:59:14.138710 62513 statistics.cc:110] LinkUp=0
+W0115 05:59:14.138721 62513 statistics.cc:111] LinkDown=0
+W0115 05:59:14.138732 62513 statistics.cc:112] LinkStateRequest=0
+W0115 05:59:14.138743 62513 statistics.cc:113] LinkStateUpdate=1965196
+W0115 05:59:14.138754 62513 statistics.cc:114] InitiateLinkState=0
+W0115 05:59:14.138766 62513 statistics.cc:115] RoutingUpdate=99160894
+W0115 06:00:50.378417 62513 scheduler.cc:234] 0.583530 had 107058558 events
+W0115 06:00:50.378584 62513 statistics.cc:108] Up=0
+W0115 06:00:50.378602 62513 statistics.cc:109] Down=0
+W0115 06:00:50.378613 62513 statistics.cc:110] LinkUp=0
+W0115 06:00:50.378623 62513 statistics.cc:111] LinkDown=0
+W0115 06:00:50.378633 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:00:50.378644 62513 statistics.cc:113] LinkStateUpdate=1628987
+W0115 06:00:50.378654 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:00:50.378664 62513 statistics.cc:115] RoutingUpdate=105429571
+W0115 06:00:50.378681 62513 statistics.cc:195] bw in [0.550000,0.600000) is [9895396,498941710,0,0]
+W0115 06:02:33.518594 62513 scheduler.cc:234] 0.594540 had 113158655 events
+W0115 06:02:33.518766 62513 statistics.cc:108] Up=0
+W0115 06:02:33.518779 62513 statistics.cc:109] Down=0
+W0115 06:02:33.518790 62513 statistics.cc:110] LinkUp=0
+W0115 06:02:33.518800 62513 statistics.cc:111] LinkDown=0
+W0115 06:02:33.518810 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:02:33.518821 62513 statistics.cc:113] LinkStateUpdate=1338778
+W0115 06:02:33.518831 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:02:33.518841 62513 statistics.cc:115] RoutingUpdate=111819877
+W0115 06:02:33.850980 62513 scheduler.cc:244] reachability @ 0.600500 is 258546/999000
+W0115 06:04:23.684744 62513 scheduler.cc:234] 0.605550 had 119011413 events
+W0115 06:04:23.684906 62513 statistics.cc:108] Up=0
+W0115 06:04:23.684919 62513 statistics.cc:109] Down=0
+W0115 06:04:23.684929 62513 statistics.cc:110] LinkUp=0
+W0115 06:04:23.684939 62513 statistics.cc:111] LinkDown=0
+W0115 06:04:23.684950 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:04:23.684962 62513 statistics.cc:113] LinkStateUpdate=1104316
+W0115 06:04:23.684972 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:04:23.684981 62513 statistics.cc:115] RoutingUpdate=117907097
+W0115 06:06:20.316531 62513 scheduler.cc:234] 0.616560 had 124503872 events
+W0115 06:06:20.316712 62513 statistics.cc:108] Up=0
+W0115 06:06:20.316725 62513 statistics.cc:109] Down=0
+W0115 06:06:20.316736 62513 statistics.cc:110] LinkUp=0
+W0115 06:06:20.316746 62513 statistics.cc:111] LinkDown=0
+W0115 06:06:20.316757 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:06:20.316767 62513 statistics.cc:113] LinkStateUpdate=907611
+W0115 06:06:20.316778 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:06:20.316788 62513 statistics.cc:115] RoutingUpdate=123596261
+W0115 06:08:23.285461 62513 scheduler.cc:234] 0.627570 had 130032190 events
+W0115 06:08:23.285640 62513 statistics.cc:108] Up=0
+W0115 06:08:23.285651 62513 statistics.cc:109] Down=0
+W0115 06:08:23.285662 62513 statistics.cc:110] LinkUp=0
+W0115 06:08:23.285672 62513 statistics.cc:111] LinkDown=0
+W0115 06:08:23.285683 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:08:23.285694 62513 statistics.cc:113] LinkStateUpdate=726349
+W0115 06:08:23.285704 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:08:23.285722 62513 statistics.cc:115] RoutingUpdate=129305841
+W0115 06:10:33.855829 62513 scheduler.cc:234] 0.638580 had 135044908 events
+W0115 06:10:33.855993 62513 statistics.cc:108] Up=0
+W0115 06:10:33.856006 62513 statistics.cc:109] Down=0
+W0115 06:10:33.856016 62513 statistics.cc:110] LinkUp=0
+W0115 06:10:33.856026 62513 statistics.cc:111] LinkDown=0
+W0115 06:10:33.856036 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:10:33.856046 62513 statistics.cc:113] LinkStateUpdate=572345
+W0115 06:10:33.856056 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:10:33.856065 62513 statistics.cc:115] RoutingUpdate=134472563
+W0115 06:10:33.856088 62513 statistics.cc:195] bw in [0.600000,0.650000) is [3757865,645046478,0,0]
+W0115 06:12:51.489269 62513 scheduler.cc:234] 0.649590 had 140211960 events
+W0115 06:12:51.489454 62513 statistics.cc:108] Up=0
+W0115 06:12:51.489465 62513 statistics.cc:109] Down=0
+W0115 06:12:51.489476 62513 statistics.cc:110] LinkUp=0
+W0115 06:12:51.489486 62513 statistics.cc:111] LinkDown=0
+W0115 06:12:51.489495 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:12:51.489505 62513 statistics.cc:113] LinkStateUpdate=447244
+W0115 06:12:51.489514 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:12:51.489529 62513 statistics.cc:115] RoutingUpdate=139764716
+W0115 06:12:52.019862 62513 scheduler.cc:244] reachability @ 0.655550 is 431463/999000
+W0115 06:15:14.886432 62513 scheduler.cc:234] 0.660600 had 144972609 events
+W0115 06:15:14.886601 62513 statistics.cc:108] Up=0
+W0115 06:15:14.886615 62513 statistics.cc:109] Down=0
+W0115 06:15:14.886626 62513 statistics.cc:110] LinkUp=0
+W0115 06:15:14.886637 62513 statistics.cc:111] LinkDown=0
+W0115 06:15:14.886647 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:15:14.886657 62513 statistics.cc:113] LinkStateUpdate=345025
+W0115 06:15:14.886669 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:15:14.886680 62513 statistics.cc:115] RoutingUpdate=144627584
+W0115 06:17:45.478322 62513 scheduler.cc:234] 0.671610 had 148939577 events
+W0115 06:17:45.478503 62513 statistics.cc:108] Up=0
+W0115 06:17:45.478516 62513 statistics.cc:109] Down=0
+W0115 06:17:45.478526 62513 statistics.cc:110] LinkUp=0
+W0115 06:17:45.478536 62513 statistics.cc:111] LinkDown=0
+W0115 06:17:45.478546 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:17:45.478557 62513 statistics.cc:113] LinkStateUpdate=263938
+W0115 06:17:45.478574 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:17:45.478584 62513 statistics.cc:115] RoutingUpdate=148675639
+W0115 06:20:21.767236 62513 scheduler.cc:234] 0.682620 had 151717133 events
+W0115 06:20:21.767408 62513 statistics.cc:108] Up=0
+W0115 06:20:21.767422 62513 statistics.cc:109] Down=0
+W0115 06:20:21.767434 62513 statistics.cc:110] LinkUp=0
+W0115 06:20:21.767446 62513 statistics.cc:111] LinkDown=0
+W0115 06:20:21.767457 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:20:21.767468 62513 statistics.cc:113] LinkStateUpdate=199881
+W0115 06:20:21.767480 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:20:21.767491 62513 statistics.cc:115] RoutingUpdate=151517252
+W0115 06:20:21.767777 62513 statistics.cc:195] bw in [0.650000,0.700000) is [958187,598318325,0,0]
+W0115 06:23:02.228199 62513 scheduler.cc:234] 0.693630 had 153647193 events
+W0115 06:23:02.228380 62513 statistics.cc:108] Up=0
+W0115 06:23:02.228395 62513 statistics.cc:109] Down=0
+W0115 06:23:02.228410 62513 statistics.cc:110] LinkUp=0
+W0115 06:23:02.228422 62513 statistics.cc:111] LinkDown=0
+W0115 06:23:02.228435 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:23:02.228446 62513 statistics.cc:113] LinkStateUpdate=149343
+W0115 06:23:02.228457 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:23:02.228469 62513 statistics.cc:115] RoutingUpdate=153497850
+W0115 06:25:47.628120 62513 scheduler.cc:234] 0.704640 had 155951808 events
+W0115 06:25:47.628284 62513 statistics.cc:108] Up=0
+W0115 06:25:47.628298 62513 statistics.cc:109] Down=0
+W0115 06:25:47.628311 62513 statistics.cc:110] LinkUp=0
+W0115 06:25:47.628322 62513 statistics.cc:111] LinkDown=0
+W0115 06:25:47.628335 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:25:47.628345 62513 statistics.cc:113] LinkStateUpdate=110347
+W0115 06:25:47.628358 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:25:47.628370 62513 statistics.cc:115] RoutingUpdate=155841461
+W0115 06:25:48.337188 62513 scheduler.cc:244] reachability @ 0.710600 is 584752/999000
+W0115 06:28:39.825148 62513 scheduler.cc:234] 0.715650 had 158789468 events
+W0115 06:28:39.825222 62513 statistics.cc:108] Up=0
+W0115 06:28:39.825233 62513 statistics.cc:109] Down=0
+W0115 06:28:39.825244 62513 statistics.cc:110] LinkUp=0
+W0115 06:28:39.825254 62513 statistics.cc:111] LinkDown=0
+W0115 06:28:39.825265 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:28:39.825276 62513 statistics.cc:113] LinkStateUpdate=75097
+W0115 06:28:39.825287 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:28:39.825299 62513 statistics.cc:115] RoutingUpdate=158714371
+W0115 06:31:37.421165 62513 scheduler.cc:234] 0.726660 had 160985828 events
+W0115 06:31:37.421269 62513 statistics.cc:108] Up=0
+W0115 06:31:37.421283 62513 statistics.cc:109] Down=0
+W0115 06:31:37.421293 62513 statistics.cc:110] LinkUp=0
+W0115 06:31:37.421303 62513 statistics.cc:111] LinkDown=0
+W0115 06:31:37.421315 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:31:37.421336 62513 statistics.cc:113] LinkStateUpdate=48588
+W0115 06:31:37.421350 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:31:37.421361 62513 statistics.cc:115] RoutingUpdate=160937240
+W0115 06:34:37.967175 62513 scheduler.cc:234] 0.737670 had 161172667 events
+W0115 06:34:37.967257 62513 statistics.cc:108] Up=0
+W0115 06:34:37.967272 62513 statistics.cc:109] Down=0
+W0115 06:34:37.967283 62513 statistics.cc:110] LinkUp=0
+W0115 06:34:37.967296 62513 statistics.cc:111] LinkDown=0
+W0115 06:34:37.967308 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:34:37.967321 62513 statistics.cc:113] LinkStateUpdate=31056
+W0115 06:34:37.967335 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:34:37.967347 62513 statistics.cc:115] RoutingUpdate=161141611
+W0115 06:34:37.967368 62513 statistics.cc:195] bw in [0.700000,0.750000) is [284967,795936363,0,0]
+W0115 06:37:41.810235 62513 scheduler.cc:234] 0.748680 had 159321559 events
+W0115 06:37:41.810385 62513 statistics.cc:108] Up=0
+W0115 06:37:41.810401 62513 statistics.cc:109] Down=0
+W0115 06:37:41.810413 62513 statistics.cc:110] LinkUp=0
+W0115 06:37:41.810426 62513 statistics.cc:111] LinkDown=0
+W0115 06:37:41.810441 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:37:41.810452 62513 statistics.cc:113] LinkStateUpdate=19879
+W0115 06:37:41.810463 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:37:41.810474 62513 statistics.cc:115] RoutingUpdate=159301680
+W0115 06:40:46.673184 62513 scheduler.cc:234] 0.759690 had 156413845 events
+W0115 06:40:46.673274 62513 statistics.cc:108] Up=0
+W0115 06:40:46.673287 62513 statistics.cc:109] Down=0
+W0115 06:40:46.673300 62513 statistics.cc:110] LinkUp=0
+W0115 06:40:46.673311 62513 statistics.cc:111] LinkDown=0
+W0115 06:40:46.673324 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:40:46.673336 62513 statistics.cc:113] LinkStateUpdate=11866
+W0115 06:40:46.673346 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:40:46.673358 62513 statistics.cc:115] RoutingUpdate=156401979
+W0115 06:40:47.567914 62513 scheduler.cc:244] reachability @ 0.765650 is 731176/999000
+W0115 06:43:53.277416 62513 scheduler.cc:234] 0.770700 had 153918217 events
+W0115 06:43:53.277497 62513 statistics.cc:108] Up=0
+W0115 06:43:53.277509 62513 statistics.cc:109] Down=0
+W0115 06:43:53.277523 62513 statistics.cc:110] LinkUp=0
+W0115 06:43:53.277535 62513 statistics.cc:111] LinkDown=0
+W0115 06:43:53.277547 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:43:53.277560 62513 statistics.cc:113] LinkStateUpdate=6234
+W0115 06:43:53.277572 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:43:53.277585 62513 statistics.cc:115] RoutingUpdate=153911983
+W0115 06:46:58.100908 62513 scheduler.cc:234] 0.781710 had 151051783 events
+W0115 06:46:58.101063 62513 statistics.cc:108] Up=0
+W0115 06:46:58.101078 62513 statistics.cc:109] Down=0
+W0115 06:46:58.101091 62513 statistics.cc:110] LinkUp=0
+W0115 06:46:58.101104 62513 statistics.cc:111] LinkDown=0
+W0115 06:46:58.101119 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:46:58.101130 62513 statistics.cc:113] LinkStateUpdate=2685
+W0115 06:46:58.101145 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:46:58.101158 62513 statistics.cc:115] RoutingUpdate=151049098
+W0115 06:46:58.101182 62513 statistics.cc:195] bw in [0.750000,0.800000) is [21689,610294782,0,0]
+W0115 06:50:01.386549 62513 scheduler.cc:234] 0.792720 had 148932626 events
+W0115 06:50:01.386649 62513 statistics.cc:108] Up=0
+W0115 06:50:01.386664 62513 statistics.cc:109] Down=0
+W0115 06:50:01.386677 62513 statistics.cc:110] LinkUp=0
+W0115 06:50:01.386690 62513 statistics.cc:111] LinkDown=0
+W0115 06:50:01.386703 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:50:01.386714 62513 statistics.cc:113] LinkStateUpdate=904
+W0115 06:50:01.386725 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:50:01.386739 62513 statistics.cc:115] RoutingUpdate=148931722
+W0115 06:53:02.331459 62513 scheduler.cc:234] 0.803730 had 144964226 events
+W0115 06:53:02.331537 62513 statistics.cc:108] Up=0
+W0115 06:53:02.331550 62513 statistics.cc:109] Down=0
+W0115 06:53:02.331571 62513 statistics.cc:110] LinkUp=0
+W0115 06:53:02.331583 62513 statistics.cc:111] LinkDown=0
+W0115 06:53:02.331595 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:53:02.331606 62513 statistics.cc:113] LinkStateUpdate=259
+W0115 06:53:02.331617 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:53:02.331630 62513 statistics.cc:115] RoutingUpdate=144963967
+W0115 06:55:59.202579 62513 scheduler.cc:234] 0.814740 had 138066428 events
+W0115 06:55:59.202746 62513 statistics.cc:108] Up=0
+W0115 06:55:59.202760 62513 statistics.cc:109] Down=0
+W0115 06:55:59.202772 62513 statistics.cc:110] LinkUp=0
+W0115 06:55:59.202783 62513 statistics.cc:111] LinkDown=0
+W0115 06:55:59.202796 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:55:59.202808 62513 statistics.cc:113] LinkStateUpdate=54
+W0115 06:55:59.202821 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:55:59.202832 62513 statistics.cc:115] RoutingUpdate=138066374
+W0115 06:56:00.190691 62513 scheduler.cc:244] reachability @ 0.820700 is 831077/999000
+W0115 06:58:48.352007 62513 scheduler.cc:234] 0.825750 had 129367653 events
+W0115 06:58:48.352087 62513 statistics.cc:108] Up=0
+W0115 06:58:48.352102 62513 statistics.cc:109] Down=0
+W0115 06:58:48.352113 62513 statistics.cc:110] LinkUp=0
+W0115 06:58:48.352123 62513 statistics.cc:111] LinkDown=0
+W0115 06:58:48.352136 62513 statistics.cc:112] LinkStateRequest=0
+W0115 06:58:48.352147 62513 statistics.cc:113] LinkStateUpdate=7
+W0115 06:58:48.352159 62513 statistics.cc:114] InitiateLinkState=0
+W0115 06:58:48.352171 62513 statistics.cc:115] RoutingUpdate=129367646
+W0115 07:01:24.530827 62513 scheduler.cc:234] 0.836760 had 119864765 events
+W0115 07:01:24.530930 62513 statistics.cc:108] Up=0
+W0115 07:01:24.530944 62513 statistics.cc:109] Down=0
+W0115 07:01:24.530956 62513 statistics.cc:110] LinkUp=0
+W0115 07:01:24.530967 62513 statistics.cc:111] LinkDown=0
+W0115 07:01:24.530978 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:01:24.530990 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:01:24.531002 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:01:24.531013 62513 statistics.cc:115] RoutingUpdate=119864765
+W0115 07:01:24.531036 62513 statistics.cc:195] bw in [0.800000,0.850000) is [320,641856323,0,0]
+W0115 07:03:50.047123 62513 scheduler.cc:234] 0.847770 had 109593571 events
+W0115 07:03:50.047200 62513 statistics.cc:108] Up=0
+W0115 07:03:50.047214 62513 statistics.cc:109] Down=0
+W0115 07:03:50.047224 62513 statistics.cc:110] LinkUp=0
+W0115 07:03:50.047235 62513 statistics.cc:111] LinkDown=0
+W0115 07:03:50.047246 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:03:50.047258 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:03:50.047271 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:03:50.047281 62513 statistics.cc:115] RoutingUpdate=109593571
+W0115 07:06:01.358613 62513 scheduler.cc:234] 0.858780 had 99505101 events
+W0115 07:06:01.358767 62513 statistics.cc:108] Up=0
+W0115 07:06:01.358780 62513 statistics.cc:109] Down=0
+W0115 07:06:01.358791 62513 statistics.cc:110] LinkUp=0
+W0115 07:06:01.358803 62513 statistics.cc:111] LinkDown=0
+W0115 07:06:01.358814 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:06:01.358824 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:06:01.358835 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:06:01.358846 62513 statistics.cc:115] RoutingUpdate=99505101
+W0115 07:07:58.497249 62513 scheduler.cc:234] 0.869790 had 86905561 events
+W0115 07:07:58.497328 62513 statistics.cc:108] Up=0
+W0115 07:07:58.497341 62513 statistics.cc:109] Down=0
+W0115 07:07:58.497354 62513 statistics.cc:110] LinkUp=0
+W0115 07:07:58.497367 62513 statistics.cc:111] LinkDown=0
+W0115 07:07:58.497380 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:07:58.497391 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:07:58.497403 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:07:58.497414 62513 statistics.cc:115] RoutingUpdate=86905561
+W0115 07:07:59.540246 62513 scheduler.cc:244] reachability @ 0.875750 is 894928/999000
+W0115 07:09:38.746904 62513 scheduler.cc:234] 0.880800 had 74174660 events
+W0115 07:09:38.746996 62513 statistics.cc:108] Up=0
+W0115 07:09:38.747009 62513 statistics.cc:109] Down=0
+W0115 07:09:38.747021 62513 statistics.cc:110] LinkUp=0
+W0115 07:09:38.747032 62513 statistics.cc:111] LinkDown=0
+W0115 07:09:38.747043 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:09:38.747055 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:09:38.747066 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:09:38.747077 62513 statistics.cc:115] RoutingUpdate=74174660
+W0115 07:09:38.747109 62513 statistics.cc:195] bw in [0.850000,0.900000) is [0,323568152,0,0]
+W0115 07:11:04.655510 62513 scheduler.cc:234] 0.891810 had 62982830 events
+W0115 07:11:04.655591 62513 statistics.cc:108] Up=0
+W0115 07:11:04.655604 62513 statistics.cc:109] Down=0
+W0115 07:11:04.655616 62513 statistics.cc:110] LinkUp=0
+W0115 07:11:04.655628 62513 statistics.cc:111] LinkDown=0
+W0115 07:11:04.655639 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:11:04.655652 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:11:04.655663 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:11:04.655674 62513 statistics.cc:115] RoutingUpdate=62982830
+W0115 07:12:14.834275 62513 scheduler.cc:234] 0.902820 had 53982860 events
+W0115 07:12:14.834354 62513 statistics.cc:108] Up=0
+W0115 07:12:14.834367 62513 statistics.cc:109] Down=0
+W0115 07:12:14.834378 62513 statistics.cc:110] LinkUp=0
+W0115 07:12:14.834390 62513 statistics.cc:111] LinkDown=0
+W0115 07:12:14.834403 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:12:14.834414 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:12:14.834425 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:12:14.834436 62513 statistics.cc:115] RoutingUpdate=53982860
+W0115 07:13:15.063277 62513 scheduler.cc:234] 0.913830 had 47009749 events
+W0115 07:13:15.063354 62513 statistics.cc:108] Up=0
+W0115 07:13:15.063369 62513 statistics.cc:109] Down=0
+W0115 07:13:15.063381 62513 statistics.cc:110] LinkUp=0
+W0115 07:13:15.063393 62513 statistics.cc:111] LinkDown=0
+W0115 07:13:15.063405 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:13:15.063417 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:13:15.063428 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:13:15.063441 62513 statistics.cc:115] RoutingUpdate=47009749
+W0115 07:14:05.945127 62513 scheduler.cc:234] 0.924840 had 39709721 events
+W0115 07:14:05.945667 62513 statistics.cc:108] Up=0
+W0115 07:14:05.946228 62513 statistics.cc:109] Down=0
+W0115 07:14:05.947769 62513 statistics.cc:110] LinkUp=0
+W0115 07:14:05.974741 62513 statistics.cc:111] LinkDown=0
+W0115 07:14:05.974777 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:14:05.974791 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:14:05.974802 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:14:05.974814 62513 statistics.cc:115] RoutingUpdate=39709721
+W0115 07:14:07.046036 62513 scheduler.cc:244] reachability @ 0.930800 is 947702/999000
+W0115 07:14:48.865015 62513 scheduler.cc:234] 0.935850 had 32581118 events
+W0115 07:14:48.865779 62513 statistics.cc:108] Up=0
+W0115 07:14:48.892048 62513 statistics.cc:109] Down=0
+W0115 07:14:48.892072 62513 statistics.cc:110] LinkUp=0
+W0115 07:14:48.892084 62513 statistics.cc:111] LinkDown=0
+W0115 07:14:48.892096 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:14:48.892107 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:14:48.892120 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:14:48.892132 62513 statistics.cc:115] RoutingUpdate=32581118
+W0115 07:14:48.892155 62513 statistics.cc:195] bw in [0.900000,0.950000) is [0,199605578,0,0]
+W0115 07:15:21.819337 62513 scheduler.cc:234] 0.946860 had 26322130 events
+W0115 07:15:21.820363 62513 statistics.cc:108] Up=0
+W0115 07:15:21.842778 62513 statistics.cc:109] Down=0
+W0115 07:15:21.842813 62513 statistics.cc:110] LinkUp=0
+W0115 07:15:21.842828 62513 statistics.cc:111] LinkDown=0
+W0115 07:15:21.842840 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:15:21.842852 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:15:21.842865 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:15:21.842890 62513 statistics.cc:115] RoutingUpdate=26322130
+W0115 07:15:47.936707 62513 scheduler.cc:234] 0.957870 had 21606614 events
+W0115 07:15:47.938086 62513 statistics.cc:108] Up=0
+W0115 07:15:47.939463 62513 statistics.cc:109] Down=0
+W0115 07:15:47.940829 62513 statistics.cc:110] LinkUp=0
+W0115 07:15:47.942175 62513 statistics.cc:111] LinkDown=0
+W0115 07:15:47.943544 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:15:47.945209 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:15:47.946787 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:15:47.948339 62513 statistics.cc:115] RoutingUpdate=21606614
+W0115 07:16:09.711158 62513 scheduler.cc:234] 0.968880 had 17940727 events
+W0115 07:16:09.712157 62513 statistics.cc:108] Up=0
+W0115 07:16:09.712968 62513 statistics.cc:109] Down=0
+W0115 07:16:09.713687 62513 statistics.cc:110] LinkUp=0
+W0115 07:16:09.714552 62513 statistics.cc:111] LinkDown=0
+W0115 07:16:09.715304 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:16:09.715993 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:16:09.716609 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:16:09.732899 62513 statistics.cc:115] RoutingUpdate=17940727
+W0115 07:16:28.354526 62513 scheduler.cc:234] 0.979890 had 14780981 events
+W0115 07:16:28.355907 62513 statistics.cc:108] Up=0
+W0115 07:16:28.357238 62513 statistics.cc:109] Down=0
+W0115 07:16:28.358541 62513 statistics.cc:110] LinkUp=0
+W0115 07:16:28.359871 62513 statistics.cc:111] LinkDown=0
+W0115 07:16:28.361165 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:16:28.362458 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:16:28.363766 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:16:28.365087 62513 statistics.cc:115] RoutingUpdate=14780981
+W0115 07:16:29.469986 62513 scheduler.cc:244] reachability @ 0.985850 is 971199/999000
+W0115 07:16:29.485666 62513 statistics.cc:195] bw in [0.950000,1.000000) is [0,65929829,0,0]
+W0115 07:16:42.770107 62513 scheduler.cc:234] 0.990900 had 11601507 events
+W0115 07:16:42.770675 62513 statistics.cc:108] Up=0
+W0115 07:16:42.781379 62513 statistics.cc:109] Down=0
+W0115 07:16:42.781407 62513 statistics.cc:110] LinkUp=0
+W0115 07:16:42.781421 62513 statistics.cc:111] LinkDown=0
+W0115 07:16:42.781435 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:16:42.781446 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:16:42.781458 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:16:42.781471 62513 statistics.cc:115] RoutingUpdate=11601507
+W0115 07:16:52.959244 62513 scheduler.cc:234] 1.001910 had 9111706 events
+W0115 07:16:52.960590 62513 statistics.cc:108] Up=0
+W0115 07:16:52.961884 62513 statistics.cc:109] Down=0
+W0115 07:16:52.963176 62513 statistics.cc:110] LinkUp=0
+W0115 07:16:52.964473 62513 statistics.cc:111] LinkDown=0
+W0115 07:16:52.965770 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:16:52.967088 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:16:52.968389 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:16:52.969683 62513 statistics.cc:115] RoutingUpdate=9111706
+W0115 07:17:01.242683 62513 scheduler.cc:234] 1.012920 had 6776528 events
+W0115 07:17:01.244017 62513 statistics.cc:108] Up=0
+W0115 07:17:01.245333 62513 statistics.cc:109] Down=0
+W0115 07:17:01.246624 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:01.247912 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:01.249215 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:01.250699 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:01.252187 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:01.253677 62513 statistics.cc:115] RoutingUpdate=6776528
+W0115 07:17:07.159116 62513 scheduler.cc:234] 1.023930 had 4755980 events
+W0115 07:17:07.159625 62513 statistics.cc:108] Up=0
+W0115 07:17:07.160159 62513 statistics.cc:109] Down=0
+W0115 07:17:07.160656 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:07.161155 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:07.165896 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:07.165933 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:07.165948 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:07.165972 62513 statistics.cc:115] RoutingUpdate=4755980
+W0115 07:17:11.099441 62513 scheduler.cc:234] 1.034940 had 3311559 events
+W0115 07:17:11.103027 62513 statistics.cc:108] Up=0
+W0115 07:17:11.103046 62513 statistics.cc:109] Down=0
+W0115 07:17:11.103060 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:11.103073 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:11.103088 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:11.103101 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:11.103116 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:11.103127 62513 statistics.cc:115] RoutingUpdate=3311559
+W0115 07:17:12.210911 62513 scheduler.cc:244] reachability @ 1.040900 is 995000/999000
+W0115 07:17:12.210996 62513 statistics.cc:195] bw in [1.000000,1.050000) is [0,26031568,0,0]
+W0115 07:17:14.649549 62513 scheduler.cc:234] 1.045950 had 2075795 events
+W0115 07:17:14.650874 62513 statistics.cc:108] Up=0
+W0115 07:17:14.652032 62513 statistics.cc:109] Down=0
+W0115 07:17:14.653178 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:14.654315 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:14.655388 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:14.656766 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:14.658036 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:14.659279 62513 statistics.cc:115] RoutingUpdate=2075795
+W0115 07:17:16.147927 62513 scheduler.cc:234] 1.056960 had 1337618 events
+W0115 07:17:16.148587 62513 statistics.cc:108] Up=0
+W0115 07:17:16.149229 62513 statistics.cc:109] Down=0
+W0115 07:17:16.149754 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:16.150634 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:16.151482 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:16.152245 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:16.154412 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:16.154804 62513 statistics.cc:115] RoutingUpdate=1337618
+W0115 07:17:17.093559 62513 scheduler.cc:234] 1.067970 had 848754 events
+W0115 07:17:17.095294 62513 statistics.cc:108] Up=0
+W0115 07:17:17.095780 62513 statistics.cc:109] Down=0
+W0115 07:17:17.096264 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:17.096904 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:17.098666 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:17.098703 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:17.098718 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:17.098731 62513 statistics.cc:115] RoutingUpdate=848754
+W0115 07:17:17.400362 62513 scheduler.cc:234] 1.078980 had 270177 events
+W0115 07:17:17.401932 62513 statistics.cc:108] Up=0
+W0115 07:17:17.403450 62513 statistics.cc:109] Down=0
+W0115 07:17:17.404731 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:17.406054 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:17.407521 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:17.409024 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:17.410408 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:17.411667 62513 statistics.cc:115] RoutingUpdate=270177
+W0115 07:17:17.414835 62513 statistics.cc:195] bw in [1.050000,1.100000) is [0,2486805,0,0]
+W0115 07:17:17.441282 62513 scheduler.cc:234] 1.089990 had 30256 events
+W0115 07:17:17.441764 62513 statistics.cc:108] Up=0
+W0115 07:17:17.442265 62513 statistics.cc:109] Down=0
+W0115 07:17:17.442760 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:17.443312 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:17.443758 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:17.443784 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:17.443799 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:17.443814 62513 statistics.cc:115] RoutingUpdate=30256
+W0115 07:17:18.550793 62513 scheduler.cc:244] reachability @ 1.095950 is 999000/999000
+W0115 07:17:18.550940 62513 scheduler.cc:234] 1.101000 had 39 events
+W0115 07:17:18.551062 62513 statistics.cc:108] Up=0
+W0115 07:17:18.551080 62513 statistics.cc:109] Down=0
+W0115 07:17:18.551095 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:18.551107 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:18.551136 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:18.551149 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:18.551163 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:18.551177 62513 statistics.cc:115] RoutingUpdate=39
+W0115 07:17:19.625885 62513 scheduler.cc:244] reachability @ 1.151000 is 999000/999000
+W0115 07:17:19.625933 62513 statistics.cc:195] bw in [1.100000,1.150000) is [0,39,0,0]
+W0115 07:17:19.676978 62513 scheduler.cc:234] 500.000000 had 10000 events
+W0115 07:17:19.677038 62513 statistics.cc:108] Up=0
+W0115 07:17:19.677052 62513 statistics.cc:109] Down=0
+W0115 07:17:19.677064 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:19.677078 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:19.677093 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:19.677105 62513 statistics.cc:113] LinkStateUpdate=0
+W0115 07:17:19.677119 62513 statistics.cc:114] InitiateLinkState=10000
+W0115 07:17:19.677148 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:19.808919 62513 scheduler.cc:234] 500.011010 had 30572 events
+W0115 07:17:19.809159 62513 statistics.cc:108] Up=0
+W0115 07:17:19.809180 62513 statistics.cc:109] Down=0
+W0115 07:17:19.809195 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:19.809208 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:19.809221 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:19.809234 62513 statistics.cc:113] LinkStateUpdate=30572
+W0115 07:17:19.809249 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:19.809262 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:20.111953 62513 scheduler.cc:234] 500.022020 had 93283 events
+W0115 07:17:20.112013 62513 statistics.cc:108] Up=0
+W0115 07:17:20.112030 62513 statistics.cc:109] Down=0
+W0115 07:17:20.112041 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:20.112057 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:20.112071 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:20.112083 62513 statistics.cc:113] LinkStateUpdate=93283
+W0115 07:17:20.112097 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:20.112110 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:20.658454 62513 scheduler.cc:234] 500.033030 had 238231 events
+W0115 07:17:20.658515 62513 statistics.cc:108] Up=0
+W0115 07:17:20.658529 62513 statistics.cc:109] Down=0
+W0115 07:17:20.658542 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:20.658556 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:20.658570 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:20.658583 62513 statistics.cc:113] LinkStateUpdate=238231
+W0115 07:17:20.658596 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:20.658609 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:20.658629 62513 statistics.cc:195] bw in [500.000000,500.050000) is [798306,0,0,0]
+W0115 07:17:21.384484 62513 scheduler.cc:234] 500.044040 had 436220 events
+W0115 07:17:21.384544 62513 statistics.cc:108] Up=0
+W0115 07:17:21.384558 62513 statistics.cc:109] Down=0
+W0115 07:17:21.384570 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:21.384583 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:21.384596 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:21.384609 62513 statistics.cc:113] LinkStateUpdate=436220
+W0115 07:17:21.384621 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:21.384634 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:22.491061 62513 scheduler.cc:244] reachability @ 500.050000 is 999000/999000
+W0115 07:17:23.251776 62513 scheduler.cc:234] 500.055050 had 539404 events
+W0115 07:17:23.251839 62513 statistics.cc:108] Up=0
+W0115 07:17:23.251854 62513 statistics.cc:109] Down=0
+W0115 07:17:23.251866 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:23.251879 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:23.251894 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:23.251907 62513 statistics.cc:113] LinkStateUpdate=539404
+W0115 07:17:23.251921 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:23.251935 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:23.996448 62513 scheduler.cc:234] 500.066060 had 513420 events
+W0115 07:17:23.996510 62513 statistics.cc:108] Up=0
+W0115 07:17:23.996533 62513 statistics.cc:109] Down=0
+W0115 07:17:23.996548 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:23.996562 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:23.996577 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:23.996588 62513 statistics.cc:113] LinkStateUpdate=513420
+W0115 07:17:23.996603 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:23.996615 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:24.800536 62513 scheduler.cc:234] 500.077070 had 491773 events
+W0115 07:17:24.800597 62513 statistics.cc:108] Up=0
+W0115 07:17:24.800612 62513 statistics.cc:109] Down=0
+W0115 07:17:24.800624 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:24.800637 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:24.800649 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:24.800665 62513 statistics.cc:113] LinkStateUpdate=491773
+W0115 07:17:24.800678 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:24.800704 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:25.769357 62513 scheduler.cc:234] 500.088080 had 563265 events
+W0115 07:17:25.769422 62513 statistics.cc:108] Up=0
+W0115 07:17:25.769435 62513 statistics.cc:109] Down=0
+W0115 07:17:25.769448 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:25.769461 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:25.769475 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:25.769490 62513 statistics.cc:113] LinkStateUpdate=563265
+W0115 07:17:25.769503 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:25.769516 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:25.769557 62513 statistics.cc:195] bw in [500.050000,500.100000) is [2814623,0,0,0]
+W0115 07:17:26.943095 62513 scheduler.cc:234] 500.099090 had 706761 events
+W0115 07:17:26.943157 62513 statistics.cc:108] Up=0
+W0115 07:17:26.943172 62513 statistics.cc:109] Down=0
+W0115 07:17:26.943186 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:26.943198 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:26.943212 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:26.943227 62513 statistics.cc:113] LinkStateUpdate=706761
+W0115 07:17:26.943241 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:26.943254 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:28.049718 62513 scheduler.cc:244] reachability @ 500.105050 is 999000/999000
+W0115 07:17:29.393461 62513 scheduler.cc:234] 500.110100 had 857969 events
+W0115 07:17:29.393523 62513 statistics.cc:108] Up=0
+W0115 07:17:29.393539 62513 statistics.cc:109] Down=0
+W0115 07:17:29.393553 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:29.393566 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:29.393580 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:29.393594 62513 statistics.cc:113] LinkStateUpdate=857969
+W0115 07:17:29.393607 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:29.393621 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:30.898849 62513 scheduler.cc:234] 500.121110 had 983884 events
+W0115 07:17:30.898913 62513 statistics.cc:108] Up=0
+W0115 07:17:30.898928 62513 statistics.cc:109] Down=0
+W0115 07:17:30.898941 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:30.898954 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:30.898967 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:30.898980 62513 statistics.cc:113] LinkStateUpdate=983884
+W0115 07:17:30.898994 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:30.899008 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:32.607951 62513 scheduler.cc:234] 500.132120 had 1100204 events
+W0115 07:17:32.608016 62513 statistics.cc:108] Up=0
+W0115 07:17:32.608031 62513 statistics.cc:109] Down=0
+W0115 07:17:32.608047 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:32.608060 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:32.608073 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:32.608086 62513 statistics.cc:113] LinkStateUpdate=1100204
+W0115 07:17:32.608100 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:32.608114 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:32.608155 62513 statistics.cc:195] bw in [500.100000,500.150000) is [4189781,0,0,0]
+W0115 07:17:34.573951 62513 scheduler.cc:234] 500.143130 had 1247724 events
+W0115 07:17:34.574014 62513 statistics.cc:108] Up=0
+W0115 07:17:34.574030 62513 statistics.cc:109] Down=0
+W0115 07:17:34.574044 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:34.574057 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:34.574070 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:34.574086 62513 statistics.cc:113] LinkStateUpdate=1247724
+W0115 07:17:34.574100 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:34.574112 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:36.892946 62513 scheduler.cc:234] 500.154140 had 1461396 events
+W0115 07:17:36.893012 62513 statistics.cc:108] Up=0
+W0115 07:17:36.893026 62513 statistics.cc:109] Down=0
+W0115 07:17:36.893039 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:36.893054 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:36.893067 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:36.893096 62513 statistics.cc:113] LinkStateUpdate=1461396
+W0115 07:17:36.893110 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:36.893123 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:37.999660 62513 scheduler.cc:244] reachability @ 500.160100 is 999000/999000
+W0115 07:17:40.700697 62513 scheduler.cc:234] 500.165150 had 1726537 events
+W0115 07:17:40.700762 62513 statistics.cc:108] Up=0
+W0115 07:17:40.700777 62513 statistics.cc:109] Down=0
+W0115 07:17:40.700789 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:40.700804 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:40.700819 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:40.700834 62513 statistics.cc:113] LinkStateUpdate=1726537
+W0115 07:17:40.700848 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:40.700861 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:43.778170 62513 scheduler.cc:234] 500.176160 had 2005678 events
+W0115 07:17:43.778234 62513 statistics.cc:108] Up=0
+W0115 07:17:43.778247 62513 statistics.cc:109] Down=0
+W0115 07:17:43.778261 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:43.778275 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:43.778291 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:43.778305 62513 statistics.cc:113] LinkStateUpdate=2005678
+W0115 07:17:43.778318 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:43.778332 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:47.250684 62513 scheduler.cc:234] 500.187170 had 2274235 events
+W0115 07:17:47.250849 62513 statistics.cc:108] Up=0
+W0115 07:17:47.250867 62513 statistics.cc:109] Down=0
+W0115 07:17:47.250882 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:47.250896 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:47.250910 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:47.250924 62513 statistics.cc:113] LinkStateUpdate=2274235
+W0115 07:17:47.250938 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:47.250952 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:47.250994 62513 statistics.cc:195] bw in [500.150000,500.200000) is [10006858,0,0,0]
+W0115 07:17:51.268533 62513 scheduler.cc:234] 500.198180 had 2539012 events
+W0115 07:17:51.268596 62513 statistics.cc:108] Up=0
+W0115 07:17:51.268614 62513 statistics.cc:109] Down=0
+W0115 07:17:51.268626 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:51.268640 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:51.268656 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:51.268667 62513 statistics.cc:113] LinkStateUpdate=2539012
+W0115 07:17:51.268682 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:51.268697 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:55.958564 62513 scheduler.cc:234] 500.209190 had 2826935 events
+W0115 07:17:55.958627 62513 statistics.cc:108] Up=0
+W0115 07:17:55.958643 62513 statistics.cc:109] Down=0
+W0115 07:17:55.958657 62513 statistics.cc:110] LinkUp=0
+W0115 07:17:55.958670 62513 statistics.cc:111] LinkDown=0
+W0115 07:17:55.958684 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:17:55.958698 62513 statistics.cc:113] LinkStateUpdate=2826935
+W0115 07:17:55.958711 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:17:55.958735 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:17:57.077006 62513 scheduler.cc:244] reachability @ 500.215150 is 999000/999000
+W0115 07:18:02.298372 62513 scheduler.cc:234] 500.220200 had 3174578 events
+W0115 07:18:02.299568 62513 statistics.cc:108] Up=0
+W0115 07:18:02.300312 62513 statistics.cc:109] Down=0
+W0115 07:18:02.300353 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:02.300367 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:02.300382 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:02.300396 62513 statistics.cc:113] LinkStateUpdate=3174578
+W0115 07:18:02.300411 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:02.300426 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:08.001008 62513 scheduler.cc:234] 500.231210 had 3584008 events
+W0115 07:18:08.001071 62513 statistics.cc:108] Up=0
+W0115 07:18:08.001088 62513 statistics.cc:109] Down=0
+W0115 07:18:08.001103 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:08.001117 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:08.001130 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:08.001144 62513 statistics.cc:113] LinkStateUpdate=3584008
+W0115 07:18:08.001159 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:08.001173 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:08.001247 62513 statistics.cc:195] bw in [500.200000,500.250000) is [13619395,0,0,0]
+W0115 07:18:14.224167 62513 scheduler.cc:234] 500.242220 had 4033874 events
+W0115 07:18:14.224238 62513 statistics.cc:108] Up=0
+W0115 07:18:14.224256 62513 statistics.cc:109] Down=0
+W0115 07:18:14.224270 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:14.224287 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:14.224299 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:14.224315 62513 statistics.cc:113] LinkStateUpdate=4033874
+W0115 07:18:14.224330 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:14.224344 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:20.970736 62513 scheduler.cc:234] 500.253230 had 4473155 events
+W0115 07:18:20.970832 62513 statistics.cc:108] Up=0
+W0115 07:18:20.970847 62513 statistics.cc:109] Down=0
+W0115 07:18:20.970860 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:20.970875 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:20.970888 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:20.970906 62513 statistics.cc:113] LinkStateUpdate=4473155
+W0115 07:18:20.970921 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:20.970937 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:27.499150 62513 scheduler.cc:234] 500.264240 had 4865574 events
+W0115 07:18:27.500772 62513 statistics.cc:108] Up=0
+W0115 07:18:27.502182 62513 statistics.cc:109] Down=0
+W0115 07:18:27.502220 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:27.502236 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:27.502254 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:27.502269 62513 statistics.cc:113] LinkStateUpdate=4865574
+W0115 07:18:27.502284 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:27.502297 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:28.609058 62513 scheduler.cc:244] reachability @ 500.270200 is 999000/999000
+W0115 07:18:35.551399 62513 scheduler.cc:234] 500.275250 had 5251154 events
+W0115 07:18:35.552618 62513 statistics.cc:108] Up=0
+W0115 07:18:35.554291 62513 statistics.cc:109] Down=0
+W0115 07:18:35.554327 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:35.554342 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:35.554358 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:35.554370 62513 statistics.cc:113] LinkStateUpdate=5251154
+W0115 07:18:35.554385 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:35.554400 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:43.137660 62513 scheduler.cc:234] 500.286260 had 5666269 events
+W0115 07:18:43.139225 62513 statistics.cc:108] Up=0
+W0115 07:18:43.141211 62513 statistics.cc:109] Down=0
+W0115 07:18:43.141247 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:43.141260 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:43.141275 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:43.141289 62513 statistics.cc:113] LinkStateUpdate=5666269
+W0115 07:18:43.141315 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:43.141330 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:18:43.141351 62513 statistics.cc:195] bw in [500.250000,500.300000) is [26338998,0,0,0]
+W0115 07:18:51.413353 62513 scheduler.cc:234] 500.297270 had 6082846 events
+W0115 07:18:51.414724 62513 statistics.cc:108] Up=0
+W0115 07:18:51.416785 62513 statistics.cc:109] Down=0
+W0115 07:18:51.416824 62513 statistics.cc:110] LinkUp=0
+W0115 07:18:51.416838 62513 statistics.cc:111] LinkDown=0
+W0115 07:18:51.416852 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:18:51.416867 62513 statistics.cc:113] LinkStateUpdate=6082846
+W0115 07:18:51.416882 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:18:51.416898 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:00.859356 62513 scheduler.cc:234] 500.308280 had 6451866 events
+W0115 07:19:00.860487 62513 statistics.cc:108] Up=0
+W0115 07:19:00.862575 62513 statistics.cc:109] Down=0
+W0115 07:19:00.862617 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:00.862632 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:00.862646 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:00.862661 62513 statistics.cc:113] LinkStateUpdate=6451866
+W0115 07:19:00.862675 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:00.862690 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:10.405083 62513 scheduler.cc:234] 500.319290 had 6746690 events
+W0115 07:19:10.405910 62513 statistics.cc:108] Up=0
+W0115 07:19:10.408323 62513 statistics.cc:109] Down=0
+W0115 07:19:10.408409 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:10.408424 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:10.408440 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:10.408453 62513 statistics.cc:113] LinkStateUpdate=6746690
+W0115 07:19:10.408468 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:10.408480 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:11.525233 62513 scheduler.cc:244] reachability @ 500.325250 is 999000/999000
+W0115 07:19:20.839462 62513 scheduler.cc:234] 500.330300 had 6971298 events
+W0115 07:19:20.840373 62513 statistics.cc:108] Up=0
+W0115 07:19:20.842273 62513 statistics.cc:109] Down=0
+W0115 07:19:20.842309 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:20.842324 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:20.842339 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:20.842355 62513 statistics.cc:113] LinkStateUpdate=6971298
+W0115 07:19:20.842370 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:20.842383 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:20.842597 62513 statistics.cc:195] bw in [500.300000,500.350000) is [27320986,0,0,0]
+W0115 07:19:30.123723 62513 scheduler.cc:234] 500.341310 had 7151132 events
+W0115 07:19:30.124747 62513 statistics.cc:108] Up=0
+W0115 07:19:30.126260 62513 statistics.cc:109] Down=0
+W0115 07:19:30.126293 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:30.126307 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:30.126322 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:30.126335 62513 statistics.cc:113] LinkStateUpdate=7151132
+W0115 07:19:30.126349 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:30.126363 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:39.550420 62513 scheduler.cc:234] 500.352320 had 7307605 events
+W0115 07:19:39.551976 62513 statistics.cc:108] Up=0
+W0115 07:19:39.552438 62513 statistics.cc:109] Down=0
+W0115 07:19:39.552475 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:39.552489 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:39.552505 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:39.552518 62513 statistics.cc:113] LinkStateUpdate=7307605
+W0115 07:19:39.552532 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:39.552546 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:49.166299 62513 scheduler.cc:234] 500.363330 had 7452724 events
+W0115 07:19:49.167786 62513 statistics.cc:108] Up=0
+W0115 07:19:49.168251 62513 statistics.cc:109] Down=0
+W0115 07:19:49.168288 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:49.168303 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:49.168328 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:49.168342 62513 statistics.cc:113] LinkStateUpdate=7452724
+W0115 07:19:49.168356 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:49.168370 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:19:59.741189 62513 scheduler.cc:234] 500.374340 had 7538025 events
+W0115 07:19:59.742568 62513 statistics.cc:108] Up=0
+W0115 07:19:59.743214 62513 statistics.cc:109] Down=0
+W0115 07:19:59.743257 62513 statistics.cc:110] LinkUp=0
+W0115 07:19:59.743273 62513 statistics.cc:111] LinkDown=0
+W0115 07:19:59.743286 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:19:59.743301 62513 statistics.cc:113] LinkStateUpdate=7538025
+W0115 07:19:59.743316 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:19:59.743330 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:20:00.860501 62513 scheduler.cc:244] reachability @ 500.380300 is 999000/999000
+W0115 07:20:11.317935 62513 scheduler.cc:234] 500.385350 had 7480873 events
+W0115 07:20:11.319457 62513 statistics.cc:108] Up=0
+W0115 07:20:11.320441 62513 statistics.cc:109] Down=0
+W0115 07:20:11.320531 62513 statistics.cc:110] LinkUp=0
+W0115 07:20:11.320546 62513 statistics.cc:111] LinkDown=0
+W0115 07:20:11.320562 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:20:11.320577 62513 statistics.cc:113] LinkStateUpdate=7480873
+W0115 07:20:11.320593 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:20:11.320608 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:20:11.320724 62513 statistics.cc:195] bw in [500.350000,500.400000) is [37082607,0,0,0]
+W0115 07:20:20.902477 62513 scheduler.cc:234] 500.396360 had 7303380 events
+W0115 07:20:20.903970 62513 statistics.cc:108] Up=0
+W0115 07:20:20.904438 62513 statistics.cc:109] Down=0
+W0115 07:20:20.904474 62513 statistics.cc:110] LinkUp=0
+W0115 07:20:20.904489 62513 statistics.cc:111] LinkDown=0
+W0115 07:20:20.904502 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:20:20.904517 62513 statistics.cc:113] LinkStateUpdate=7303380
+W0115 07:20:20.904533 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:20:20.904548 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:20:30.136581 62513 scheduler.cc:234] 500.407370 had 7116687 events
+W0115 07:20:30.137392 62513 statistics.cc:108] Up=0
+W0115 07:20:30.137414 62513 statistics.cc:109] Down=0
+W0115 07:20:30.137429 62513 statistics.cc:110] LinkUp=0
+W0115 07:20:30.137442 62513 statistics.cc:111] LinkDown=0
+W0115 07:20:30.137457 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:20:30.137471 62513 statistics.cc:113] LinkStateUpdate=7116687
+W0115 07:20:30.137485 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:20:30.137500 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:20:39.079715 62513 scheduler.cc:234] 500.418380 had 6950311 events
+W0115 07:20:39.080090 62513 statistics.cc:108] Up=0
+W0115 07:20:39.080826 62513 statistics.cc:109] Down=0
+W0115 07:20:39.082298 62513 statistics.cc:110] LinkUp=0
+W0115 07:20:39.082334 62513 statistics.cc:111] LinkDown=0
+W0115 07:20:39.082350 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:20:39.082366 62513 statistics.cc:113] LinkStateUpdate=6950311
+W0115 07:20:39.082382 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:20:39.082397 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:20:47.638263 62513 scheduler.cc:234] 500.429390 had 6745141 events
+W0115 07:20:47.638330 62513 statistics.cc:108] Up=0
+W0115 07:20:47.638348 62513 statistics.cc:109] Down=0
+W0115 07:20:47.638363 62513 statistics.cc:110] LinkUp=0
+W0115 07:20:47.638378 62513 statistics.cc:111] LinkDown=0
+W0115 07:20:47.638393 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:20:47.638408 62513 statistics.cc:113] LinkStateUpdate=6745141
+W0115 07:20:47.638423 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:20:47.638439 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:20:48.747223 62513 scheduler.cc:244] reachability @ 500.435350 is 999000/999000
+W0115 07:20:48.747347 62513 statistics.cc:195] bw in [500.400000,500.450000) is [27239464,0,0,0]
+W0115 07:20:57.564304 62513 scheduler.cc:234] 500.440400 had 6427325 events
+W0115 07:20:57.564379 62513 statistics.cc:108] Up=0
+W0115 07:20:57.564395 62513 statistics.cc:109] Down=0
+W0115 07:20:57.564411 62513 statistics.cc:110] LinkUp=0
+W0115 07:20:57.564426 62513 statistics.cc:111] LinkDown=0
+W0115 07:20:57.564442 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:20:57.564458 62513 statistics.cc:113] LinkStateUpdate=6427325
+W0115 07:20:57.564472 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:20:57.564487 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:05.761096 62513 scheduler.cc:234] 500.451410 had 6045138 events
+W0115 07:21:05.761162 62513 statistics.cc:108] Up=0
+W0115 07:21:05.761178 62513 statistics.cc:109] Down=0
+W0115 07:21:05.761193 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:05.761209 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:05.761224 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:05.761239 62513 statistics.cc:113] LinkStateUpdate=6045138
+W0115 07:21:05.761252 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:05.761266 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:13.124975 62513 scheduler.cc:234] 500.462420 had 5670421 events
+W0115 07:21:13.125066 62513 statistics.cc:108] Up=0
+W0115 07:21:13.125083 62513 statistics.cc:109] Down=0
+W0115 07:21:13.125098 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:13.125114 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:13.125130 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:13.125145 62513 statistics.cc:113] LinkStateUpdate=5670421
+W0115 07:21:13.125160 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:13.125174 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:19.818187 62513 scheduler.cc:234] 500.473430 had 5334420 events
+W0115 07:21:19.818259 62513 statistics.cc:108] Up=0
+W0115 07:21:19.818275 62513 statistics.cc:109] Down=0
+W0115 07:21:19.818291 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:19.818307 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:19.818321 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:19.818336 62513 statistics.cc:113] LinkStateUpdate=5334420
+W0115 07:21:19.818351 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:19.818367 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:26.086344 62513 scheduler.cc:234] 500.484440 had 5022343 events
+W0115 07:21:26.086410 62513 statistics.cc:108] Up=0
+W0115 07:21:26.086426 62513 statistics.cc:109] Down=0
+W0115 07:21:26.086441 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:26.086455 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:26.086470 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:26.086484 62513 statistics.cc:113] LinkStateUpdate=5022343
+W0115 07:21:26.086499 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:26.086513 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:27.200770 62513 scheduler.cc:244] reachability @ 500.490400 is 999000/999000
+W0115 07:21:27.200847 62513 statistics.cc:195] bw in [500.450000,500.500000) is [26776601,0,0,0]
+W0115 07:21:32.974866 62513 scheduler.cc:234] 500.495450 had 4704279 events
+W0115 07:21:32.974930 62513 statistics.cc:108] Up=0
+W0115 07:21:32.974946 62513 statistics.cc:109] Down=0
+W0115 07:21:32.974959 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:32.974975 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:32.974990 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:32.975005 62513 statistics.cc:113] LinkStateUpdate=4704279
+W0115 07:21:32.975020 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:32.975036 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:38.204499 62513 scheduler.cc:234] 500.506460 had 4324938 events
+W0115 07:21:38.204567 62513 statistics.cc:108] Up=0
+W0115 07:21:38.204582 62513 statistics.cc:109] Down=0
+W0115 07:21:38.204597 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:38.204612 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:38.204627 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:38.204643 62513 statistics.cc:113] LinkStateUpdate=4324938
+W0115 07:21:38.204658 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:38.204674 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:42.846297 62513 scheduler.cc:234] 500.517470 had 3881262 events
+W0115 07:21:42.846364 62513 statistics.cc:108] Up=0
+W0115 07:21:42.846379 62513 statistics.cc:109] Down=0
+W0115 07:21:42.846396 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:42.846410 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:42.846424 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:42.846438 62513 statistics.cc:113] LinkStateUpdate=3881262
+W0115 07:21:42.846452 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:42.846468 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:46.922647 62513 scheduler.cc:234] 500.528480 had 3419039 events
+W0115 07:21:46.922740 62513 statistics.cc:108] Up=0
+W0115 07:21:46.922757 62513 statistics.cc:109] Down=0
+W0115 07:21:46.922772 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:46.922788 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:46.922803 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:46.922821 62513 statistics.cc:113] LinkStateUpdate=3419039
+W0115 07:21:46.922834 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:46.922848 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:46.922894 62513 statistics.cc:195] bw in [500.500000,500.550000) is [14623957,0,0,0]
+W0115 07:21:50.681241 62513 scheduler.cc:234] 500.539490 had 2998718 events
+W0115 07:21:50.681305 62513 statistics.cc:108] Up=0
+W0115 07:21:50.681321 62513 statistics.cc:109] Down=0
+W0115 07:21:50.681339 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:50.681352 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:50.681366 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:50.681382 62513 statistics.cc:113] LinkStateUpdate=2998718
+W0115 07:21:50.681398 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:50.681414 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:51.791309 62513 scheduler.cc:244] reachability @ 500.545450 is 999000/999000
+W0115 07:21:55.576454 62513 scheduler.cc:234] 500.550500 had 2650541 events
+W0115 07:21:55.576522 62513 statistics.cc:108] Up=0
+W0115 07:21:55.576539 62513 statistics.cc:109] Down=0
+W0115 07:21:55.576553 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:55.576568 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:55.576583 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:55.576597 62513 statistics.cc:113] LinkStateUpdate=2650541
+W0115 07:21:55.576612 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:55.576628 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:21:58.768177 62513 scheduler.cc:234] 500.561510 had 2311894 events
+W0115 07:21:58.768250 62513 statistics.cc:108] Up=0
+W0115 07:21:58.768267 62513 statistics.cc:109] Down=0
+W0115 07:21:58.768282 62513 statistics.cc:110] LinkUp=0
+W0115 07:21:58.768297 62513 statistics.cc:111] LinkDown=0
+W0115 07:21:58.768312 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:21:58.768326 62513 statistics.cc:113] LinkStateUpdate=2311894
+W0115 07:21:58.768342 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:21:58.768357 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:01.440649 62513 scheduler.cc:234] 500.572520 had 1965196 events
+W0115 07:22:01.440712 62513 statistics.cc:108] Up=0
+W0115 07:22:01.440728 62513 statistics.cc:109] Down=0
+W0115 07:22:01.440743 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:01.440757 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:01.440771 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:01.440788 62513 statistics.cc:113] LinkStateUpdate=1965196
+W0115 07:22:01.440803 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:01.440817 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:03.632369 62513 scheduler.cc:234] 500.583530 had 1628987 events
+W0115 07:22:03.632434 62513 statistics.cc:108] Up=0
+W0115 07:22:03.632450 62513 statistics.cc:109] Down=0
+W0115 07:22:03.632467 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:03.632482 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:03.632496 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:03.632513 62513 statistics.cc:113] LinkStateUpdate=1628987
+W0115 07:22:03.632527 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:03.632542 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:03.632609 62513 statistics.cc:195] bw in [500.550000,500.600000) is [9895396,0,0,0]
+W0115 07:22:05.448619 62513 scheduler.cc:234] 500.594540 had 1338778 events
+W0115 07:22:05.448684 62513 statistics.cc:108] Up=0
+W0115 07:22:05.448701 62513 statistics.cc:109] Down=0
+W0115 07:22:05.448719 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:05.448732 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:05.448747 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:05.448763 62513 statistics.cc:113] LinkStateUpdate=1338778
+W0115 07:22:05.448778 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:05.448794 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:06.565796 62513 scheduler.cc:244] reachability @ 500.600500 is 999000/999000
+W0115 07:22:08.085692 62513 scheduler.cc:234] 500.605550 had 1104316 events
+W0115 07:22:08.085760 62513 statistics.cc:108] Up=0
+W0115 07:22:08.085778 62513 statistics.cc:109] Down=0
+W0115 07:22:08.085794 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:08.085810 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:08.085827 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:08.085844 62513 statistics.cc:113] LinkStateUpdate=1104316
+W0115 07:22:08.085860 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:08.085873 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:09.292641 62513 scheduler.cc:234] 500.616560 had 907611 events
+W0115 07:22:09.292711 62513 statistics.cc:108] Up=0
+W0115 07:22:09.292728 62513 statistics.cc:109] Down=0
+W0115 07:22:09.292743 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:09.292758 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:09.292773 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:09.292788 62513 statistics.cc:113] LinkStateUpdate=907611
+W0115 07:22:09.292804 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:09.292819 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:10.246929 62513 scheduler.cc:234] 500.627570 had 726349 events
+W0115 07:22:10.246992 62513 statistics.cc:108] Up=0
+W0115 07:22:10.247009 62513 statistics.cc:109] Down=0
+W0115 07:22:10.247023 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:10.247040 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:10.247055 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:10.247069 62513 statistics.cc:113] LinkStateUpdate=726349
+W0115 07:22:10.247086 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:10.247102 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:11.003252 62513 scheduler.cc:234] 500.638580 had 572345 events
+W0115 07:22:11.003316 62513 statistics.cc:108] Up=0
+W0115 07:22:11.003334 62513 statistics.cc:109] Down=0
+W0115 07:22:11.003350 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:11.003391 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:11.003407 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:11.003420 62513 statistics.cc:113] LinkStateUpdate=572345
+W0115 07:22:11.003435 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:11.003469 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:11.003515 62513 statistics.cc:195] bw in [500.600000,500.650000) is [3757865,0,0,0]
+W0115 07:22:11.596817 62513 scheduler.cc:234] 500.649590 had 447244 events
+W0115 07:22:11.596881 62513 statistics.cc:108] Up=0
+W0115 07:22:11.596896 62513 statistics.cc:109] Down=0
+W0115 07:22:11.596911 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:11.596926 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:11.596940 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:11.596956 62513 statistics.cc:113] LinkStateUpdate=447244
+W0115 07:22:11.596971 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:11.596985 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:12.703302 62513 scheduler.cc:244] reachability @ 500.655550 is 999000/999000
+W0115 07:22:13.165946 62513 scheduler.cc:234] 500.660600 had 345025 events
+W0115 07:22:13.166012 62513 statistics.cc:108] Up=0
+W0115 07:22:13.166028 62513 statistics.cc:109] Down=0
+W0115 07:22:13.166043 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:13.166056 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:13.166070 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:13.166095 62513 statistics.cc:113] LinkStateUpdate=345025
+W0115 07:22:13.166111 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:13.166127 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:13.517140 62513 scheduler.cc:234] 500.671610 had 263938 events
+W0115 07:22:13.517206 62513 statistics.cc:108] Up=0
+W0115 07:22:13.517222 62513 statistics.cc:109] Down=0
+W0115 07:22:13.517238 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:13.517254 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:13.517269 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:13.517287 62513 statistics.cc:113] LinkStateUpdate=263938
+W0115 07:22:13.517313 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:13.517331 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:13.784725 62513 scheduler.cc:234] 500.682620 had 199881 events
+W0115 07:22:13.784790 62513 statistics.cc:108] Up=0
+W0115 07:22:13.784806 62513 statistics.cc:109] Down=0
+W0115 07:22:13.784822 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:13.784838 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:13.784853 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:13.784868 62513 statistics.cc:113] LinkStateUpdate=199881
+W0115 07:22:13.784883 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:13.784898 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:13.784940 62513 statistics.cc:195] bw in [500.650000,500.700000) is [958187,0,0,0]
+W0115 07:22:13.986397 62513 scheduler.cc:234] 500.693630 had 149343 events
+W0115 07:22:13.986459 62513 statistics.cc:108] Up=0
+W0115 07:22:13.986474 62513 statistics.cc:109] Down=0
+W0115 07:22:13.986490 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:13.986505 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:13.986521 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:13.986537 62513 statistics.cc:113] LinkStateUpdate=149343
+W0115 07:22:13.986553 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:13.986568 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:14.132446 62513 scheduler.cc:234] 500.704640 had 110347 events
+W0115 07:22:14.132513 62513 statistics.cc:108] Up=0
+W0115 07:22:14.132529 62513 statistics.cc:109] Down=0
+W0115 07:22:14.132545 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:14.132560 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:14.132575 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:14.132591 62513 statistics.cc:113] LinkStateUpdate=110347
+W0115 07:22:14.132607 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:14.132622 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:15.238884 62513 scheduler.cc:244] reachability @ 500.710600 is 999000/999000
+W0115 07:22:15.339247 62513 scheduler.cc:234] 500.715650 had 75097 events
+W0115 07:22:15.339314 62513 statistics.cc:108] Up=0
+W0115 07:22:15.339330 62513 statistics.cc:109] Down=0
+W0115 07:22:15.339349 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:15.339364 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:15.339380 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:15.339395 62513 statistics.cc:113] LinkStateUpdate=75097
+W0115 07:22:15.339412 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:15.339428 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:15.405551 62513 scheduler.cc:234] 500.726660 had 48588 events
+W0115 07:22:15.405612 62513 statistics.cc:108] Up=0
+W0115 07:22:15.405628 62513 statistics.cc:109] Down=0
+W0115 07:22:15.405644 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:15.405661 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:15.405676 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:15.405693 62513 statistics.cc:113] LinkStateUpdate=48588
+W0115 07:22:15.405707 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:15.405722 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:15.454277 62513 scheduler.cc:234] 500.737670 had 31056 events
+W0115 07:22:15.454340 62513 statistics.cc:108] Up=0
+W0115 07:22:15.454355 62513 statistics.cc:109] Down=0
+W0115 07:22:15.454371 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:15.454387 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:15.454402 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:15.454428 62513 statistics.cc:113] LinkStateUpdate=31056
+W0115 07:22:15.454445 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:15.454463 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:15.454535 62513 statistics.cc:195] bw in [500.700000,500.750000) is [284967,0,0,0]
+W0115 07:22:15.485631 62513 scheduler.cc:234] 500.748680 had 19879 events
+W0115 07:22:15.485682 62513 statistics.cc:108] Up=0
+W0115 07:22:15.485700 62513 statistics.cc:109] Down=0
+W0115 07:22:15.485716 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:15.485733 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:15.485749 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:15.485776 62513 statistics.cc:113] LinkStateUpdate=19879
+W0115 07:22:15.485795 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:15.485810 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:15.500401 62513 scheduler.cc:234] 500.759690 had 11866 events
+W0115 07:22:15.500432 62513 statistics.cc:108] Up=0
+W0115 07:22:15.500448 62513 statistics.cc:109] Down=0
+W0115 07:22:15.500464 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:15.500480 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:15.500497 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:15.500514 62513 statistics.cc:113] LinkStateUpdate=11866
+W0115 07:22:15.500530 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:15.500546 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:16.606973 62513 scheduler.cc:244] reachability @ 500.765650 is 999000/999000
+W0115 07:22:16.615906 62513 scheduler.cc:234] 500.770700 had 6234 events
+W0115 07:22:16.615933 62513 statistics.cc:108] Up=0
+W0115 07:22:16.615952 62513 statistics.cc:109] Down=0
+W0115 07:22:16.615967 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:16.615984 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:16.616000 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:16.616016 62513 statistics.cc:113] LinkStateUpdate=6234
+W0115 07:22:16.616032 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:16.616049 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:16.618679 62513 scheduler.cc:234] 500.781710 had 2685 events
+W0115 07:22:16.618700 62513 statistics.cc:108] Up=0
+W0115 07:22:16.618716 62513 statistics.cc:109] Down=0
+W0115 07:22:16.618733 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:16.618748 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:16.618764 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:16.618780 62513 statistics.cc:113] LinkStateUpdate=2685
+W0115 07:22:16.618798 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:16.618813 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:16.618845 62513 statistics.cc:195] bw in [500.750000,500.800000) is [21689,0,0,0]
+W0115 07:22:16.619628 62513 scheduler.cc:234] 500.792720 had 904 events
+W0115 07:22:16.619650 62513 statistics.cc:108] Up=0
+W0115 07:22:16.619668 62513 statistics.cc:109] Down=0
+W0115 07:22:16.619683 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:16.619699 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:16.619714 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:16.619730 62513 statistics.cc:113] LinkStateUpdate=904
+W0115 07:22:16.619747 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:16.619762 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:16.620054 62513 scheduler.cc:234] 500.803730 had 259 events
+W0115 07:22:16.620075 62513 statistics.cc:108] Up=0
+W0115 07:22:16.620090 62513 statistics.cc:109] Down=0
+W0115 07:22:16.620105 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:16.620122 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:16.620138 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:16.620156 62513 statistics.cc:113] LinkStateUpdate=259
+W0115 07:22:16.620170 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:16.620187 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:16.620345 62513 scheduler.cc:234] 500.814740 had 54 events
+W0115 07:22:16.620369 62513 statistics.cc:108] Up=0
+W0115 07:22:16.620388 62513 statistics.cc:109] Down=0
+W0115 07:22:16.620404 62513 statistics.cc:110] LinkUp=0
+W0115 07:22:16.620429 62513 statistics.cc:111] LinkDown=0
+W0115 07:22:16.620445 62513 statistics.cc:112] LinkStateRequest=0
+W0115 07:22:16.620463 62513 statistics.cc:113] LinkStateUpdate=54
+W0115 07:22:16.620481 62513 statistics.cc:114] InitiateLinkState=0
+W0115 07:22:16.620496 62513 statistics.cc:115] RoutingUpdate=0
+W0115 07:22:17.714956 62513 scheduler.cc:244] reachability @ 500.820700 is 999000/999000

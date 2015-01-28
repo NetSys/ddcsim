@@ -1,0 +1,345 @@
+Log file created at: 2015/01/24 22:34:00
+Running on machine: samk-laptop
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+-1.000000 had 0 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+0.000000 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=3
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+0.011010 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=6
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+0.022020 had 4 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=4
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+0.033030 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+bw in [0.000000,0.050000) is [12,0,0,0,0]
+0.050000 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=2
+reachability @ 0.050000 is 0/2
+0.061010 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=6
+ControllerView=0
+InitiateRoutingUpdate=0
+0.072020 had 4 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=4
+ControllerView=0
+InitiateRoutingUpdate=0
+0.083030 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=2
+ControllerView=0
+InitiateRoutingUpdate=0
+reachability @ 0.111010 is 2/2
+bw in [0.050000,0.100000) is [0,12,0,0,0]
+1.000000 had 4 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=4
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+1.012010 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+1.023020 had 5 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=3
+ControllerView=1
+InitiateRoutingUpdate=0
+1.034030 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=4
+ControllerView=2
+InitiateRoutingUpdate=0
+1.045040 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=1
+ControllerView=1
+InitiateRoutingUpdate=0
+reachability @ 1.050000 is 0/0
+bw in [1.000000,1.050000) is [4,8,0,4,0]
+2.000000 had 2 events
+Up=0
+Down=0
+LinkUp=2
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+2.012010 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+2.023020 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+2.034030 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=3
+ControllerView=1
+InitiateRoutingUpdate=0
+bw in [2.000000,2.050000) is [8,5,2,2,2]
+2.045040 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=2
+ControllerView=1
+InitiateRoutingUpdate=0
+reachability @ 2.050000 is 2/2
+2.056050 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=1
+ControllerView=1
+InitiateRoutingUpdate=0
+2.067060 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+2.078070 had 1 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+2.089080 had 1 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+reachability @ 2.106050 is 2/2
+bw in [2.050000,2.100000) is [7,1,1,1,7]
+3.000000 had 2 events
+Up=0
+Down=0
+LinkUp=2
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+3.012010 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+3.023020 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=3
+ControllerView=1
+InitiateRoutingUpdate=0
+3.034030 had 8 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=2
+ControllerView=2
+InitiateRoutingUpdate=0
+bw in [3.000000,3.050000) is [10,6,3,4,6]
+3.045040 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=1
+ControllerView=1
+InitiateRoutingUpdate=0
+reachability @ 3.050000 is 2/2
+3.056050 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+3.067060 had 1 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0

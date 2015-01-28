@@ -1,0 +1,647 @@
+Log file created at: 2015/01/24 22:34:00
+Running on machine: samk-laptop
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+-1.000000 had 0 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Initiate Link State Update:time_=0.000000 affected_entities=0 
+... ls_=0 <--> 1 3 4 ,1 <--> 0 ,3 <--> 0 ,4 <--> 0 , dst_to_neighbor_=null
+Switch 1 received event Initiate Link State Update:time_=0.000000 affected_entities=1 
+... ls_=0 <--> 1 ,1 <--> 0 2 6 ,2 <--> 1 ,6 <--> 1  dst_to_neighbor_=null
+Switch 2 received event Initiate Link State Update:time_=0.000000 affected_entities=2 
+... ls_=1 <--> 2 ,2 <--> 1 5 ,5 <--> 2 , dst_to_neighbor_=null
+0.000000 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=3
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=0.011010 affected_entities=0  in_port_=0 sn_=0 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 1 ,3 <--> 0 ,4 <--> 0 ,6 <--> 1  dst_to_neighbor_=null
+Switch 1 received event Link State Update:time_=0.011010 affected_entities=1  in_port_=1 sn_=0 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+Switch 1 received event Link State Update:time_=0.011010 affected_entities=1  in_port_=0 sn_=0 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+Switch 2 received event Link State Update:time_=0.011010 affected_entities=2  in_port_=0 sn_=0 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+Controller 3 received event Link State Update:time_=0.011010 affected_entities=3  in_port_=0 sn_=0 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 ,3 <--> 0 ,4 <--> 0 ,
+Controller 4 received event Link State Update:time_=0.011010 affected_entities=4  in_port_=0 sn_=0 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 ,3 <--> 0 ,4 <--> 0 ,
+0.011010 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=6
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=0.022020 affected_entities=0  in_port_=0 sn_=0 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+Switch 2 received event Link State Update:time_=0.022020 affected_entities=2  in_port_=0 sn_=0 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+Controller 3 received event Link State Update:time_=0.022020 affected_entities=3  in_port_=0 sn_=0 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 ,3 <--> 0 ,4 <--> 0 ,6 <--> 1 
+Controller 4 received event Link State Update:time_=0.022020 affected_entities=4  in_port_=0 sn_=0 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 ,3 <--> 0 ,4 <--> 0 ,6 <--> 1 
+0.022020 had 4 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=4
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Controller 3 received event Link State Update:time_=0.033030 affected_entities=3  in_port_=0 sn_=0 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Link State Update:time_=0.033030 affected_entities=4  in_port_=0 sn_=0 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+0.033030 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Controller 3 received event Initiate Routing Update:TODO
+bw in [0.000000,0.050000) is [12,0,0,0,0]
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Initiate Routing Update:TODO
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+0.050000 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=2
+reachability @ 0.050000 is 0/2
+0
+1
+Switch 0 received event Routing Update:time_=0.061010 affected_entities=0  in_port_=2 sn_=0 src_=4 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+0
+1
+Switch 0 received event Routing Update:time_=0.061010 affected_entities=0  in_port_=2 sn_=0 src_=4 dst_=1 dst_to_neighbor_=2 6 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=null
+0
+1
+Switch 0 received event Routing Update:time_=0.061010 affected_entities=0  in_port_=2 sn_=0 src_=4 dst_=0 dst_to_neighbor_=1 1 
+Routing update was directed at me
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=0.061010 affected_entities=0  in_port_=1 sn_=0 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=0.061010 affected_entities=0  in_port_=1 sn_=0 src_=3 dst_=1 dst_to_neighbor_=2 6 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=0.061010 affected_entities=0  in_port_=1 sn_=0 src_=3 dst_=0 dst_to_neighbor_=1 1 
+Routing update was directed at me
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0.061010 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=6
+ControllerView=0
+InitiateRoutingUpdate=0
+0
+1
+Switch 1 received event Routing Update:time_=0.072020 affected_entities=1  in_port_=0 sn_=0 src_=3 dst_=1 dst_to_neighbor_=2 6 
+Routing update was directed at me
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=0.072020 affected_entities=1  in_port_=0 sn_=0 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=0.072020 affected_entities=1  in_port_=0 sn_=0 src_=4 dst_=1 dst_to_neighbor_=2 6 
+Routing update was directed at me
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=0.072020 affected_entities=1  in_port_=0 sn_=0 src_=4 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0.072020 had 4 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=4
+ControllerView=0
+InitiateRoutingUpdate=0
+0
+1
+Switch 2 received event Routing Update:time_=0.083030 affected_entities=2  in_port_=0 sn_=0 src_=4 dst_=2 dst_to_neighbor_=5 1 
+Routing update was directed at me
+... ls_=0 <--> 1 3 4 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+0
+1
+Switch 2 received event Routing Update:time_=0.083030 affected_entities=2  in_port_=0 sn_=0 src_=3 dst_=2 dst_to_neighbor_=5 1 
+Routing update was directed at me
+... ls_=0 <--> 1 3 4 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+0.083030 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=2
+ControllerView=0
+InitiateRoutingUpdate=0
+reachability @ 0.111010 is 2/2
+Switch 0 received event Link Down:time_=1.000000 affected_entities=0  out_=2
+bw in [0.050000,0.100000) is [0,12,0,0,0]
+... ls_=0 <--> 1 3 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 1 received event Link Down:time_=1.000000 affected_entities=1  out_=1
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Switch 2 received event Link Down:time_=1.000000 affected_entities=2  out_=0
+... ls_=0 <--> 1 3 4 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Controller 4 received event Link Down:time_=1.000000 affected_entities=4  out_=0
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+1.000000 had 4 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=4
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=1.012010 affected_entities=0  in_port_=0 sn_=1 src_id=1 up_links_=0 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 1 received event Link State Update:time_=1.012010 affected_entities=1  in_port_=0 sn_=1 src_id=0 up_links_=1 3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Controller 3 received event Link State Update:time_=1.012010 affected_entities=3  in_port_=0 sn_=1 src_id=0 up_links_=1 3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+1.012010 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+0
+1
+Switch 0 received event Routing Update:time_=1.023020 affected_entities=0  in_port_=1 sn_=1 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=1.023020 affected_entities=0  in_port_=1 sn_=1 src_=3 dst_=1 dst_to_neighbor_=2 6 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=1.023020 affected_entities=0  in_port_=1 sn_=1 src_=3 dst_=0 dst_to_neighbor_=1 1 
+Routing update was directed at me
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 0 received event Controller View:time_=1.023020 affected_entities=0  in_port_=1 sn_=0 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=100
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Controller 3 received event Link State Update:time_=1.023020 affected_entities=3  in_port_=0 sn_=1 src_id=1 up_links_=0 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+1.023020 had 5 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=3
+ControllerView=1
+InitiateRoutingUpdate=0
+0
+1
+Switch 0 received event Routing Update:time_=1.034030 affected_entities=0  in_port_=1 sn_=2 src_=3 dst_=1 dst_to_neighbor_=-1 6 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=1.034030 affected_entities=0  in_port_=1 sn_=2 src_=3 dst_=0 dst_to_neighbor_=-1 1 
+Routing update was directed at me
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+Switch 0 received event Controller View:time_=1.034030 affected_entities=0  in_port_=1 sn_=1 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=110
+... ls_=0 <--> 3 1 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+Switch 1 received event Controller View:time_=1.034030 affected_entities=1  in_port_=0 sn_=0 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=100
+... ls_=0 <--> 1 3 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=1.034030 affected_entities=1  in_port_=0 sn_=1 src_=3 dst_=1 dst_to_neighbor_=2 6 
+Routing update was directed at me
+... ls_=0 <--> 1 3 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=1.034030 affected_entities=1  in_port_=0 sn_=1 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 1 3 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+1.034030 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=4
+ControllerView=2
+InitiateRoutingUpdate=0
+Switch 1 received event Controller View:time_=1.045040 affected_entities=1  in_port_=0 sn_=1 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 6 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=110
+... ls_=0 <--> 1 3 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=1.045040 affected_entities=1  in_port_=0 sn_=2 src_=3 dst_=1 dst_to_neighbor_=-1 6 
+Routing update was directed at me
+... ls_=0 <--> 1 3 ,1 <--> 6 0 ,2 <--> 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 6 
+1.045040 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=1
+ControllerView=1
+InitiateRoutingUpdate=0
+reachability @ 1.050000 is 0/0
+Switch 1 received event Link Up:time_=2.000000 affected_entities=1  out_=1
+bw in [1.000000,1.050000) is [4,8,0,4,0]
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 6 
+Switch 2 received event Link Up:time_=2.000000 affected_entities=2  out_=0
+... ls_=0 <--> 1 3 4 ,1 <--> 6 0 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+2.000000 had 2 events
+Up=0
+Down=0
+LinkUp=2
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=2.012010 affected_entities=0  in_port_=0 sn_=2 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+Switch 1 received event Link State Update:time_=2.012010 affected_entities=1  in_port_=1 sn_=2 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 6 
+Switch 2 received event Link State Update:time_=2.012010 affected_entities=2  in_port_=0 sn_=2 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+2.012010 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=2.023020 affected_entities=0  in_port_=0 sn_=2 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+Controller 3 received event Link State Update:time_=2.023020 affected_entities=3  in_port_=0 sn_=2 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+Switch was partitioned
+... 0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+2.023020 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Request:time_=2.034030 affected_entities=0  in_port_=1 sn_=0 src_=3
+... ls_=0 <--> 1 3 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+0
+1
+Switch 0 received event Routing Update:time_=2.034030 affected_entities=0  in_port_=1 sn_=2 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 1 3 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+0
+1
+Switch 0 received event Routing Update:time_=2.034030 affected_entities=0  in_port_=1 sn_=3 src_=3 dst_=1 dst_to_neighbor_=2 6 
+... ls_=0 <--> 1 3 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 1 
+0
+1
+Switch 0 received event Routing Update:time_=2.034030 affected_entities=0  in_port_=1 sn_=3 src_=3 dst_=0 dst_to_neighbor_=1 1 
+Routing update was directed at me
+... ls_=0 <--> 1 3 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 0 received event Controller View:time_=2.034030 affected_entities=0  in_port_=1 sn_=2 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=120
+... ls_=0 <--> 1 3 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Controller 3 received event Link State Update:time_=2.034030 affected_entities=3  in_port_=0 sn_=2 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+2.034030 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=3
+ControllerView=1
+InitiateRoutingUpdate=0
+Switch 1 received event Controller View:time_=2.045040 affected_entities=1  in_port_=0 sn_=2 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=120
+bw in [2.000000,2.050000) is [8,5,2,2,2]
+... ls_=0 <--> 3 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=-1 6 
+0
+1
+Switch 1 received event Routing Update:time_=2.045040 affected_entities=1  in_port_=0 sn_=3 src_=3 dst_=1 dst_to_neighbor_=2 6 
+Routing update was directed at me
+... ls_=0 <--> 3 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=2.045040 affected_entities=1  in_port_=0 sn_=2 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Switch 1 received event Link State Request:time_=2.045040 affected_entities=1  in_port_=0 sn_=0 src_=3
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Switch 1 received event Link State Update:time_=2.045040 affected_entities=1  in_port_=0 sn_=2 src_id=0 up_links_=1 3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Controller 3 received event Link State Update:time_=2.045040 affected_entities=3  in_port_=0 sn_=2 src_id=0 up_links_=1 3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+2.045040 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=2
+ControllerView=1
+InitiateRoutingUpdate=0
+reachability @ 2.050000 is 2/2
+Switch 0 received event Link State Update:time_=2.056050 affected_entities=0  in_port_=0 sn_=3 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 2 received event Link State Update:time_=2.056050 affected_entities=2  in_port_=0 sn_=2 src_id=0 up_links_=1 3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Switch 2 received event Link State Request:time_=2.056050 affected_entities=2  in_port_=0 sn_=0 src_=3
+... ls_=0 <--> 1 3 ,1 <--> 6 0 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Switch 2 received event Link State Update:time_=2.056050 affected_entities=2  in_port_=0 sn_=3 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+0
+1
+Switch 2 received event Routing Update:time_=2.056050 affected_entities=2  in_port_=0 sn_=2 src_=3 dst_=2 dst_to_neighbor_=5 1 
+Routing update was directed at me
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Switch 2 received event Controller View:time_=2.056050 affected_entities=2  in_port_=0 sn_=2 src_id_=3 topology_=0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=120
+... ls_=0 <--> 3 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+2.056050 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=1
+ControllerView=1
+InitiateRoutingUpdate=0
+Switch 1 received event Link State Update:time_=2.067060 affected_entities=1  in_port_=1 sn_=3 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 ,1 <--> 6 0 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Controller 3 received event Link State Update:time_=2.067060 affected_entities=3  in_port_=0 sn_=3 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+2.067060 had 2 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=2
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=2.078070 affected_entities=0  in_port_=0 sn_=3 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+2.078070 had 1 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Controller 3 received event Link State Update:time_=2.089080 affected_entities=3  in_port_=0 sn_=3 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,5 <--> 2 ,6 <--> 1 
+2.089080 had 1 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+reachability @ 2.106050 is 2/2
+Switch 0 received event Link Up:time_=3.000000 affected_entities=0  out_=2
+bw in [2.050000,2.100000) is [7,1,1,1,7]
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Controller 4 received event Link Up:time_=3.000000 affected_entities=4  out_=0
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+3.000000 had 2 events
+Up=0
+Down=0
+LinkUp=2
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=0
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 1 received event Link State Update:time_=3.012010 affected_entities=1  in_port_=0 sn_=3 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Controller 3 received event Link State Update:time_=3.012010 affected_entities=3  in_port_=0 sn_=3 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+Switch was partitioned
+... 0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Link State Update:time_=3.012010 affected_entities=4  in_port_=0 sn_=3 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 2 6 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+3.012010 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Request:time_=3.023020 affected_entities=0  in_port_=1 sn_=1 src_=3
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=3.023020 affected_entities=0  in_port_=1 sn_=3 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=3.023020 affected_entities=0  in_port_=1 sn_=4 src_=3 dst_=1 dst_to_neighbor_=2 6 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+0
+1
+Switch 0 received event Routing Update:time_=3.023020 affected_entities=0  in_port_=1 sn_=4 src_=3 dst_=0 dst_to_neighbor_=1 1 
+Routing update was directed at me
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 0 received event Controller View:time_=3.023020 affected_entities=0  in_port_=1 sn_=3 src_id_=3 topology_=0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=333
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 2 received event Link State Update:time_=3.023020 affected_entities=2  in_port_=0 sn_=3 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+3.023020 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=3
+ControllerView=1
+InitiateRoutingUpdate=0
+Switch 1 received event Controller View:time_=3.034030 affected_entities=1  in_port_=0 sn_=3 src_id_=3 topology_=0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=333
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=3.034030 affected_entities=1  in_port_=0 sn_=4 src_=3 dst_=1 dst_to_neighbor_=2 6 
+Routing update was directed at me
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+0
+1
+Switch 1 received event Routing Update:time_=3.034030 affected_entities=1  in_port_=0 sn_=3 src_=3 dst_=2 dst_to_neighbor_=5 1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 2 0 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Switch 1 received event Link State Request:time_=3.034030 affected_entities=1  in_port_=0 sn_=1 src_=3
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Switch 1 received event Link State Update:time_=3.034030 affected_entities=1  in_port_=0 sn_=4 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Controller 3 received event Link State Update:time_=3.034030 affected_entities=3  in_port_=0 sn_=4 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Controller View:time_=3.034030 affected_entities=4  in_port_=0 sn_=3 src_id_=3 topology_=0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=333
+Newer link state for 1 learned from controller view
+Newer link state for 2 learned from controller view
+... 0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Link State Update:time_=3.034030 affected_entities=4  in_port_=0 sn_=4 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+3.034030 had 8 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=2
+ControllerView=2
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=3.045040 affected_entities=0  in_port_=0 sn_=4 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+bw in [3.000000,3.050000) is [10,6,3,4,6]
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+Switch 2 received event Link State Update:time_=3.045040 affected_entities=2  in_port_=0 sn_=4 src_id=0 up_links_=1 3 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 2 6 0 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Switch 2 received event Link State Request:time_=3.045040 affected_entities=2  in_port_=0 sn_=1 src_=3
+... ls_=0 <--> 1 3 4 ,1 <--> 6 0 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Switch 2 received event Link State Update:time_=3.045040 affected_entities=2  in_port_=0 sn_=4 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+0
+1
+Switch 2 received event Routing Update:time_=3.045040 affected_entities=2  in_port_=0 sn_=3 src_=3 dst_=2 dst_to_neighbor_=5 1 
+Routing update was directed at me
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+Switch 2 received event Controller View:time_=3.045040 affected_entities=2  in_port_=0 sn_=3 src_id_=3 topology_=0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  id_to_last_=333
+... ls_=0 <--> 3 4 1 ,1 <--> 0 2 6 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=5 1 
+3.045040 had 6 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=1
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=1
+ControllerView=1
+InitiateRoutingUpdate=0
+reachability @ 3.050000 is 2/2
+Switch 1 received event Link State Update:time_=3.056050 affected_entities=1  in_port_=1 sn_=4 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 1 3 4 ,1 <--> 6 0 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=2 6 
+Controller 3 received event Link State Update:time_=3.056050 affected_entities=3  in_port_=0 sn_=4 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Link State Update:time_=3.056050 affected_entities=4  in_port_=0 sn_=4 src_id=1 up_links_=0 2 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+3.056050 had 3 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=3
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Switch 0 received event Link State Update:time_=3.067060 affected_entities=0  in_port_=0 sn_=4 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... ls_=0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 1 5 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1  dst_to_neighbor_=1 1 
+3.067060 had 1 events
+Up=0
+Down=0
+LinkUp=0
+LinkDown=0
+LinkStateRequest=0
+LinkStateUpdate=1
+InitiateLinkState=0
+RoutingUpdate=0
+ControllerView=0
+InitiateRoutingUpdate=0
+Controller 3 received event Link State Update:time_=3.078070 affected_entities=3  in_port_=0 sn_=4 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 1 3 4 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
+Controller 4 received event Link State Update:time_=3.078070 affected_entities=4  in_port_=0 sn_=4 src_id=2 up_links_=1 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 
+... 0 <--> 3 4 1 ,1 <--> 0 6 2 ,2 <--> 5 1 ,3 <--> 0 ,4 <--> 0 ,5 <--> 2 ,6 <--> 1 
